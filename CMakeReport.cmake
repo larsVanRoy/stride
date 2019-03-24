@@ -102,6 +102,11 @@ if( NOT STRIDE_FORCE_NO_PYTHON )
 	message( STATUS "------> Python version              : ${PYTHONLIBS_VERSION_STRING} " )
 endif()
 #
+if(NOT STRIDE_FORCE_NO_QT)
+    message( STATUS "" )
+    message( STATUS "------> HDF5_FOUND                   : ${HDF5_FOUND}"                   )
+endif()
+#
 message( STATUS "" )
 if ( STRIDE_INCLUDE_DOC )
 	message( STATUS "------> DOXYGEN_FOUND               : ${DOXYGEN_FOUND} "          )
