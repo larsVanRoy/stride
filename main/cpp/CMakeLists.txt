@@ -45,7 +45,7 @@ set_property(SOURCE ${PROTO_HDR} ${PROTO_SRC}
 if(${STRIDE_FORCE_NO_HDF5})
     message("NOT USING PREINSTALLED")
 else()
-    find_package(HDF5 1.10 COMPONENTS CXX)
+    find_package(HDF5 1.10.5 COMPONENTS CXX)
     if(${HDF5_FOUND})
         include_directories(${HDF5_INCLUDE_DIR})
         message(${HDF5_INCLUDE_DIRS})
@@ -61,6 +61,8 @@ set(HDF5_PROTOTYPE_SRC
 )
 
 add_executable(prototype_hdf5 ${HDF5_PROTOTYPE_SRC})
+message(${HDF5_CXX_LIBRARIES})
+target_link_libraries(prototype_hdf5 ${HDF5_CXX_LIBRARIES})
 
 #============================================================================
 # Sources.
