@@ -52,12 +52,11 @@ if(NOT STRIDE_FORCE_NO_HDF5)
     if(${HDF5_FOUND})
         include_directories(${HDF5_INCLUDE_DIR})
         message(${HDF5_INCLUDE_DIRS})
+        add_executable(prototype_hdf5 ${HDF5_PROTOTYPE_SRC})
+        message(${HDF5_CXX_LIBRARIES})
+        target_link_libraries(prototype_hdf5 ${HDF5_CXX_LIBRARIES})
     endif()
 endif()
-
-add_executable(prototype_hdf5 ${HDF5_PROTOTYPE_SRC})
-message(${HDF5_CXX_LIBRARIES})
-target_link_libraries(prototype_hdf5 ${HDF5_CXX_LIBRARIES})
 
 #============================================================================
 # Sources.
@@ -181,6 +180,11 @@ if(Protobuf_FOUND)
     target_link_libraries(libstride PRIVATE ${Protobuf_LIBRARIES})
 else()
     target_link_libraries(libstride PRIVATE libprotobuf)
+endif()
+if(HDF5_FOUND)
+    target_link_libraries(libstride PRIVATE ${HDF5_CXX_LIBRARIES})
+else()
+    target_link_libraries(libstride PRIVATE libHDF5)
 endif()
 set_target_properties(libstride
     PROPERTIES

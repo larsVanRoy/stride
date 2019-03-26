@@ -83,9 +83,9 @@ void openFileAndRead(){
     auto dims = new hsize_t[rank];
     dataSpace.getSimpleExtentDims(dims);
 
-    int* buffer = new int[dims[0]*dims[1]];
+    auto buffer = new int[dims[0]*dims[1]];
     dataSet.read(buffer, PredType::NATIVE_INT);
-    for(int i = 0; i < dims[0]*dims[1]; ++i){
+    for(hsize_t i = 0; i < dims[0]*dims[1]; ++i){
         std::cout << buffer[i] << std::endl;
     }
     StrType variable_length_string_type(PredType::C_S1, H5T_VARIABLE); //Variable length string
@@ -96,14 +96,14 @@ void openFileAndRead(){
     delete[] dims;
 
     DataSet dataSet_persons = file.openDataSet("Persons");
-    dataSpace = dataSet.getSpace();
-    rank = dataSpace.getSimpleExtentNdims();
-    dims = new hsize_t[rank];
-    dataSpace.getSimpleExtentDims(dims);
+    auto dataSpace2 = dataSet_persons.getSpace();
+    rank = dataSpace2.getSimpleExtentNdims();
+    auto dims2 = new hsize_t[rank];
+    dataSpace2.getSimpleExtentDims(dims2);
 
-    person_t* person_buffer = new person_t[dims[0]];
+    auto person_buffer = new person_t[dims2[0]];
     dataSet_persons.read(person_buffer, compPerson);
-    for(auto i = 0; i < dims[0]; ++i){
+    for(hsize_t i = 0; i < dims2[0]; ++i){
         std::cout << person_buffer[i].id << ' ' << person_buffer[i].age << std::endl;
     }
 }
@@ -112,7 +112,7 @@ void openFileAndRead(){
  * Huidig voorstel HDF5 : root heeft - een dataset Persons (1D- matrix van Person compound types)
  *                                   - een group Locations
  *                                   - Een attribute geogridname
-*
+ *
  *                        Locations heeft - groups Location_i
  *
  *                        Location_i heeft - een dataset Commute (1D-matrix van Commute compound types)
