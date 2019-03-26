@@ -75,16 +75,15 @@ endif()
 #============================================================================
 # HDF5.
 #============================================================================
-#set(STRIDE_FORCE_NO_HDF5 TRUE)
+set(HDF5_ROOT /usr/local/HDF_Group/HDF5/1.10.5)
+
 if(${STRIDE_FORCE_NO_HDF5})
     message("NOT USING PREINSTALLED")
 else()
-    find_package(HDF5 1.10 COMPONENTS CXX)
+    find_package(HDF5 1.10.5 COMPONENTS CXX)
     if(${HDF5_FOUND})
         include_directories(${HDF5_INCLUDE_DIR})
         message(${HDF5_INCLUDE_DIRS})
-    else()
-        add_subdirectory(main/rescources/libs/hdf5)
     endif()
 endif()
 

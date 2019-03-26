@@ -5,9 +5,6 @@
 #include <H5Cpp.h>
 #include <string>
 #include <iostream>
-#include <pop/Population.h>
-#include "geopop/io/GeoGridReaderFactory.h"
-#include "geopop/io/GeoGridReader.h"
 
 using namespace H5;
 
@@ -127,10 +124,6 @@ void openFileAndRead(){
 
 
 int main(){
-    auto pop = stride::Population::Create();
-    auto factory = geopop::GeoGridReaderFactory();
-    auto reader = factory.CreateReader("test.proto", pop.get());
-    reader->Read();
     createFileAndWrite();
     openFileAndRead();
     return 0;
