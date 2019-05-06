@@ -84,7 +84,7 @@ else()
         include_directories(${HDF5_INCLUDE_DIR})
         message(${HDF5_INCLUDE_DIRS})
     else()
-        add_subdirectory(main/rescources/libs/hdf5)
+        add_subdirectory(main/resources/lib/HDF5)
     endif()
 endif()
 
