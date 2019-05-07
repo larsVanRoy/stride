@@ -13,16 +13,13 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include <geopop/GeoGridConfig.h>
-#include "PreSchoolPopulator.h"
+#include "Populator.h"
 
 #include "contact/AgeBrackets.h"
 #include "contact/ContactPool.h"
 #include "geopop/GeoGrid.h"
-#include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
 #include "pop/Person.h"
-#include "util/Assert.h"
 
 namespace geopop {
 
@@ -30,26 +27,26 @@ namespace geopop {
     using namespace stride;
     using namespace stride::ContactType;
 
-    void PreSchoolPopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+    template<>
+    void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig&)
     {
-        m_logger->trace("Starting to populate preschools");
+        m_logger->trace("Starting to populate PreSchools");
 
         for (const auto& loc : geoGrid) {
             if (loc->GetPopCount() == 0) {
                 continue;
             }
 
-            // 1. find all preschools in an area of 10-k*10 km
-            const vector<ContactPool*>& preschools = GetNearbyPools(Id::PreSchool, geoGrid, *loc);
+            // 1. find all schools in an area of 10-k*10 km
+            const vector<ContactPool*>& classes = geoGrid.GetNearbyPools(Id::PreSchool, *loc);
 
-            auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(preschools.size()), 0U);
+            auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(classes.size()), 0U);
 
-            // 2. for every kid assign a preschool
+            // 2. for every student assign a class
             for (auto& pool : loc->RefPools(Id::Household)) {
                 for (Person* p : *pool) {
-                    if (AgeBrackets::Daycare::HasAge(p->GetAge()) &&
-                        MakeChoice(geoGridConfig.input.participation_preschool)) {
-                        auto& c = preschools[dist()];
+                    if (AgeBrackets::PreSchool::HasAge(p->GetAge())) {
+                        auto& c = classes[dist()];
                         c->AddMember(p);
                         p->SetPoolId(Id::PreSchool, c->GetId());
                     }
@@ -57,7 +54,7 @@ namespace geopop {
             }
         }
 
-        m_logger->trace("Done populating Preschools");
+        m_logger->trace("Done populating PreSchools");
     }
 
 } // namespace geopop

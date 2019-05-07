@@ -59,6 +59,12 @@ protected:
 // Declare specializations (implemntation in separate .cpp files).
 // ---------------------------------------------------------------
 template<>
+void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+
+template<>
+void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+
+template<>
 void Populator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
 template<>
@@ -79,6 +85,8 @@ void Populator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoG
 // ---------------------------------------------------------------
 // Shorthand definitions.
 // ---------------------------------------------------------------
+using DaycarePopulator = Populator<stride::ContactType::Id::Daycare>;
+using PreSchoolPopulator = Populator<stride::ContactType::Id::PreSchool>;
 using K12SchoolPopulator = Populator<stride::ContactType::Id::K12School>;
 using CollegePopulator = Populator<stride::ContactType::Id::College>;
 using WorkplacePopulator = Populator<stride::ContactType::Id::Workplace>;

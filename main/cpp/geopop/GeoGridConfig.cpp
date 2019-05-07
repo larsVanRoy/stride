@@ -105,12 +105,12 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
         const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
 
-        popInfo.popcount_daycare = static_cast<unsigned int>(floor(input.participation_daycare * age_count_daycare));
+        info.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
 
-        popInfo.popcount_preschool = static_cast<unsigned int>(
-            floor(input.participation_preschool * age_count_preschool));
+        info.popcount_preschool = static_cast<unsigned int>(
+            floor(param.participation_preschool * age_count_preschool));
 
-        popInfo.popcount_k12school = age_count_k12school;
+        info.popcount_k12school = age_count_k12school;
 
         info.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
 

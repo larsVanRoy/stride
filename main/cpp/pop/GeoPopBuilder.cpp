@@ -118,20 +118,6 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
 
 void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-<<<<<<< HEAD
-        vector<shared_ptr<Generator>> generators{make_shared<K12SchoolGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<DaycareGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<PreSchoolGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<CollegeGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<WorkplaceGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<PrimaryCommunityGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<SecondaryCommunityGenerator>(m_rn_man, m_stride_logger),
-                                                 make_shared<HouseholdGenerator>(m_rn_man, m_stride_logger)};
-
-        for (const auto& g : generators) {
-                g->Apply(geoGrid, geoGridConfig);
-        }
-=======
         K12SchoolGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         CollegeGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
@@ -143,25 +129,10 @@ void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConf
         SecondaryCommunityGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         HouseholdGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
->>>>>>> upstream/master
 }
 
 void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
-<<<<<<< HEAD
-        vector<shared_ptr<Populator>> populators{make_shared<HouseholdPopulator>(m_rn_man, m_stride_logger),
-                                                 make_shared<DaycarePopulator>(m_rn_man, m_stride_logger),
-                                                 make_shared<PreSchoolPopulator>(m_rn_man, m_stride_logger),
-                                                 make_shared<K12SchoolPopulator>(m_rn_man, m_stride_logger),
-                                                 make_shared<CollegePopulator>(m_rn_man, m_stride_logger),
-                                                 make_shared<PrimaryCommunityPopulator>(m_rn_man, m_stride_logger),
-                                                 make_shared<SecondaryCommunityPopulator>(m_rn_man, m_stride_logger),
-                                                 make_shared<WorkplacePopulator>(m_rn_man, m_stride_logger)};
-
-        for (shared_ptr<Populator>& p : populators) {
-                p->Apply(geoGrid, geoGridConfig);
-        }
-=======
         HouseholdPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         K12SchoolPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
@@ -173,7 +144,6 @@ void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridCo
         SecondaryCommunityPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         WorkplacePopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
->>>>>>> upstream/master
 }
 
 } // namespace stride

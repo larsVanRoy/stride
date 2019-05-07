@@ -13,15 +13,13 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "DaycarePopulator.h"
+#include "Populator.h"
 
 #include "contact/AgeBrackets.h"
 #include "contact/ContactPool.h"
 #include "geopop/GeoGrid.h"
-#include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"
 #include "pop/Person.h"
-#include "util/Assert.h"
 
 namespace geopop {
 
@@ -29,7 +27,8 @@ namespace geopop {
     using namespace stride;
     using namespace stride::ContactType;
 
-    void DaycarePopulator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+    template<>
+    void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig&)
     {
         m_logger->trace("Starting to populate Daycares");
 
@@ -39,16 +38,15 @@ namespace geopop {
             }
 
             // 1. find all daycares in an area of 10-k*10 km
-            const vector<ContactPool*>& daycares = GetNearbyPools(Id::Daycare, geoGrid, *loc);
+            const vector<ContactPool*>& classes = geoGrid.GetNearbyPools(Id::Daycare, *loc);
 
-            auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(daycares.size()), 0U);
+            auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(classes.size()), 0U);
 
-            // 2. for every toddler assign a daycare
+            // 2. for every student assign a class
             for (auto& pool : loc->RefPools(Id::Household)) {
                 for (Person* p : *pool) {
-                    if (AgeBrackets::Daycare::HasAge(p->GetAge()) &&
-                        MakeChoice(geoGridConfig.input.participation_daycare)) {
-                        auto& c = daycares[dist()];
+                    if (AgeBrackets::Daycare::HasAge(p->GetAge())) {
+                        auto& c = classes[dist()];
                         c->AddMember(p);
                         p->SetPoolId(Id::Daycare, c->GetId());
                     }

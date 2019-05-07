@@ -1,26 +1,4 @@
-/*
- *  This is free software: you can redistribute it and/or modify it
- *  under the terms of the GNU General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  any later version.
- *  The software is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *  You should have received a copy of the GNU General Public License
- *  along with the software. If not, see <http://www.gnu.org/licenses/>.
- *
- *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
- */
-
-#include <geopop/GeoGridConfig.h>
-#include "PreSchoolGenerator.h"
-
-#include "geopop/GeoGrid.h"
-#include "geopop/GeoGridConfig.h"
-#include "geopop/Location.h"
-#include "pop/Population.h"
-#include "util/RnMan.h"
+#include "Generator.h"
 
 namespace geopop {
 
@@ -28,12 +6,17 @@ namespace geopop {
     using namespace stride;
     using namespace stride::ContactType;
 
-    void PreSchoolGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+    template<>
+    void Generator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
     {
+        // 1. given the number of persons of school age, calculate number of schools
+        // 2. assign schools to a location by using a discrete distribution which reflects the
+        //    relative number of pupils for that location; the relative number of pupils is set
+        //    to the relative population w.r.t the total population.
 
-        const auto pupilCount = geoGridConfig.popInfo.popcount_preschool;
+        const auto pupilCount = ggConfig.info.popcount_daycare;
         const auto schoolCount =
-                static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(geoGridConfig.pools.preschool_size)));
+                static_cast<unsigned int>(ceil(pupilCount / static_cast<double>(ggConfig.people[Id::PreSchool])));
 
         vector<double> weights;
         for (const auto& loc : geoGrid) {
@@ -50,16 +33,7 @@ namespace geopop {
 
         for (auto i = 0U; i < schoolCount; i++) {
             const auto loc = geoGrid[dist()];
-            AddPools(*loc, pop, geoGridConfig.pools.pools_per_preschool);
-        }
-    }
-
-    void PreSchoolGenerator::AddPools(Location& loc, Population* pop, unsigned int number)
-    {
-        auto& poolSys = pop->RefPoolSys();
-        for (auto i = 0U; i < number; ++i) {
-            const auto p = poolSys.CreateContactPool(Id::PreSchool);
-            loc.RegisterPool<Id::PreSchool>(p);
+            AddPools(*loc, pop, ggConfig);
         }
     }
 

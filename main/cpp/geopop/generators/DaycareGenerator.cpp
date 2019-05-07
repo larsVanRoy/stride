@@ -13,15 +13,7 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include <geopop/GeoGridConfig.h>
-#include "DaycareGenerator.h"
-
-#include "geopop/GeoGrid.h"
-#include "geopop/GeoGridConfig.h"
-#include "geopop/Location.h"
-#include "pop/Population.h"
-#include "util/Assert.h"
-#include "util/RnMan.h"
+#include "Generator.h"
 
 namespace geopop {
 
@@ -29,48 +21,34 @@ namespace geopop {
     using namespace stride;
     using namespace stride::ContactType;
 
-    void DaycareGenerator::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+    template<>
+    void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
     {
-        const auto toddlerCount = geoGridConfig.popInfo.popcount_daycare;
-        const auto daycareCount =
-                static_cast<unsigned int>(ceil(toddlerCount / static_cast<double>(geoGridConfig.pools.daycare_size)));
-        const auto cities = geoGrid.TopK(10);
+        // 1. given the number of persons of school age, calculate number of schools
+        // 2. assign schools to a location by using a discrete distribution which reflects the
+        //    relative number of pupils for that location; the relative number of pupils is set
+        //    to the relative population w.r.t the total population.
 
-        if (cities.empty()) {
+        const auto toddlerCount = ggConfig.info.popcount_daycare;
+        const auto daycareCount =
+                static_cast<unsigned int>(ceil(toddlerCount / static_cast<double>(ggConfig.people[Id::Daycare])));
+
+        vector<double> weights;
+        for (const auto& loc : geoGrid) {
+            weights.push_back(loc->GetPopFraction());
+        }
+
+        if (weights.empty()) {
             // trng can't handle empty vectors
             return;
-        }
-
-        // Aggregate population in TopK cities.
-        auto totalPop = 0U;
-        for (const auto& c : cities) {
-            totalPop += c->GetPopCount();
-        }
-
-        // Weights determined by relative population in city.
-        vector<double> weights;
-        for (const auto& c : cities) {
-            const auto weight = static_cast<double>(c->GetPopCount()) / static_cast<double>(totalPop);
-            AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight),
-                        "DaycareGenerator> Invalid weight: " + to_string(weight), m_logger);
-            weights.push_back(weight);
         }
 
         const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
         auto       pop  = geoGrid.GetPopulation();
 
         for (auto i = 0U; i < daycareCount; i++) {
-            auto loc = cities[dist()];
-            AddPools(*loc, pop, geoGridConfig.pools.pools_per_daycare);
-        }
-    }
-
-    void DaycareGenerator::AddPools(Location& loc, Population* pop, unsigned int number)
-    {
-        auto& poolSys = pop->RefPoolSys();
-        for (auto i = 0U; i < number; ++i) {
-            const auto p = poolSys.CreateContactPool(stride::ContactType::Id::Daycare);
-            loc.RegisterPool<Id::Daycare>(p);
+            const auto loc = geoGrid[dist()];
+            AddPools(*loc, pop, ggConfig);
         }
     }
 

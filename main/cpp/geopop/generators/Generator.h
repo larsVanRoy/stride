@@ -70,6 +70,12 @@ protected:
 // Declare specializations (implemntation in separate .cpp files).
 // ---------------------------------------------------------------
 template<>
+void Generator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+
+template<>
+void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+
+template<>
 void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
 
 template<>
@@ -90,6 +96,8 @@ void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoG
 // ---------------------------------------------------------------
 // Shorthand definitions.
 // ---------------------------------------------------------------
+using DaycareGenerator = Generator<stride::ContactType::Id::Daycare>;
+using PreSchoolGenerator = Generator<stride::ContactType::Id::PreSchool>;
 using K12SchoolGenerator = Generator<stride::ContactType::Id::K12School>;
 using CollegeGenerator = Generator<stride::ContactType::Id::College>;
 using WorkplaceGenerator = Generator<stride::ContactType::Id::Workplace>;
