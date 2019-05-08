@@ -101,21 +101,17 @@ find_package(Threads)
 #----------------------------------------------------------------------------
 # ProtoBuf
 #----------------------------------------------------------------------------
-set(Protobuf_USE_STATIC_LIBS ON)
 if(NOT STRIDE_FORCE_NO_PROTOC)
     include(FindProtobuf)
     find_package(Protobuf)
     if(NOT Protobuf_FOUND)
-        set(Protobuf_VERSION "0.0.0")
-    endif()
-    if((Protobuf_FOUND) AND (${Protobuf_VERSION} VERSION_LESS 3.0.0))
-         set(Protobuf_FOUND FALSE)
+            set(Protobuf_VERSION "0.0.0")
     endif()
 else()
-    set(Protobuf_FOUND FALSE)
+    set(Protobuf_VERSION "0.0.0")
 endif()
 #
-if(Protobuf_FOUND)
+if(Protobuf_FOUND AND (${Protobuf_VERSION} VERSION_GREATER 3.0.0 OR ${Protobuf_VERSION} VERSION_EQUAL 3.0.0))
     set(Protobuf_PBS_DIR ${CMAKE_BINARY_DIR}/main/cpp)
     include_directories(SYSTEM ${Protobuf_INCLUDE_DIRS})
 else()
@@ -147,6 +143,22 @@ else()
     else()
         set(LIBS ${LIBS} stdc++fs)
     endif()
+endif()
+
+#----------------------------------------------------------------------------
+# HDF5
+#----------------------------------------------------------------------------
+if(NOT STRIDE_FORCE_NO_HDF5)
+    find_package(HDF5 COMPONENTS CXX HL)
+endif()
+if(HDF5_FOUND)
+    include_directories(SYSTEM ${HDF5_CXX_INCLUDE_DIRS})
+else()
+    include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/src)
+    include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/c++/src)
+    include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/hl/src)
+    include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/hdf5/hl/c++/src)
+    include_directories(SYSTEM ${CMAKE_BINARY_DIR}/main/resources/lib/hdf5/config)
 endif()
 
 #----------------------------------------------------------------------------

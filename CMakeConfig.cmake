@@ -63,9 +63,10 @@ set(STRIDE_FORCE_NO_QT FALSE
     CACHE BOOL "Force CMake to act as if QT had not been found.")
 set(STRIDE_FORCE_NO_HDF5 FALSE
     CACHE BOOL "Force CMake to act as if HDF5 was not available.")
+
 set(STRIDE_FORCE_NO_PROTOC FALSE
 	CACHE BOOL "Do NOT use installed protobuf compiler even if available.")
-
+	
 #============================================================================
 # Additional CMake modules:
 #============================================================================

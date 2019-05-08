@@ -37,31 +37,6 @@ set_property(SOURCE ${PROTO_HDR} ${PROTO_SRC}
     COMPILE_FLAGS "-Wno-all -Wno-effc++ -Wno-extra -Wno-pedantic"
 )
 
-
-#============================================================================
-# HDF5.
-#============================================================================
-#set(STRIDE_FORCE_NO_HDF5 TRUE)
-if(${STRIDE_FORCE_NO_HDF5})
-    message("NOT USING PREINSTALLED")
-else()
-    find_package(HDF5 1.10 COMPONENTS CXX)
-    if(${HDF5_FOUND})
-        include_directories(${HDF5_INCLUDE_DIR})
-        message(${HDF5_INCLUDE_DIRS})
-    endif()
-endif()
-
-
-#============================================================================
-# Prototype Sources.
-#============================================================================
-set(HDF5_PROTOTYPE_SRC
-    protoypes/HDF5Prototype.cpp
-)
-
-add_executable(prototype_hdf5 ${HDF5_PROTOTYPE_SRC})
-
 #============================================================================
 # Sources.
 #============================================================================
@@ -120,12 +95,11 @@ set(STRIDE_SRC
     geopop/io/GeoGridWriterFactory.cpp
     geopop/io/GeoGridWriterFactory.h
     geopop/io/HouseholdCSVReader.cpp
-	geopop/io/HouseholdJSONReader.h
-	geopop/io/HouseholdJSONReader.cpp
+    geopop/io/HouseholdJSONReader.h
+    geopop/io/HouseholdJSONReader.cpp
     geopop/io/ReaderFactory.cpp
     geopop/populators/DaycarePopulator.cpp
     geopop/populators/PreSchoolPopulator.cpp
-    #---
     geopop/populators/CollegePopulator.cpp
     geopop/populators/HouseholdPopulator.cpp
     geopop/populators/K12SchoolPopulator.cpp
@@ -170,19 +144,28 @@ set(STRIDE_SRC
     viewers/InfectedViewer.cpp
     viewers/PersonsFileViewer.cpp
     viewers/SummaryFileViewer.cpp
-    )
+)
+
+set(PROTOTYPE_SRC
+    protoypes/HDF5Prototype.cpp
+)
 
 #============================================================================
 # Build the Stride library.
 #============================================================================
-add_library(libstride ${STRIDE_SRC})
+add_library(libstride STATIC ${STRIDE_SRC})
 target_compile_definitions(libstride PUBLIC "-DSTRIDE_GIT_HASH=${STRIDE_WC_REVISION_HASH}")
 target_compile_definitions(libstride PUBLIC "-DPROCCOUNT=${PROCCOUNT}")
 target_link_libraries(libstride PRIVATE ${LIBS})
 if(Protobuf_FOUND)
-    target_link_libraries(libstride PUBLIC ${Protobuf_LIBRARIES})
+    target_link_libraries(libstride PRIVATE ${Protobuf_LIBRARIES})
 else()
-    target_link_libraries(libstride PUBLIC libprotobuf)
+    target_link_libraries(libstride PRIVATE libprotobuf)
+endif()
+if(HDF5_FOUND)
+    target_link_libraries(libstride PRIVATE ${HDF5_CXX_LIBRARIES} ${HDF5_CXX_HL_LIBRARIES})
+else()
+    target_link_libraries(libstride PRIVATE hdf5-static hdf5_hl-static hdf5_cpp-static hdf5_hl_cpp-static)
 endif()
 set_target_properties(libstride
     PROPERTIES
@@ -204,6 +187,8 @@ include(CheckIPOSupported)
 #============================================================================
 add_executable(stride execs/stride.cpp)
 target_link_libraries(stride libstride)
+add_executable(prototype_hdf5 ${PROTOTYPE_SRC})
+target_link_libraries(prototype_hdf5 libstride)
 install(TARGETS stride DESTINATION ${BIN_INSTALL_LOCATION})
 
 #############################################################################

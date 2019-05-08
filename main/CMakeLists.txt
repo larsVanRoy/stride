@@ -21,6 +21,10 @@
 #============================================================================
 add_subdirectory(cpp)
 if (${SWIG_FOUND} AND ${PYTHONLIBS_FOUND})
+	if( POLICY CMP0086 )
+		# Silence CMP0086 warning
+		cmake_policy(SET CMP0086 NEW)
+	endif()
 	add_subdirectory(python)
 endif()
 add_subdirectory(r)

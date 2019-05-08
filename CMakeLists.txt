@@ -73,32 +73,6 @@ if(STRIDE_INCLUDE_DOC)
 endif()
 
 #============================================================================
-# HDF5.
-#============================================================================
-#set(STRIDE_FORCE_NO_HDF5 TRUE)
-if(${STRIDE_FORCE_NO_HDF5})
-    message("NOT USING PREINSTALLED")
-else()
-    find_package(HDF5 1.10 COMPONENTS CXX)
-    if(${HDF5_FOUND})
-        include_directories(${HDF5_INCLUDE_DIR})
-        message(${HDF5_INCLUDE_DIRS})
-    else()
-        add_subdirectory(main/resources/lib/HDF5)
-    endif()
-endif()
-
-#============================================================================
-# Configuration for QT.
-#============================================================================
-if(NOT STRIDE_FORCE_NO_QT)
-    set(QT_FOUND TRUE)
-    find_package(Qt5 COMPONENTS Widgets Qml Quick Core)
-else()
-    set(QT_FOUND FALSE)
-endif()
-
-#============================================================================
 # Add subdirs
 #============================================================================
 add_subdirectory(main)
