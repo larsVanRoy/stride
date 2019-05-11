@@ -19,6 +19,7 @@
 #include "HouseholdCSVReader.h"
 #include "HouseholdJSONReader.h"
 #include "LocationsCSVReader.h"
+#include "WorkplaceCSVReader.h"
 #include "util/FileSys.h"
 
 #include <fstream>
@@ -77,6 +78,23 @@ std::unique_ptr<std::istream> ReaderFactory::OpenFile(const filesys::path& path)
 
         if (path.extension().string() == ".csv" or path.extension().string() == ".json") {
                 return make_unique<ifstream>(path.string());
+        } else {
+                throw runtime_error("Unsupported file extension: " + path.extension().string());
+        }
+}
+
+shared_ptr<WorkplaceReader> ReaderFactory::CreateWorkplaceReader(const std::string& filename)
+{
+        return CreateWorkplaceReader(FileSys::GetDataDir() / filesys::path(filename));
+}
+
+shared_ptr<WorkplaceReader> ReaderFactory::CreateWorkplaceReader(const filesys::path& path)
+{
+        if(!filesys::exists(path)) {
+                throw runtime_error("File not found: " + path.string());
+        }
+        if(path.extension().string() == ".csv") {
+                return make_shared<WorkplaceCSVReader>(OpenFile(path));
         } else {
                 throw runtime_error("Unsupported file extension: " + path.extension().string());
         }
