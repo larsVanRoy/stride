@@ -30,7 +30,7 @@ using namespace stride;
 using namespace stride::ContactType;
 
 template<>
-void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 {
         m_logger->trace("Starting to populate Colleges");
 

@@ -49,10 +49,10 @@ public:
         ~Generator() = default;
 
         /// Generate ContactPools for ContactType::Id as sepcified by data in GeoGridConfig.
-        void Apply(GeoGrid&, const GeoGridConfig&) {}
+        void Apply(GeoGrid&, GeoGridConfig&) {}
 
         /// Create a given number ContactPools in the GeoGrid.
-        void AddPools(Location& loc, stride::Population* pop, const GeoGridConfig& ggConfig)
+        void AddPools(Location& loc, stride::Population* pop, GeoGridConfig& ggConfig)
         {
                 auto& poolSys = pop->RefPoolSys();
                 for (auto i = 0U; i < ggConfig.pools[ID]; ++i) {
@@ -67,31 +67,31 @@ protected:
 };
 
 // ---------------------------------------------------------------
-// Declare specializations (implemntation in separate .cpp files).
+// Declare specializations (implementation in separate .cpp files).
 // ---------------------------------------------------------------
 template<>
-void Generator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Generator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Generator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Generator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Generator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 // ---------------------------------------------------------------
 // Shorthand definitions.

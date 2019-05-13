@@ -22,7 +22,7 @@ namespace geopop {
     using namespace stride::ContactType;
 
     template<>
-    void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
+    void Generator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig)
     {
         // 1. given the number of persons of school age, calculate number of schools
         // 2. assign schools to a location by using a discrete distribution which reflects the

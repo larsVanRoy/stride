@@ -28,7 +28,7 @@ namespace geopop {
     using namespace stride::ContactType;
 
     template<>
-    void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig&)
+    void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, GeoGridConfig&)
     {
         m_logger->trace("Starting to populate Daycares");
 

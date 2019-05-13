@@ -139,16 +139,22 @@ void CSV::ReadFromStream(std::istream& inputStream)
         line                                  = Trim(line);
         std::vector<std::string> headerLabels = Split(line, ","); // Split is bad! There is no option to escape ",".
         for (const std::string& label : headerLabels) {
-                m_labels.push_back(Trim(label, "\""));
+                m_labels.push_back(Trim(Trim(label, "\"")));
         }
         m_column_count = m_labels.size();
 
         // body
         while (getline(inputStream, line)) {
-                line = Trim(line);
+                line = Trim(line, "\r");
                 if (!line.empty()) {
                         std::vector<std::string> values =
                             Split(line, ","); // Split is bad! There is no option to escape ",".
+
+                        for(auto& value : values)
+                        {
+                                value = Trim(value);
+                        }
+
                         AddRow(values);
                 }
         }

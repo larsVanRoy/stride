@@ -22,7 +22,7 @@ using namespace stride;
 using namespace stride::ContactType;
 
 template<>
-void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
+void Generator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig)
 {
         vector<double> weights;
         for (const auto& loc : geoGrid) {

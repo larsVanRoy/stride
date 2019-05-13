@@ -58,6 +58,7 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // ------------------------------------------------------------
         GeoGridConfig ggConfig(m_config);
         ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
+        ggConfig.SetWorkplaceData(m_config.get<string>("run.geopop_gen.workplace_file"));
 
         // ------------------------------------------------------------
         // Get GeoGrid associated with 'pop'.
@@ -116,7 +117,7 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
         geoGrid.Finalize();
 }
 
-void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void GeoPopBuilder::MakePools(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 {
         K12SchoolGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
@@ -131,7 +132,7 @@ void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConf
         HouseholdGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 }
 
-void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 {
         HouseholdPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 

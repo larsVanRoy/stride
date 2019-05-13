@@ -28,7 +28,7 @@ using namespace stride;
 using namespace stride::ContactType;
 
 template<>
-void Populator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, const GeoGridConfig&)
+void Populator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, GeoGridConfig&)
 {
         m_logger->trace("Starting to populate Schools");
 

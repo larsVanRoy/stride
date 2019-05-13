@@ -18,13 +18,18 @@
 #include "contact/IdSubscriptArray.h"
 #include "pop/Person.h"
 #include "util/SegmentedVector.h"
+#include "util/RnMan.h"
+#include "Location.h"
 
 #include <boost/property_tree/ptree_fwd.hpp>
 
 #include <memory>
 #include <ostream>
+#include <map>
 
 namespace geopop {
+
+using namespace stride;
 
 class GeoGrid;
 
@@ -44,12 +49,12 @@ public:
         /// People per unit (= Household, K12School, College, etc.) for each of the ContactTypes.
         /// Default initialization. Order in which contacttypes are listed in the
         /// definition of the enumeration must be respected!
-        stride::ContactType::IdSubscriptArray<unsigned int> people {0U, 500U, 3000U, 20U, 2000U, 2000U};
+        stride::ContactType::IdSubscriptArray<unsigned int> people {0U, 0U, 0U, 500U, 3000U, 20U, 2000U, 2000U};
 
         /// Pools per unit (= Household, K12School, College, etc.) for each of the ContactTypes.
         /// Default initialization. Order in which contacttypes are listed in the
         /// definition of the enumeration must be respected!
-        stride::ContactType::IdSubscriptArray<unsigned int> pools {1U, 25U, 20U, 1U, 1U, 1U};
+        stride::ContactType::IdSubscriptArray<unsigned int> pools {1U, 1U, 1U, 25U, 20U, 1U, 1U, 1U};
 
         // -----------------------------------------------------------------------------------------
         // Parameters set by constructor with configuration property tree.
@@ -69,7 +74,7 @@ public:
                 
                 /// college and having employment).
 
-                double particpation_workplace;
+                double participation_workplace;
 
                 /// Fraction of college students that commute.
                 double fraction_college_commuters;
@@ -79,6 +84,9 @@ public:
 
                 /// Target population size for the generated population.
                 unsigned int pop_size;
+
+                /// configuration for distribution of workplace sizes
+                std::vector<std::vector<double>> workplace_distribution;
         } param;
 
         // -----------------------------------------------------------------------------------------
@@ -92,6 +100,13 @@ public:
                 /// Age profile per reference household.
                 std::vector<std::vector<unsigned int>> ages{};
         } refHH;
+
+        // -----------------------------------------------------------------------------------------
+        // The sizes of the generated workplace pools
+        // Every location has a list of pools, this map will have a list of the same length with
+        // for every pool the corresponding desired size
+        // -----------------------------------------------------------------------------------------
+        std::map<unsigned int, std::vector<unsigned int>> wpPoolSizes{};
 
         // -----------------------------------------------------------------------------------------
         // These are numbers derived from the reference households, the target size of the generated
@@ -125,6 +140,12 @@ public:
         /// Read the househould data file, parse it and set data.
         // -----------------------------------------------------------------------------------------
         void SetData(const std::string& householdsFileName);
+
+        // -----------------------------------------------------------------------------------------
+        /// Read the workplace data file, parse it and set data.
+        // -----------------------------------------------------------------------------------------
+        void SetWorkplaceData(const std::string& workplaceFileName);
+
 };
 
 } // namespace geopop

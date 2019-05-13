@@ -13,6 +13,7 @@
  *  Copyright 2019, Jan Broeckhove.
  */
 
+#include <iostream>
 #include "WorkplaceCSVReader.h"
 
 #include "util/CSV.h"
@@ -35,18 +36,18 @@ void WorkplaceCSVReader::SetReferenceWorkplaces(vector<vector<double>>& ref_work
 
                 vector<double> temp;
                 double ratio;
-                double min_size;
-                double max_size;
+                int min_size;
+                int max_size;
                 try {
                         ratio = row.GetValue<double>(0);
-                        min_size = row.GetValue<double>(1);
-                        max_size = row.GetValue<double>(2);
+                        min_size = row.GetValue<unsigned int>(1);
+                        max_size = row.GetValue<unsigned int>(2);
                 } catch (const std::bad_cast& e) {
                         // incorrect format/data types
                         throw(e);
                 }
 
-                temp = {ratio, min_size, max_size};
+                temp = {ratio, double(min_size), double(max_size)};
                 ref_workplaces.emplace_back(temp);
         }
 }

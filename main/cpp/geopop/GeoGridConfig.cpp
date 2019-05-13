@@ -18,6 +18,7 @@
 #include "contact/AgeBrackets.h"
 #include "contact/ContactType.h"
 #include "geopop/io/HouseholdReader.h"
+#include "geopop/io/WorkplaceReader.h"
 #include "geopop/io/ReaderFactory.h"
 #include "util/StringUtils.h"
 
@@ -42,7 +43,7 @@ GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
         param.participation_college        = pt.get<double>("participation_college");
         param.fraction_workplace_commuters = pt.get<double>("fraction_workplace_commuters");
         param.fraction_college_commuters   = pt.get<double>("fraction_college_commuters");
-        param.particpation_workplace       = pt.get<double>("particpation_workplace");
+        param.participation_workplace       = pt.get<double>("particpation_workplace");
 
         people[Id::K12School]              = pt.get<unsigned int>("people_per_K12School", 500U);
         people[Id::College]                = pt.get<unsigned int>("people_per_College", 3000U);
@@ -115,9 +116,15 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         info.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
 
         info.popcount_workplace = static_cast<unsigned int>(
-            floor(param.particpation_workplace * (age_count_workplace - info.popcount_college)));
+            floor(param.participation_workplace * (age_count_workplace - info.popcount_college)));
 
         info.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+}
+
+void GeoGridConfig::SetWorkplaceData(const std::string &workplaceFileName) 
+{
+        auto workplaceReader = ReaderFactory::CreateWorkplaceReader(workplaceFileName);
+        workplaceReader->SetReferenceWorkplaces(param.workplace_distribution);
 }
 
 ostream& operator<<(ostream& out, const GeoGridConfig& config)
@@ -130,7 +137,7 @@ ostream& operator<<(ostream& out, const GeoGridConfig& config)
         out << setw(w) << "Participation fraction of daycare:" << config.param.participation_daycare << "\n";
         out << setw(w) << "Participation fraction of preschool:" << config.param.participation_preschool << "\n";
         out << setw(w) << "Participation fraction of college:" << config.param.participation_college << "\n";
-        out << setw(w) << "Participation fraction of workplace:" << config.param.particpation_workplace << "\n";
+        out << setw(w) << "Participation fraction of workplace:" << config.param.participation_workplace << "\n";
         out << setw(w) << "Target population size" << intToDottedString(config.param.pop_size) << "\n"
             << "\n";
         out << "Calculated:"

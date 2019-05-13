@@ -23,6 +23,7 @@
 #include "util/Assert.h"
 
 #include <utility>
+#include <algorithm>
 
 namespace geopop {
 
@@ -33,7 +34,7 @@ using namespace stride::AgeBrackets;
 using namespace util;
 
 template<>
-void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 {
         m_logger->trace("Starting to populate Workplaces");
 
@@ -41,9 +42,10 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
         auto genNonCommute{function<int()>()};
         vector<ContactPool*> nearbyWp{};
         vector<Location*> commuteLocations{};
+        vector<unsigned int> commuteLocationSize{};
 
         const auto participCollege      = geoGridConfig.param.participation_college;
-        const auto participWorkplace    = geoGridConfig.param.particpation_workplace;
+        const auto participWorkplace    = geoGridConfig.param.participation_workplace;
         const auto popCollege           = geoGridConfig.info.popcount_college;
         const auto popWorkplace         = geoGridConfig.info.popcount_workplace;
         const auto fracCollegeCommute   = geoGridConfig.param.fraction_college_commuters;
@@ -111,10 +113,38 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 // --------------------------------------------------------------
                                                 // this person commutes to the Location and in particular to Pool
                                                 // --------------------------------------------------------------
-                                                auto& pools = commuteLocations[genCommute()]->RefPools(Id::Workplace);
+                                                unsigned int max = 0;
+                                                Location* location = nullptr;
+                                                std::vector<unsigned int> sizes{};
+
+                                                // find a location with a pool that still has space for a worker
+                                                while(max == 0){
+                                                        location = commuteLocations[genCommute()];
+                                                        sizes = geoGridConfig.wpPoolSizes[location->GetID()];
+                                                        std::sort(sizes.begin(), sizes.end());
+                                                        if(!sizes.empty()){
+                                                                max = sizes.back();
+                                                        }
+                                                        else{
+                                                                max = 0;
+                                                        }
+
+                                                }
+
+                                                auto& pools = location->RefPools(Id::Workplace);
                                                 auto s = static_cast<int>(pools.size());
                                                 auto  gen   = m_rn_man.GetUniformIntGenerator(0, s);
-                                                auto  pool  = pools[gen()];
+                                                unsigned int size = 0;
+                                                int index = 0;
+
+                                                // select pools at random, until a pool with a free space is found
+                                                while(size == 0){
+                                                        index = gen();
+                                                        size = sizes[index];
+                                                }
+                                                auto  pool  = pools[index];
+                                                geoGridConfig.wpPoolSizes[location->GetID()][index] -= 1;
+
                                                 // so that's it
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
@@ -122,9 +152,39 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, cons
                                                 // ----------------------------
                                                 // this person does not commute
                                                 // ----------------------------
-                                                const auto idraw = genNonCommute();
-                                                nearbyWp[idraw]->AddMember(person);
-                                                person->SetPoolId(Id::Workplace, nearbyWp[idraw]->GetId());
+
+                                                // check if there is still space within the reference sizes
+                                                auto sizes = geoGridConfig.wpPoolSizes[loc->GetID()];
+                                                std::sort(sizes.begin(), sizes.end());
+                                                unsigned int max;
+                                                if(!sizes.empty()){
+                                                        max = sizes.back();
+                                                }
+                                                else {
+                                                        max = 0;
+                                                }
+
+                                                // if there is no space, insert the worker in a random pool
+                                                if(max == 0) {
+                                                        const auto idraw = genNonCommute();
+                                                        nearbyWp[idraw]->AddMember(person);
+                                                        person->SetPoolId(Id::Workplace, nearbyWp[idraw]->GetId());
+                                                }
+                                                // if there is space, insert the worker in a random pool with space
+                                                else{
+                                                        unsigned int size = 0;
+                                                        int index = 0;
+
+                                                        while(size == 0){
+                                                                index = genNonCommute();
+                                                                size = sizes[index];
+                                                        }
+
+                                                        geoGridConfig.wpPoolSizes[loc->GetID()][index] -= 1;
+                                                        nearbyWp[index]->AddMember(person);
+
+                                                        person->SetPoolId(Id::Workplace, nearbyWp[index]->GetId());
+                                                }
                                         }
                                 } else {
                                         // -----------------------------

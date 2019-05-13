@@ -24,7 +24,7 @@ using namespace stride;
 using namespace stride::ContactType;
 
 template<>
-void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
+void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig)
 {
         const auto studentCount = ggConfig.info.popcount_college;
         const auto collegeCount =

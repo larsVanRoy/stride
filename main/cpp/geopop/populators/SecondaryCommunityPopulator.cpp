@@ -29,7 +29,7 @@ using namespace stride::ContactType;
 namespace geopop {
 
 template<>
-void Populator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig&)
+void Populator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, GeoGridConfig&)
 {
         m_logger->trace("Starting to populate Secondary Communities");
 
