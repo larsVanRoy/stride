@@ -87,48 +87,72 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
         }
 
         // initiate workplaces without given distributions
-
         else{
+                // store the indices of the locations that are part of the key (which is a region id)
+                std::map<unsigned int, vector<unsigned int>> loc_indices;
+
+                // initialise the loc_indices map, so that every specified region has its required vector initialised
+                for (const auto& pair : ggConfig.regionInfo){
+                        loc_indices[pair.first] = {};
+                }
+
+                // store the Location indices in their correct spot in the loc_indices map
+                std::vector<unsigned int> provinces = {1, 2, 3, 4, 7};
+                for (const unsigned int& region : provinces){
+                        if(loc_indices.find(region) != loc_indices.end()){
+                                loc_indices[region] = geoGrid.get_L_for_P(region);
+                        }
+                        else{
+                                auto new_indices = geoGrid.get_L_for_P(region);
+                                loc_indices[0].insert(loc_indices[0].begin(), new_indices.begin(), new_indices.end());
+                        }
+                }
+
                 // 1. active people count and the commuting people count are given
                 // 2. count the workplaces
                 // 3. count the working people at each location = #residents + #incoming commuters - #outgoing commuters
                 // 4. use that information for the distribution
                 // 5. assign each workplaces to a location
+                for (const auto& pair : ggConfig.regionInfo){
+                        const auto EmployeeCount = pair.second.popcount_workplace;
+                        const auto WorkplacesCount =
+                                static_cast<unsigned int>(ceil(EmployeeCount /
+                                static_cast<double>(ggConfig.people[Id::Workplace])));
 
-                const auto EmployeeCount = ggConfig.info.popcount_workplace;
-                const auto WorkplacesCount =
-                        static_cast<unsigned int>(ceil(EmployeeCount / static_cast<double>(ggConfig.people[Id::Workplace])));
+                        // = for each location #residents + #incoming commuting people - #outgoing commuting people
+                        vector<double> weights;
+                        for (const auto& index : loc_indices[pair.first]) {
+                                const auto& loc = geoGrid[index];
+                                const double ActivePeopleCount =
+                                        (loc->GetPopCount() +
+                                         loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) -
+                                         loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters) *
+                                         ggConfig.param.participation_workplace);
 
-                // = for each location #residents + #incoming commuting people - #outgoing commuting people
-                vector<double> weights;
-                for (const auto& loc : geoGrid) {
-                        const double ActivePeopleCount =
-                                (loc->GetPopCount() +
-                                 loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) -
-                                 loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters) *
-                                 ggConfig.param.participation_workplace);
+                                const double weight = ActivePeopleCount / EmployeeCount;
+                                AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight),
+                                            "Invalid weight: " + to_string(weight),
+                                            m_logger);
+                                weights.push_back(weight);
+                        }
 
-                        const double weight = ActivePeopleCount / EmployeeCount;
-                        AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight), "Invalid weight: " + to_string(weight),
-                                    m_logger);
-                        weights.push_back(weight);
-                }
+                        if (weights.empty()) {
+                                // trng can't handle empty vectors
+                                return;
+                        }
 
-                if (weights.empty()) {
-                        // trng can't handle empty vectors
-                        return;
-                }
+                        const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
+                        auto       pop  = geoGrid.GetPopulation();
+                        const auto& indices = loc_indices[pair.first];
 
-                const auto dist = m_rn_man.GetDiscreteGenerator(weights, 0U);
-                auto       pop  = geoGrid.GetPopulation();
-
-                for (auto i = 0U; i < WorkplacesCount; i++) {
-                        const auto loc = geoGrid[dist()];
-                        AddPools(*loc, pop, ggConfig);
-                        if (ggConfig.wpPoolSizes.find(loc->GetID()) == ggConfig.wpPoolSizes.end()) {
-                                ggConfig.wpPoolSizes[loc->GetID()] = {0};
-                        } else {
-                                ggConfig.wpPoolSizes[loc->GetID()].emplace_back(0);
+                        for (auto i = 0U; i < WorkplacesCount; i++) {
+                                const auto loc = geoGrid[indices[dist()]];
+                                AddPools(*loc, pop, ggConfig);
+                                if (ggConfig.wpPoolSizes.find(loc->GetID()) == ggConfig.wpPoolSizes.end()) {
+                                        ggConfig.wpPoolSizes[loc->GetID()] = {0};
+                                } else {
+                                        ggConfig.wpPoolSizes[loc->GetID()].emplace_back(0);
+                                }
                         }
                 }
         }

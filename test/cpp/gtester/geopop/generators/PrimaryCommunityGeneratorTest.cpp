@@ -97,7 +97,7 @@ TEST_F(PrimaryCommunityGeneratorTest, ZeroLocationTest)
 TEST_F(PrimaryCommunityGeneratorTest, FiveLocationsTest)
 {
         m_gg_config.param.pop_size             = 37542 * 100;
-        m_gg_config.info.popcount_k12school = 750840;
+        m_gg_config.regionInfo[0].popcount_k12school = 750840;
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
         auto loc2 = make_shared<Location>(1, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);

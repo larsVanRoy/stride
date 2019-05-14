@@ -51,11 +51,11 @@ TEST(HouseholdJSONReader, validJSON)
     auto               instream = make_unique<istringstream>(jsonString);
     HouseholdJSONReader reader(move(instream));
 
-    reader.SetReferenceHouseholds(geoConfig.refHH.person_count, geoConfig.refHH.ages);
+    reader.SetReferenceHouseholds(geoConfig.refHHs[0].person_count, geoConfig.refHHs[0].ages);
 
-    EXPECT_EQ(geoConfig.refHH.person_count, 23U);
+    EXPECT_EQ(geoConfig.refHHs[0].person_count, 23U);
 
-    const vector<vector<unsigned int>>& HHages = geoConfig.refHH.ages;
+    const vector<vector<unsigned int>>& HHages = geoConfig.refHHs[0].ages;
 
     EXPECT_EQ(HHages.size(), 8U);
     EXPECT_EQ(HHages[0].size(), 3U);
@@ -94,7 +94,7 @@ TEST(HouseholdJSONReader, invalidJSON)
     auto               instream = make_unique<istringstream>(jsonString);
     HouseholdJSONReader reader(move(instream));
 
-    EXPECT_THROW(reader.SetReferenceHouseholds(geoConfig.refHH.person_count, geoConfig.refHH.ages), Exception);
+    EXPECT_THROW(reader.SetReferenceHouseholds(geoConfig.refHHs[0].person_count, geoConfig.refHHs[0].ages), Exception);
 }
 
 } // namespace

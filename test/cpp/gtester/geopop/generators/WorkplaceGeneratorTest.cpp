@@ -55,7 +55,7 @@ protected:
 TEST_F(WorkplaceGeneratorTest, ZeroLocationTest)
 {
         m_gg_config.param.pop_size           = 10000;
-        m_gg_config.info.popcount_college = 20000;
+        m_gg_config.regionInfo[0].popcount_college = 20000;
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
         EXPECT_EQ(m_geo_grid.size(), 0);
@@ -66,7 +66,7 @@ TEST_F(WorkplaceGeneratorTest, ZeroLocationTest)
 TEST_F(WorkplaceGeneratorTest, NoCommutingWithDistribution)
 {
         m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.regionInfo[0].popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.param.participation_workplace       = 0.20;
         m_gg_config.param.fraction_workplace_commuters = 0;
         m_gg_config.param.workplace_distribution       = {{1, 95, 105}};
@@ -97,7 +97,7 @@ TEST_F(WorkplaceGeneratorTest, NoCommutingWithDistribution)
 TEST_F(WorkplaceGeneratorTest, NullCommutingWithDistribution)
 {
         m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.regionInfo[0].popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.param.participation_workplace       = 0.20;
         m_gg_config.param.fraction_workplace_commuters = 0.10;
         m_gg_config.param.workplace_distribution       = {{1, 95, 105}};
@@ -140,7 +140,7 @@ TEST_F(WorkplaceGeneratorTest, NullCommutingWithDistribution)
 TEST_F(WorkplaceGeneratorTest, TenCommutingWithDistribution)
 {
         m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-        m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+        m_gg_config.regionInfo[0].popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
         m_gg_config.param.participation_workplace       = 0.20;
         m_gg_config.param.fraction_workplace_commuters = 0.10;
         m_gg_config.param.workplace_distribution       = {{1, 95, 105}};
@@ -214,7 +214,7 @@ TEST_F(WorkplaceGeneratorTest, TenCommutingWithDistribution)
 TEST_F(WorkplaceGeneratorTest, NoCommutingWithoutDistribution)
 {
     m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-    m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+    m_gg_config.regionInfo[0].popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
     m_gg_config.param.participation_workplace       = 0.20;
     m_gg_config.param.fraction_workplace_commuters = 0;
 
@@ -243,7 +243,7 @@ TEST_F(WorkplaceGeneratorTest, NoCommutingWithoutDistribution)
 TEST_F(WorkplaceGeneratorTest, NullCommutingWithoutDistribution)
 {
     m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-    m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+    m_gg_config.regionInfo[0].popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
     m_gg_config.param.participation_workplace       = 0.20;
     m_gg_config.param.fraction_workplace_commuters = 0.10;
 
@@ -284,7 +284,7 @@ TEST_F(WorkplaceGeneratorTest, NullCommutingWithoutDistribution)
 TEST_F(WorkplaceGeneratorTest, TenCommutingWithoutDistribution)
 {
     m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
-    m_gg_config.info.popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
+    m_gg_config.regionInfo[0].popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
     m_gg_config.param.participation_workplace       = 0.20;
     m_gg_config.param.fraction_workplace_commuters = 0.10;
 

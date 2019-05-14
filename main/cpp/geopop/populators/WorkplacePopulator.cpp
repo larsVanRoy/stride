@@ -46,10 +46,15 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
 
         const auto participCollege      = geoGridConfig.param.participation_college;
         const auto participWorkplace    = geoGridConfig.param.participation_workplace;
-        const auto popCollege           = geoGridConfig.info.popcount_college;
-        const auto popWorkplace         = geoGridConfig.info.popcount_workplace;
+        auto popCollege                 = 0;
+        auto popWorkplace               = 0;
         const auto fracCollegeCommute   = geoGridConfig.param.fraction_college_commuters;
         const auto fracWorkplaceCommute = geoGridConfig.param.fraction_workplace_commuters;
+
+        for (const auto& pair : geoGridConfig.regionInfo){
+                popCollege += pair.second.popcount_college;
+                popWorkplace += pair.second.popcount_workplace;
+        }
 
         double fracCommuteStudents = 0.0;
         if (static_cast<bool>(fracWorkplaceCommute) && popWorkplace) {

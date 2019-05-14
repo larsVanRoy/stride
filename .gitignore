@@ -17,6 +17,8 @@
 *-eps-converted-to.pdf
 *.Rhistory
 Thumbs.db
+data/*
+bin/*
 
 #------------------------------------
 # Local make config & build directory

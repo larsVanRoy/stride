@@ -52,7 +52,7 @@ protected:
 
 TEST_F(HouseholdPopulatorTest, OneHouseholdTest)
 {
-        m_gg_config.refHH.ages = vector<vector<unsigned int>>{{8U}};
+        m_gg_config.refHHs[0].ages = vector<vector<unsigned int>>{{8U}};
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_household_generator.AddPools(*loc1, m_pop.get(), m_gg_config);
@@ -72,7 +72,7 @@ TEST_F(HouseholdPopulatorTest, ZeroHouseholdsTest)
 
 TEST_F(HouseholdPopulatorTest, FiveHouseholdsTest)
 {
-        m_gg_config.refHH.ages = vector<vector<unsigned int>>{{18U}};
+        m_gg_config.refHHs[0].ages = vector<vector<unsigned int>>{{18U}};
 
         auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
 
@@ -91,7 +91,7 @@ TEST_F(HouseholdPopulatorTest, FiveHouseholdsTest)
 
 TEST_F(HouseholdPopulatorTest, MultipleHouseholdTypesTest)
 {
-        m_gg_config.refHH.ages = vector<vector<unsigned int>>{{18U}, {12U, 56U}};
+        m_gg_config.refHHs[0].ages = vector<vector<unsigned int>>{{18U}, {12U, 56U}};
 
         const auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_household_generator.AddPools(*loc1, m_pop.get(), m_gg_config);

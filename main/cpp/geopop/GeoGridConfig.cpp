@@ -34,7 +34,9 @@ using namespace stride::AgeBrackets;
 using namespace stride::ContactType;
 using stride::util::intToDottedString;
 
-GeoGridConfig::GeoGridConfig() : param{}, refHH{}, info{} {}
+GeoGridConfig::GeoGridConfig() : param{}, refHHs{}, regionInfo{} {
+    refHHs[0] = refHH{};
+}
 
 GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {
@@ -58,21 +60,22 @@ GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 void GeoGridConfig::SetData(const string& householdsFileName)
 {
         auto householdsReader = ReaderFactory::CreateHouseholdReader(householdsFileName);
-        householdsReader->SetReferenceHouseholds(refHH.person_count, refHH.ages);
+        auto householdRef = refHHs[0];
+        householdsReader->SetReferenceHouseholds(householdRef.person_count, householdRef.ages);
         const auto popSize = param.pop_size;
 
         //----------------------------------------------------------------
         // Determine age makeup of reference houshold population.
         //----------------------------------------------------------------
-        const auto ref_p_count   = refHH.person_count;
-        const auto averageHhSize = static_cast<double>(ref_p_count) / static_cast<double>(refHH.ages.size());
+        const auto ref_p_count   = householdRef.person_count;
+        const auto averageHhSize = static_cast<double>(ref_p_count) / static_cast<double>(householdRef.ages.size());
 
         auto ref_daycare = 0U;
         auto ref_preschool = 0U;
         auto ref_k12school = 0U;
         auto ref_college   = 0U;
         auto ref_workplace = 0U;
-        for (const auto& hhAgeProfile : refHH.ages) {
+        for (const auto& hhAgeProfile : householdRef.ages) {
                 for (const auto& age : hhAgeProfile) {
                         if (Daycare::HasAge(age)) {
                                 ref_daycare++;
@@ -106,19 +109,38 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
         const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
 
-        info.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
+        auto& provInfo = regionInfo[0];
 
-        info.popcount_preschool = static_cast<unsigned int>(
+        provInfo.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
+
+        provInfo.popcount_preschool = static_cast<unsigned int>(
             floor(param.participation_preschool * age_count_preschool));
 
-        info.popcount_k12school = age_count_k12school;
+        provInfo.popcount_k12school = age_count_k12school;
 
-        info.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
+        provInfo.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
 
-        info.popcount_workplace = static_cast<unsigned int>(
-            floor(param.participation_workplace * (age_count_workplace - info.popcount_college)));
+        provInfo.popcount_workplace = static_cast<unsigned int>(
+            floor(param.participation_workplace * (age_count_workplace - provInfo.popcount_college)));
 
-        info.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+        provInfo.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+}
+
+void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileNames)
+{
+        //----------------------------------------------------------------
+        // Read the given householdFiles
+        //----------------------------------------------------------------
+        for(auto& pair: householdFileNames){
+                unsigned int provinceID = pair.first;
+                auto householdFile = pair.second;
+
+                refHHs[provinceID] = refHH{};
+
+                auto householdReader = ReaderFactory::CreateHouseholdReader(householdFile);
+                householdReader->SetReferenceHouseholds(refHHs[provinceID].person_count, refHHs[provinceID].ages);
+
+        }
 }
 
 void GeoGridConfig::SetWorkplaceData(const std::string &workplaceFileName) 
@@ -142,12 +164,17 @@ ostream& operator<<(ostream& out, const GeoGridConfig& config)
             << "\n";
         out << "Calculated:"
             << "\n";
-        out << setw(w) << "Daycare toddler count:" << intToDottedString(config.info.popcount_daycare) << "\n";
-        out << setw(w) << "PreSchool student count:" << intToDottedString(config.info.popcount_preschool) << "\n";
-        out << setw(w) << "K12School student count:" << intToDottedString(config.info.popcount_k12school) << "\n";
-        out << setw(w) << "College student count:" << intToDottedString(config.info.popcount_college) << "\n";
-        out << setw(w) << "Workplace person count:" << intToDottedString(config.info.popcount_workplace) << "\n";
-        out << endl;
+        for(const auto& pair: config.regionInfo){
+            out << setw(w) << "for province:" << config.idNames.at(pair.first) << "\n";
+            const auto& poolInfo = pair.second;
+            out << setw(w) << "Daycare toddler count:" << intToDottedString(poolInfo.popcount_daycare) << "\n";
+            out << setw(w) << "PreSchool student count:" << intToDottedString(poolInfo.popcount_preschool) << "\n";
+            out << setw(w) << "K12School student count:" << intToDottedString(poolInfo.popcount_k12school) << "\n";
+            out << setw(w) << "College student count:" << intToDottedString(poolInfo.popcount_college) << "\n";
+            out << setw(w) << "Workplace person count:" << intToDottedString(poolInfo.popcount_workplace) << "\n";
+            out << endl;
+        }
+
         return out;
 }
 

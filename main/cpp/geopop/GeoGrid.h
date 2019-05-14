@@ -120,6 +120,9 @@ public:
         /// Gets a Location by index, doesn't performs a range check.
         const std::shared_ptr<Location>& operator[](size_t index) const { return m_locations[index]; }
 
+        /// Gets a range of Location indices by province ID
+        const std::vector<unsigned int> get_L_for_P(const unsigned int& province){ return p_id_to_index[province]; }
+
         /// Gets current size of Location storage.
         size_t size() const { return m_locations.size(); }
 
@@ -133,6 +136,9 @@ private:
 
         ///< Associative container maps Location Id to index in m_locations.
         std::unordered_map<unsigned int, unsigned int> m_id_to_index;
+
+        ///< Associative container maps Province Ids to indices in m_locations.
+        std::unordered_map<unsigned int, std::vector<unsigned int>> p_id_to_index;
 
         ///< Stores pointer to Popluation, but does not take ownership.
         stride::Population* m_population;

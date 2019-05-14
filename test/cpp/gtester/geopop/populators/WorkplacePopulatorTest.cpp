@@ -177,7 +177,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
         m_gg_config.param.fraction_workplace_commuters = 0;
         m_gg_config.param.fraction_workplace_commuters = 1;
         m_gg_config.param.fraction_college_commuters   = 0;
-        m_gg_config.info.popcount_workplace         = 1;
+        m_gg_config.regionInfo[0].popcount_workplace         = 1;
         m_gg_config.param.participation_workplace       = 1;
         m_gg_config.param.participation_college        = 0.5;
 
@@ -249,7 +249,7 @@ TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
         m_gg_config.param.fraction_workplace_commuters = 0;
         m_gg_config.param.fraction_workplace_commuters = 1;
         m_gg_config.param.fraction_college_commuters   = 0;
-        m_gg_config.info.popcount_workplace         = 1;
+        m_gg_config.regionInfo[0].popcount_workplace         = 1;
         m_gg_config.param.participation_workplace       = 1;
         m_gg_config.param.participation_college        = 0.5;
 
