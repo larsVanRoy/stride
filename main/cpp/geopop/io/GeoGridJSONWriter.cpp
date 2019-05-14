@@ -63,6 +63,13 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         stream.flush();
 }
 
+void GeoGridJSONWriter::Write(GeoGrid &geoGrid, const std::string &filename)
+{
+        std::ofstream stream(filename);
+        Write(geoGrid, stream);
+        stream.close();
+}
+
 json GeoGridJSONWriter::WriteContactPools(stride::ContactType::Id typeId,
                                           stride::util::SegmentedVector<stride::ContactPool *>& pools)
 {

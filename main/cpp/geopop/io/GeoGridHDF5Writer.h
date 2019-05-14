@@ -12,15 +12,13 @@
  *
  *  Copyright 2018, Jan Broeckhove and Bistromatics group.
  */
-
 #pragma once
 
 #include "GeoGridWriter.h"
+#include "H5Cpp.h"
 #include "geopop/Location.h"
 
-#include "json.hpp"
-
-#include <boost/property_tree/ptree.hpp>
+#include <H5Location.h>
 #include <set>
 
 namespace stride {
@@ -29,43 +27,45 @@ class Person;
 } // namespace stride
 
 namespace geopop {
-
 class ContactPool;
 
 /**
- * Writes a GeoGrid to a JSON file.
+ * Writes a GeoGrid to a HDF5 file.
  */
-class GeoGridJSONWriter : public GeoGridWriter
+class GeoGridHDF5Writer : public GeoGridWriter
 {
 public:
-        /// Construct the GeoGridJSONWriter.
-        GeoGridJSONWriter();
+        /// Construct the GeoGridHDF5Writer.
+        GeoGridHDF5Writer();
 
-        /// Write the provided GeoGrid to the proved ostream in JSON format.
+        /// Write the provided GeoGrid to the proved ostream in HDF5 format.
         void Write(GeoGrid& geoGrid, std::ostream& stream) override;
 
-        /// Write the provided GeoGrid to the provided file in JSON format.
+        /// Write the provided GeoGrid to the provided file in HDF format.
         void Write(GeoGrid& geoGrid, const std::string& filename) override;
 
 private:
-        /// Create a Boost Property Tree containing all info needed to reconstruct a ContactCenter.
-        nlohmann::json WriteContactPools(stride::ContactType::Id typeId,
-                stride::util::SegmentedVector<stride::ContactPool*>& pools);
 
         /// Create a Boost Property Tree containing all info needed to reconstruct a ContactPool.
-        nlohmann::json WriteContactPool(stride::ContactPool* contactPool);
-
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Coordinate.
-        nlohmann::json WriteCoordinate(const Coordinate& coordinate);
+        void WriteContactPool(H5::Group& group, stride::ContactPool* contactPool);
 
         /// Create a Boost Property Tree containing all info needed to reconstruct a Location.
-        nlohmann::json WriteLocation(std::shared_ptr<Location> location);
+        void WriteLocation(H5::H5File& file, std::shared_ptr<Location> location);
 
         /// Create a Boost Property Tree containing all info needed to reconstruct a Person.
-        nlohmann::json WritePerson(stride::Person* person);
+        void WritePeople(H5::H5File& file);
+
+        void WriteCommutes(H5::H5File& file, std::shared_ptr<Location> location, H5::Group& group);
+
+        template<typename T>
+        void WriteAttribute(const std::string& name, const T& value, H5::H5Location& object);
+
+        template<typename T>
+        void WriteDataset(const std::string& name, std::vector<T> values, H5::CommonFG& object);
 
 private:
         std::set<stride::Person*> m_persons_found; ///< The persons found when looping over the ContactPools.
+        unsigned int m_location_counter = 0U;
+        unsigned int m_pool_counter = 0U;
 };
-
 } // namespace geopop

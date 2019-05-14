@@ -17,6 +17,7 @@
 
 #include "GeoGridJSONWriter.h"
 #include "GeoGridProtoWriter.h"
+#include "GeoGridHDF5Writer.h"
 #include "GeoGridWriter.h"
 #include "util/Exception.h"
 
@@ -42,7 +43,10 @@ std::shared_ptr<GeoGridWriter> GeoGridWriterFactory::CreateGeoGridWriter(const s
         }
         else if (path.extension().string() == ".proto") {
                 return std::make_shared<GeoGridProtoWriter>();
-        } else {
+        }
+        else if (path.extension().string() == ".h5") {
+                return std::make_shared<GeoGridHDF5Writer>();
+        }else {
                 throw stride::util::Exception("GeoGridWriterFactory::CreateWriter> Unsupported file extension: " +
                                               path.extension().string());
         }

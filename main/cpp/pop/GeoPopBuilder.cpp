@@ -118,6 +118,10 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
 
 void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
+        DaycareGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
+
+        PreSchoolGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
+
         K12SchoolGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         CollegeGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
@@ -133,6 +137,10 @@ void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConf
 
 void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
 {
+        DaycarePopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
+
+        PreSchoolPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
+
         HouseholdPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         K12SchoolPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);

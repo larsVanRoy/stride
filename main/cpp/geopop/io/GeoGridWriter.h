@@ -34,6 +34,9 @@ public:
 
         /// Write the GeoGrid to ostream.
         virtual void Write(GeoGrid& geoGrid, std::ostream& stream) = 0;
+
+        /// Write the GeoGrid to a file
+        virtual void Write(GeoGrid& geoGrid, const std::string& filename) = 0;
 };
 
 } // namespace geopop

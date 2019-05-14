@@ -40,6 +40,8 @@ public:
         /// Parametrized constructor.
         GeoGridReader(std::unique_ptr<std::istream> inputStream, stride::Population* pop);
 
+        GeoGridReader(std::string filename, stride::Population* pop);
+
         /// No copy constructor.
         GeoGridReader(const GeoGridReader&) = delete;
 

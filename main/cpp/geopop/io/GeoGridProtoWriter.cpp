@@ -24,6 +24,7 @@
 #include "util/SegmentedVector.h"
 
 #include <iostream>
+#include <fstream>
 #include <map>
 #include <omp.h>
 
@@ -55,10 +56,19 @@ void GeoGridProtoWriter::Write(GeoGrid& geoGrid, ostream& stream)
         stream.flush();
 }
 
+void GeoGridProtoWriter::Write(GeoGrid &geogrid, const std::string &filename)
+{
+        std::ofstream stream(filename);
+        Write(geogrid, stream);
+        stream.close();
+}
+
 void GeoGridProtoWriter::WriteContactPools(Id typeId, SegmentedVector<stride::ContactPool*>& contactPools,
                                            proto::GeoGrid_Location_ContactPools* protoContactPools)
 {
-        static const map<Id, proto::GeoGrid_Location_ContactPools_Type> types = {
+        static const map<Id, proto::GeoGrid_Location_ContactPools_Type> types = {\
+            {Id::Daycare, proto::GeoGrid_Location_ContactPools_Type_Daycare},
+            {Id::PreSchool, proto::GeoGrid_Location_ContactPools_Type_PreSchool},
             {Id::K12School, proto::GeoGrid_Location_ContactPools_Type_K12School},
             {Id::PrimaryCommunity, proto::GeoGrid_Location_ContactPools_Type_PrimaryCommunity},
             {Id::SecondaryCommunity, proto::GeoGrid_Location_ContactPools_Type_SecondaryCommunity},

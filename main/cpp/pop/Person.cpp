@@ -35,18 +35,24 @@ void Person::Update(bool isWorkOff, bool isSchoolOff, bool adaptiveSymptomaticBe
 
         // Update presence in contact pools.
         if (m_health.IsSymptomatic() && adaptiveSymptomaticBehavior) {
+                m_in_pools[Id::Daycare]            = false;
+                m_in_pools[Id::PreSchool]          = false;
                 m_in_pools[Id::K12School]          = false;
                 m_in_pools[Id::College]            = false;
                 m_in_pools[Id::Workplace]          = false;
                 m_in_pools[Id::PrimaryCommunity]   = false;
                 m_in_pools[Id::SecondaryCommunity] = false;
         } else if (isWorkOff || (m_age <= MinAdultAge() && isSchoolOff)) {
+                m_in_pools[Id::Daycare]            = false;
+                m_in_pools[Id::PreSchool]          = false;
                 m_in_pools[Id::K12School]          = false;
                 m_in_pools[Id::College]            = false;
                 m_in_pools[Id::Workplace]          = false;
                 m_in_pools[Id::PrimaryCommunity]   = true;
                 m_in_pools[Id::SecondaryCommunity] = false;
         } else {
+                m_in_pools[Id::Daycare]            = true;
+                m_in_pools[Id::Daycare]            = true;
                 m_in_pools[Id::K12School]          = true;
                 m_in_pools[Id::College]            = true;
                 m_in_pools[Id::Workplace]          = true;

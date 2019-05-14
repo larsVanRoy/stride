@@ -48,6 +48,9 @@ public:
         /// Write the GeoGrid to the ostream in Protobuf format.
         void Write(GeoGrid& geoGrid, std::ostream& stream) override;
 
+        /// Write the GeoGrid to the file in Protobuf format
+        void Write(GeoGrid& geogrid, const std::string& filename) override;
+
 private:
         /// Create a ProtoBuf ContactPools structure.
         void WriteContactPools(stride::ContactType::Id                              typeId,

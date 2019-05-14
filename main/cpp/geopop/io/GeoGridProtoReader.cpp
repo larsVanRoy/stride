@@ -64,6 +64,8 @@ void GeoGridProtoReader::ParseContactPools(shared_ptr<Location>                 
         const auto protoType = protoContactPools.type();
 
         static const map<proto::GeoGrid_Location_ContactPools_Type, Id> types = {
+            {proto::GeoGrid_Location_ContactPools_Type_Daycare, Id::Daycare},
+            {proto::GeoGrid_Location_ContactPools_Type_PreSchool, Id::PreSchool},
             {proto::GeoGrid_Location_ContactPools_Type_K12School, Id::K12School},
             {proto::GeoGrid_Location_ContactPools_Type_PrimaryCommunity, Id::PrimaryCommunity},
             {proto::GeoGrid_Location_ContactPools_Type_SecondaryCommunity, Id::SecondaryCommunity},

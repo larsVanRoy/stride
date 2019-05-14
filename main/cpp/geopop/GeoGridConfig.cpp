@@ -37,21 +37,25 @@ GeoGridConfig::GeoGridConfig() : param{}, refHH{}, info{} {}
 
 GeoGridConfig::GeoGridConfig(const ptree& configPt) : GeoGridConfig()
 {
-        const auto pt = configPt.get_child("run.geopop_gen");
+        const auto pt                      = configPt.get_child("run.geopop_gen");
         param.pop_size                     = pt.get<unsigned int>("population_size");
         param.participation_college        = pt.get<double>("participation_college");
         param.fraction_workplace_commuters = pt.get<double>("fraction_workplace_commuters");
         param.fraction_college_commuters   = pt.get<double>("fraction_college_commuters");
         param.particpation_workplace       = pt.get<double>("particpation_workplace");
 
-        people[Id::K12School]              = pt.get<unsigned int>("people_per_K12School", 500U);
-        people[Id::College]                = pt.get<unsigned int>("people_per_College", 3000U);
-        people[Id::Workplace]              = pt.get<unsigned int>("people_per_Workplace", 20U);
-        people[Id::PrimaryCommunity]       = pt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
-        people[Id::SecondaryCommunity]     = pt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
+        people[Id::Daycare]            = pt.get<unsigned int>("people_per_Daycare", 10U);
+        people[Id::PreSchool]          = pt.get<unsigned int>("people_per_PreSchool", 120U);
+        people[Id::K12School]          = pt.get<unsigned int>("people_per_K12School", 500U);
+        people[Id::College]            = pt.get<unsigned int>("people_per_College", 3000U);
+        people[Id::Workplace]          = pt.get<unsigned int>("people_per_Workplace", 20U);
+        people[Id::PrimaryCommunity]   = pt.get<unsigned int>("people_per_PrimaryCommunity", 2000U);
+        people[Id::SecondaryCommunity] = pt.get<unsigned int>("people_per_SecondaryCommunity", 2000U);
 
-        pools[Id::K12School]              = pt.get<unsigned int>("pools_per_K12School", 25U);
-        pools[Id::College]                = pt.get<unsigned int>("pools_per_College", 20U);
+        pools[Id::Daycare]   = pt.get<unsigned int>("pools_per_Daycare", 1U);
+        pools[Id::PreSchool] = pt.get<unsigned int>("pools_per_PreSchool", 6U);
+        pools[Id::K12School] = pt.get<unsigned int>("pools_per_K12School", 25U);
+        pools[Id::College]   = pt.get<unsigned int>("pools_per_College", 20U);
 }
 
 void GeoGridConfig::SetData(const string& householdsFileName)
@@ -66,7 +70,7 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         const auto ref_p_count   = refHH.person_count;
         const auto averageHhSize = static_cast<double>(ref_p_count) / static_cast<double>(refHH.ages.size());
 
-        auto ref_daycare = 0U;
+        auto ref_daycare   = 0U;
         auto ref_preschool = 0U;
         auto ref_k12school = 0U;
         auto ref_college   = 0U;
@@ -107,8 +111,7 @@ void GeoGridConfig::SetData(const string& householdsFileName)
 
         info.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
 
-        info.popcount_preschool = static_cast<unsigned int>(
-            floor(param.participation_preschool * age_count_preschool));
+        info.popcount_preschool = static_cast<unsigned int>(floor(param.participation_preschool * age_count_preschool));
 
         info.popcount_k12school = age_count_k12school;
 

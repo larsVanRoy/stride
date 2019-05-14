@@ -14,7 +14,6 @@
  */
 
 #include "geopop/io/GeoGridJSONWriter.h"
-#include "geopop/ContactCenter.h"
 #include "geopop/GeoGridConfig.h"
 
 #include "contact/ContactType.h"
