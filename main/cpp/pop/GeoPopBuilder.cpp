@@ -58,7 +58,14 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // ------------------------------------------------------------
         GeoGridConfig ggConfig(m_config);
         ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
-        ggConfig.SetWorkplaceData(m_config.get<string>("run.geopop_gen.workplace_file"));
+
+        // ------------------------------------------------------------
+        // Set the workplace data.
+        // ------------------------------------------------------------
+        optional<ptree& > workplace_config = m_config.get_child_optional("run.geopop_gen.workplace_file");
+        if(workplace_config) {
+                ggConfig.SetWorkplaceData(m_config.get<string>("run.geopop_gen.workplace_file"));
+        }
 
         // ------------------------------------------------------------
         // Get GeoGrid associated with 'pop'.
