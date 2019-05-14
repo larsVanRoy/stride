@@ -28,7 +28,7 @@ using namespace stride;
 using namespace stride::ContactType;
 
 template<>
-void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
+void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig)
 {
         // 1. calculate number of communities
         // 2. assign communities to a location using a discrete distribution reflecting

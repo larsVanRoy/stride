@@ -32,7 +32,7 @@ using stride::ContactPool;
 using stride::ContactType::Id;
 
 GeoGrid::GeoGrid(stride::Population* population)
-    : m_locations(), m_id_to_index(), m_population(population), m_finalized(false), m_tree()
+    : m_locations(), m_id_to_index(), p_id_to_index(), m_population(population), m_finalized(false), m_tree()
 {
 }
 
@@ -43,6 +43,12 @@ void GeoGrid::AddLocation(shared_ptr<Location> location)
         }
         m_locations.emplace_back(location);
         m_id_to_index[location->GetID()] = static_cast<unsigned int>(m_locations.size() - 1);
+        if (p_id_to_index.find(location->GetProvince()) != p_id_to_index.end()){
+                p_id_to_index[location->GetProvince()].emplace_back(static_cast<unsigned int>(m_locations.size() - 1));
+        }
+        else{
+                p_id_to_index[location->GetProvince()] = {static_cast<unsigned int>(m_locations.size() - 1)};
+        }
 }
 
 template <typename Policy, typename F>

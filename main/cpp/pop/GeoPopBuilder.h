@@ -22,6 +22,8 @@
 
 #include "AbstractPopBuilder.h"
 
+#include "util/RnMan.h"
+
 #include <boost/property_tree/ptree_fwd.hpp>
 
 #include <memory>
@@ -60,10 +62,10 @@ private:
                            const std::string& citiesFileName, const std::string& commutingFileName);
 
         /// Build and store the Geo part of the GeoGrid.
-        void MakePools(geopop::GeoGrid& geoGrid, const geopop::GeoGridConfig& geoGridConfig);
+        void MakePools(geopop::GeoGrid& geoGrid, geopop::GeoGridConfig& geoGridConfig);
 
         /// Build and store the Pop part of the GeoGrid.
-        void MakePersons(geopop::GeoGrid& geoGrid, const geopop::GeoGridConfig& geoGridConfig);
+        void MakePersons(geopop::GeoGrid& geoGrid, geopop::GeoGridConfig& geoGridConfig);
 };
 
 } // namespace stride

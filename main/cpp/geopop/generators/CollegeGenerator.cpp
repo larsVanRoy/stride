@@ -24,9 +24,13 @@ using namespace stride;
 using namespace stride::ContactType;
 
 template<>
-void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig)
+void Generator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig)
 {
-        const auto studentCount = ggConfig.info.popcount_college;
+        unsigned int studentCount = 0;
+
+        for (const auto& pair : ggConfig.regionInfo){
+                studentCount += pair.second.popcount_college;
+        }
         const auto collegeCount =
             static_cast<unsigned int>(ceil(studentCount / static_cast<double>(ggConfig.people[Id::College])));
         const auto cities = geoGrid.TopK(10);

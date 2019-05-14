@@ -26,18 +26,25 @@ using namespace std;
 using namespace stride::ContactType;
 
 template<>
-void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 {
         m_logger->trace("Starting to populate Households");
 
-        auto person_id = 0U;
-        auto hh_dist   = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(geoGridConfig.refHH.ages.size()), 0U);
-        auto pop       = geoGrid.GetPopulation();
+        auto person_id                    = 0U;
+        auto pop                          = geoGrid.GetPopulation();
+
+        GeoGridConfig::refHH HHReference{};
 
         for (const shared_ptr<Location>& loc : geoGrid) {
+                if(geoGridConfig.refHHs.find(loc->GetProvince()) != geoGridConfig.refHHs.end()){
+                        HHReference = geoGridConfig.refHHs[loc->GetProvince()];
+                } else{
+                        HHReference = geoGridConfig.refHHs[0];
+                }
+                auto hh_dist   = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(HHReference.ages.size()), 0U);
                 for (auto& pool : loc->RefPools(Id::Household)) {
                         const auto hDraw = static_cast<unsigned int>(hh_dist());
-                        for (const auto& age : geoGridConfig.refHH.ages[hDraw]) {
+                        for (const auto& age : HHReference.ages[hDraw]) {
                                 const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0);
                                 pool->AddMember(p);
                         }

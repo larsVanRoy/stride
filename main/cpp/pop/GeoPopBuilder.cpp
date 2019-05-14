@@ -33,6 +33,7 @@
 #include "util/StringUtils.h"
 
 #include <boost/property_tree/ptree.hpp>
+#include <boost/optional/optional.hpp>
 #include <contact/ContactType.h>
 #include <spdlog/logger.h>
 
@@ -58,6 +59,14 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // ------------------------------------------------------------
         GeoGridConfig ggConfig(m_config);
         ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
+
+        // ------------------------------------------------------------
+        // Set the workplace data.
+        // ------------------------------------------------------------
+        boost::optional<const ptree& > workplace_config = m_config.get_child_optional("run.geopop_gen.workplace_file");
+        if(workplace_config) {
+                ggConfig.SetWorkplaceData(m_config.get<string>("run.geopop_gen.workplace_file"));
+        }
 
         // ------------------------------------------------------------
         // Get GeoGrid associated with 'pop'.
@@ -116,7 +125,7 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
         geoGrid.Finalize();
 }
 
-void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void GeoPopBuilder::MakePools(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 {
         DaycareGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
@@ -135,7 +144,7 @@ void GeoPopBuilder::MakePools(GeoGrid& geoGrid, const GeoGridConfig& geoGridConf
         HouseholdGenerator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 }
 
-void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, const GeoGridConfig& geoGridConfig)
+void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 {
         DaycarePopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 

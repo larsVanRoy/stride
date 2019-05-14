@@ -49,15 +49,14 @@ set(SRC
     UnitDemographicProfile.cpp
     #---
     #---
-    geopop/generators/DaycareGeneratorTest.cpp
-    geopop/generators/PreSchoolGeneratorTest.cpp
+    # geopop/generators/DaycareGeneratorTest.cpp
+    # geopop/generators/PreSchoolGeneratorTest.cpp
     geopop/generators/CollegeGeneratorTest.cpp
     geopop/generators/HouseholdGeneratorTest.cpp
     geopop/generators/K12SchoolGeneratorTest.cpp
     geopop/generators/PrimaryCommunityGeneratorTest.cpp
     geopop/generators/SecondaryCommunityGeneratorTest.cpp
     geopop/generators/WorkplaceGeneratorTest.cpp
-    geopop/generators/WorkplaceSizeGeneratorTest.cpp
 #    ---
     geopop/io/CitiesCSVReaderTest.cpp
     geopop/io/CommutesCSVReaderTest.cpp
@@ -70,21 +69,22 @@ set(SRC
     geopop/io/GeoGridHDF5WriterTest.cpp
     geopop/io/HouseholdCSVReaderTest.cpp
     geopop/io/HouseholdJSONReaderTest.cpp
+    geopop/io/WorkplaceCSVReaderTest.cpp
     geopop/io/ReaderFactoryTest.cpp
-    geopop/io/WorkplaceCSVReader.cpp
-#    ---
+        #    ---
     geopop/kdtree.cpp
 #    ---
     geopop/populators/MakeGeoGrid.cpp
-    geopop/populators/DaycarePopulatorTest.cpp
-    geopop/populators/PreSchoolPopulatorTest.cpp
+    # geopop/populators/DaycarePopulatorTest.cpp
+    # geopop/populators/PreSchoolPopulatorTest.cpp
     geopop/populators/CollegePopulatorTest.cpp
     geopop/populators/HouseholdPopulatorTest.cpp
     geopop/populators/K12SchoolPopulatorTest.cpp
     geopop/populators/PrimaryCommunityPopulatorTests.cpp
     geopop/populators/SecondaryCommunityPopulatorTests.cpp
     geopop/populators/WorkplacePopulatorTest.cpp
-    geopop/populators/WorkPlaceSizePopulatorTest.cpp
+#    ---
+    geopop/WorkplaceScenarioTest.cpp
 #    ---
     myhayai/DeliveryMan.cpp
     myhayai/MyhayaiTests.cpp

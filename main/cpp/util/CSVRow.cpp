@@ -21,7 +21,6 @@
 
 #include "CSV.h"
 
-#include <iostream>
 #include <ostream>
 
 namespace {

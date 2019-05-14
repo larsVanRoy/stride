@@ -48,7 +48,7 @@ public:
         ~Populator() = default;
 
         /// Populate the ContactPools type ID. This is a placeholder for the specializations.
-        void Apply(GeoGrid&, const GeoGridConfig&) {};
+        void Apply(GeoGrid&, GeoGridConfig&) {};
 
 protected:
         stride::util::RnMan&            m_rn_man; ///< RnManager used by populators.
@@ -59,28 +59,28 @@ protected:
 // Declare specializations (implemntation in separate .cpp files).
 // ---------------------------------------------------------------
 template<>
-void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Populator<stride::ContactType::Id::PreSchool>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Populator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Populator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Populator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Populator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 template<>
-void Populator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, const GeoGridConfig& ggConfig);
+void Populator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig);
 
 // ---------------------------------------------------------------
 // Shorthand definitions.
