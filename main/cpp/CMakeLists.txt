@@ -152,10 +152,6 @@ set(STRIDE_SRC
     viewers/SummaryFileViewer.cpp
 )
 
-set(PROTOTYPE_SRC
-    protoypes/HDF5Prototype.cpp
-)
-
 #============================================================================
 # Build the Stride library.
 #============================================================================
@@ -193,8 +189,6 @@ include(CheckIPOSupported)
 #============================================================================
 add_executable(stride execs/stride.cpp)
 target_link_libraries(stride libstride)
-add_executable(prototype_hdf5 ${PROTOTYPE_SRC})
-target_link_libraries(prototype_hdf5 libstride)
 install(TARGETS stride DESTINATION ${BIN_INSTALL_LOCATION})
 
 #############################################################################
