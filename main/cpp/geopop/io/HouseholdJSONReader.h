@@ -4,7 +4,7 @@
 #include "HouseholdReader.h"
 
 #include <vector>
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 namespace stride {
 

@@ -18,7 +18,7 @@
 #include "GeoGridWriter.h"
 #include "geopop/Location.h"
 
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 #include <boost/property_tree/ptree.hpp>
 #include <set>

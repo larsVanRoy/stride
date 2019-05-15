@@ -20,7 +20,7 @@
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
 
-#include "json.hpp"
+#include <nlohmann/json.hpp>
 
 #include <boost/property_tree/ptree_fwd.hpp>
 
