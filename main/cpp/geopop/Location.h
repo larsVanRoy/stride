@@ -92,6 +92,9 @@ public:
         /// Set Location's population fraction (of the total populaion count).
         void SetPopFraction(double relativePopulation);
 
+        /// Get the last contactPool ID for a given contactType
+        unsigned int GetContactPoolId(stride::ContactType::Id id);
+
 public:
         /// Access through const reference to ContactPools of type 'id'.
         /// \param id   ContactType::Id of pools container you want to access.

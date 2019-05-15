@@ -129,7 +129,8 @@ vector<ContactPool*> GeoGrid::GetNearbyPools(Id id, const Location& start, doubl
                         break;
                 }
         }
-        return pools;
+        auto pooool = pools;
+        return pooool;
 }
 
 vector<Location*> GeoGrid::TopK(size_t k) const

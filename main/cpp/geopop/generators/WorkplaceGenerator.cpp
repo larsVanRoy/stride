@@ -77,11 +77,8 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
 
                                 workers -= workplaceSize;
                                 AddPools(*loc, geoGrid.GetPopulation(), ggConfig);
-                                if (ggConfig.wpPoolSizes.find(loc->GetID()) == ggConfig.wpPoolSizes.end()) {
-                                        ggConfig.wpPoolSizes[loc->GetID()] = {workplaceSize};
-                                } else {
-                                        ggConfig.wpPoolSizes[loc->GetID()].emplace_back(workplaceSize);
-                                }
+                                const auto& pool_id = loc->GetContactPoolId(stride::ContactType::Id::Workplace);
+                                ggConfig.wpPoolSizes[pool_id] = workplaceSize;
                         }
                 }
         }
@@ -148,11 +145,8 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                         for (auto i = 0U; i < WorkplacesCount; i++) {
                                 const auto loc = geoGrid[indices[dist()]];
                                 AddPools(*loc, pop, ggConfig);
-                                if (ggConfig.wpPoolSizes.find(loc->GetID()) == ggConfig.wpPoolSizes.end()) {
-                                        ggConfig.wpPoolSizes[loc->GetID()] = {0};
-                                } else {
-                                        ggConfig.wpPoolSizes[loc->GetID()].emplace_back(0);
-                                }
+                                const auto& pool_id = loc->GetContactPoolId(stride::ContactType::Id::Workplace);
+                                ggConfig.wpPoolSizes[pool_id] = 0;
                         }
                 }
         }

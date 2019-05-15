@@ -41,6 +41,9 @@ void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, GeoG
                 } else{
                         HHReference = geoGridConfig.refHHs[0];
                 }
+                if (loc->GetPopCount() == 0) {
+                        continue;
+                }
                 auto hh_dist   = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(HHReference.ages.size()), 0U);
                 for (auto& pool : loc->RefPools(Id::Household)) {
                         const auto hDraw = static_cast<unsigned int>(hh_dist());

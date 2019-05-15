@@ -105,24 +105,25 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
         m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
-        std::vector<unsigned int> sizes_for_location = {20, 80};
-        sizes[brasschaat->GetID()] = sizes_for_location;
+        auto pool_id = brasschaat->GetContactPoolId(stride::ContactType::Id::Workplace);
+        m_gg_config.wpPoolSizes[pool_id] = 20;
+        m_gg_config.wpPoolSizes[pool_id] = 80;
 
         auto schoten = *(m_geo_grid.begin() + 1);
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-        sizes_for_location = {2, 98};
-        sizes[schoten->GetID()] = sizes_for_location;
+        pool_id = schoten->GetContactPoolId(stride::ContactType::Id::Workplace);
+        m_gg_config.wpPoolSizes[pool_id] = 2;
+        m_gg_config.wpPoolSizes[pool_id] = 98;
 
         auto kortrijk = *(m_geo_grid.begin() + 2);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
-        sizes_for_location = {50, 50};
-        sizes[kortrijk->GetID()] = sizes_for_location;
-
-        m_gg_config.wpPoolSizes = sizes;
+        pool_id = kortrijk->GetContactPoolId(stride::ContactType::Id::Workplace);
+        m_gg_config.wpPoolSizes[pool_id] = 50;
+        m_gg_config.wpPoolSizes[pool_id] = 50;
 
         m_geo_grid.Finalize();
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
@@ -190,15 +191,17 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-        std::vector<unsigned int> sizes_for_location = {20, 80};
-        sizes[schoten->GetID()] = sizes_for_location;
+        auto pool_id = schoten->GetContactPoolId(stride::ContactType::Id::Workplace);
+        m_gg_config.wpPoolSizes[pool_id] = 20;
+        m_gg_config.wpPoolSizes[pool_id] = 80;
 
         auto kortrijk = *(m_geo_grid.begin() + 1);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
-        sizes_for_location = {20, 80};
-        sizes[kortrijk->GetID()] = sizes_for_location;
+        pool_id = kortrijk->GetContactPoolId(stride::ContactType::Id::Workplace);
+        m_gg_config.wpPoolSizes[pool_id] = 20;
+        m_gg_config.wpPoolSizes[pool_id] = 80;
 
         auto brasschaat = *(m_geo_grid.begin() + 2);
         sizes[brasschaat->GetID()] = {};
@@ -207,8 +210,6 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
         kortrijk->AddIncomingCommute(schoten, 0.5);
         kortrijk->AddOutgoingCommute(schoten, 0.5);
         schoten->AddIncomingCommute(kortrijk, 0.5);
-
-        m_gg_config.wpPoolSizes = sizes;
 
         m_geo_grid.Finalize();
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);
@@ -260,30 +261,31 @@ TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
         m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
-        std::vector<unsigned int> sizes_for_location = {20, 80};
-        sizes[brasschaat->GetID()] = sizes_for_location;
+        auto pool_id = brasschaat->GetContactPoolId(stride::ContactType::Id::Workplace);
+        m_gg_config.wpPoolSizes[pool_id] = 20;
+        m_gg_config.wpPoolSizes[pool_id] = 80;
 
         auto schoten = *(m_geo_grid.begin() + 1);
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
-        sizes_for_location = {20, 80};
-        sizes[schoten->GetID()] = sizes_for_location;
+        pool_id = schoten->GetContactPoolId(stride::ContactType::Id::Workplace);
+        m_gg_config.wpPoolSizes[pool_id] = 20;
+        m_gg_config.wpPoolSizes[pool_id] = 80;
 
         auto kortrijk = *(m_geo_grid.begin() + 2);
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
-        sizes_for_location = {20, 80};
-        sizes[kortrijk->GetID()] = sizes_for_location;
+        pool_id = kortrijk->GetContactPoolId(stride::ContactType::Id::Workplace);
+        m_gg_config.wpPoolSizes[pool_id] = 20;
+        m_gg_config.wpPoolSizes[pool_id] = 80;
 
         // test case is only commuting but between nobody is commuting from or to Brasschaat
         schoten->AddOutgoingCommute(kortrijk, 0.5);
         kortrijk->AddIncomingCommute(schoten, 0.5);
         kortrijk->AddOutgoingCommute(schoten, 0.5);
         schoten->AddIncomingCommute(kortrijk, 0.5);
-
-        m_gg_config.wpPoolSizes = sizes;
 
         m_geo_grid.Finalize();
         m_workplace_populator.Apply(m_geo_grid, m_gg_config);

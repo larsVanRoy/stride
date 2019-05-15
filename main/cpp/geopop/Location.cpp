@@ -21,6 +21,7 @@
 #include "util/Exception.h"
 
 #include <cmath>
+#include <algorithm>
 
 namespace geopop {
 
@@ -97,5 +98,9 @@ void Location::SetPopCount(unsigned int totalPopCount)
         m_pop_count = static_cast<unsigned int>(floor(m_pop_fraction * totalPopCount));
 }
 void Location::SetPopFraction(double relativePopulation) { m_pop_fraction = relativePopulation; }
+
+unsigned int Location::GetContactPoolId(stride::ContactType::Id id) {
+        return m_pool_index[id].back()->GetId();
+}
 
 } // namespace geopop

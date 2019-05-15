@@ -114,10 +114,9 @@ public:
 
         // -----------------------------------------------------------------------------------------
         // The sizes of the generated workplace pools
-        // Every location has a list of pools, this map will have a list of the same length with
-        // for every pool the corresponding desired size
+        // Every pool's id will be linked to a corresponding size
         // -----------------------------------------------------------------------------------------
-        std::map<unsigned int, std::vector<unsigned int>> wpPoolSizes{};
+        std::map<unsigned int, unsigned int> wpPoolSizes{};
 
         // -----------------------------------------------------------------------------------------
         // These are numbers derived from the reference households, the target size of the generated
@@ -164,11 +163,13 @@ public:
         // All other id's represent the corresponding provinces.
         // -----------------------------------------------------------------------------------------
         std::map<unsigned int, std::string> idNames{
+                {0, "Default"},
                 {1, "Antwerp"},
                 {2, "Flemish Brabant"},
                 {3, "West-Flanders"},
                 {4, "East-Flanders"},
-                {7, "Limburg"}
+                {7, "Limburg"},
+                {11, "Central Cities"}
         };
 
         // -----------------------------------------------------------------------------------------
@@ -186,6 +187,11 @@ public:
         /// Read the workplace data file, parse it and set data.
         // -----------------------------------------------------------------------------------------
         void SetWorkplaceData(const std::string& workplaceFileName);
+
+        // -----------------------------------------------------------------------------------------
+        /// helper function for << overload
+        // -----------------------------------------------------------------------------------------
+        friend std::ostream& operator<<(std::ostream& output, const GeoGridConfig& config);
 
 };
 

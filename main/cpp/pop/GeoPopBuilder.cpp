@@ -57,8 +57,33 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // ------------------------------------------------------------
         // Set the GeoGridConfig.
         // ------------------------------------------------------------
+
+        // default config
         GeoGridConfig ggConfig(m_config);
         ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
+
+        // specific configs
+        map<unsigned int, string> possible_household_files =
+                {
+                        {1, "run.geopop_gen.antwerp_household_file"},
+                        {2, "run.geopop_gen.flemish_brabant_household_file"},
+                        {3, "run.geopop_gen.west_flanders_household_file"},
+                        {4, "run.geopop_gen.east_flanders_household_file"},
+                        {7, "run.geopop_gen.limburg_household_file"}
+                };
+
+        std::map<unsigned int, string> files;
+        boost::optional<const ptree& > temp_household;
+
+        for (const auto& pair : possible_household_files){
+                temp_household = m_config.get_child_optional(pair.second);
+                if (temp_household){
+                        files[pair.first] = m_config.get<string>(pair.second);
+                }
+        }
+        if( files.empty() ){
+                ggConfig.SetData(files);
+        }
 
         // ------------------------------------------------------------
         // Set the workplace data.
@@ -92,6 +117,7 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         m_stride_logger->trace("Starting MakePools");
         MakePools(geoGrid, ggConfig);
         m_stride_logger->trace("Finished MakePools");
+        cout << ggConfig << endl;
 
         // ------------------------------------------------------------
         // Generate Pop.
