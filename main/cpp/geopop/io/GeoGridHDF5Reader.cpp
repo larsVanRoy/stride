@@ -136,7 +136,7 @@ void GeoGridHDF5Reader::ReadContactPool(const DataSet& object, std::shared_ptr<L
 
 template <typename T>
 void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataType& type, T* data,
-                                      const H5Location& object)
+                                      const H5Object& object)
 {
         auto attr = object.openAttribute(name);
         switch (attr.getTypeClass()) {
@@ -146,7 +146,7 @@ void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataTyp
 }
 template <>
 void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataType& type, std::string* data,
-                                      const H5::H5Location& object)
+                                      const H5::H5Object& object)
 {
         auto attr = object.openAttribute(name);
         switch (attr.getTypeClass()) {
@@ -154,7 +154,7 @@ void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataTyp
         }
 }
 template <typename T>
-void GeoGridHDF5Reader::ReadDataset(const std::string& name, const H5::DataType& type, T* data, const CommonFG& object)
+void GeoGridHDF5Reader::ReadDataset(const std::string& name, const H5::DataType& type, T* data, const H5::H5Object& object)
 {
         auto dataSet = object.openDataSet(name);
         switch (dataSet.getTypeClass()) {

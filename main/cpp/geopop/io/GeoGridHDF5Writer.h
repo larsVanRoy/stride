@@ -58,10 +58,10 @@ private:
         void WriteCommutes(H5::H5File& file, std::shared_ptr<Location> location, H5::Group& group);
 
         template<typename T>
-        void WriteAttribute(const std::string& name, const T& value, H5::H5Location& object);
+        void WriteAttribute(const std::string& name, const T& value, H5::H5Object& object);
 
         template<typename T>
-        void WriteDataset(const std::string& name, std::vector<T> values, H5::CommonFG& object);
+        void WriteDataset(const std::string& name, std::vector<T> values, H5::H5Object& object);
 
 private:
         std::set<stride::Person*> m_persons_found; ///< The persons found when looping over the ContactPools.

@@ -58,11 +58,11 @@ protected:
         void ReadContactPool(const H5::DataSet& object, std::shared_ptr<Location> location_ptr);
 
         template <typename T>
-        void ReadAttribute(const std::string& name, const H5::DataType& type, T* data, const H5::H5Location& object);
+        void ReadAttribute(const std::string& name, const H5::DataType& type, T* data, const H5::H5Object& object);
 
         template <typename T>
-        void ReadDataset(const std::string& name, const H5::DataType& type, T* data, const H5::CommonFG& object);
+        void ReadDataset(const std::string& name, const H5::DataType& type, T* data, const H5::H5Object& object);
 };
 template<>
-void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataType& type, std::string* data, const H5::H5Location& object);
+void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataType& type, std::string* data, const H5::H5Object& object);
 } // namespace geopop
