@@ -105,12 +105,13 @@ std::shared_ptr<Population> Population::Create()
         return r;
 }
 
-Person* Population::CreatePerson(unsigned int id, double age, unsigned int householdId, unsigned int k12SchoolId,
-                                 unsigned int college, unsigned int workId, unsigned int primaryCommunityId,
+Person* Population::CreatePerson(unsigned int id, double age, unsigned int daycareId, unsigned int preschoolId,
+                                 unsigned int householdId, unsigned int k12SchoolId, unsigned int college,
+                                 unsigned int workId, unsigned int primaryCommunityId,
                                  unsigned int secondaryCommunityId)
 {
-        return emplace_back(id, age, householdId, k12SchoolId, college, workId, primaryCommunityId,
-                            secondaryCommunityId);
+        return emplace_back(id, age, daycareId, preschoolId, householdId, k12SchoolId, college, workId,
+                            primaryCommunityId, secondaryCommunityId);
 }
 
 unsigned int Population::GetInfectedCount() const

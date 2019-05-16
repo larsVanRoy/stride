@@ -48,7 +48,7 @@ void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, GeoG
                 for (auto& pool : loc->RefPools(Id::Household)) {
                         const auto hDraw = static_cast<unsigned int>(hh_dist());
                         for (const auto& age : HHReference.ages[hDraw]) {
-                                const auto p = pop->CreatePerson(person_id++, age, pool->GetId(), 0, 0, 0, 0, 0);
+                                const auto p = pop->CreatePerson(person_id++, age, 0, 0, pool->GetId(), 0, 0, 0, 0, 0);
                                 pool->AddMember(p);
                         }
                 }
