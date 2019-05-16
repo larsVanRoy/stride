@@ -37,6 +37,26 @@ def trackCases(simulator, event):
             writer.writeheader()
         writer.writerow({"timestep": timestep, "cases": cases})
 
+def createBoxPlot(outputPrefix, levels):
+    """
+        Plot a boxplot for each level.
+    """
+    legend = []
+    data = []
+    ticks = [i for i in range(1, len(legend)+1)]
+    for v in levels:
+        level_set = []
+        legend.append(str(round(v*100, 1)))
+        with open(os.path.join(outputPrefix + "_" + str(v), "cases.csv")) as csvfile:
+            reader = list(csv.DictReader(csvfile))
+            for i in range(sim_days-1, len(reader), sim_days + 1):
+                level_set.append(int(reader[i]["cases"]))
+        data.append(level_set)
+    plt.boxplot(data)
+    plt.xticks([1, 2, 3], legend)
+    plt.ylabel("New cases per day")
+    plt.savefig(os.path.join(outputPrefix + "_plots", param + "boxplot_{0}_{1}_{2}".format(sys.argv[1], sys.argv[2], sys.argv[3])))
+    plt.show()
 
 def plotNewCases(outputPrefix, levels):
     """
@@ -104,7 +124,7 @@ def runSimulation(level, outputPrefix):
     tree.write(os.path.join("config", config))
 
     for run in range(0, runs):
-        print("run number {0} of {1}".format(run, runs))
+        print("run number {0} of {1}".format(run+1, runs))
         controller = PyController(data_dir="data")
         controller.loadRunConfig(os.path.join("config", config))
         controller.runConfig.setParameter("num_days", sim_days)
@@ -141,6 +161,7 @@ def main():
         levels.append(level)
     plotNewCases(outputPrefix, levels)
     plotCummulativeCases(outputPrefix, levels)
+    createBoxPlot(outputPrefix, levels)
     t_elapsed = time.mktime(time.localtime()) - t_start
     print("Total time elapsed: " + str(round(t_elapsed)) + " seconds")
 
@@ -149,10 +170,10 @@ def main():
 param = "fraction_workplace_commuters"
 
 # the used config file
-config = "stochastic_analysis.xml"
+config = "run_generate_default_python.xml"
 
 # the number of simulations
-runs = 15
+runs = 20
 
 # the number of days per simulation
 sim_days = 500
