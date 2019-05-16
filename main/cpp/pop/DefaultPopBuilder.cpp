@@ -74,7 +74,7 @@ shared_ptr<Population> DefaultPopBuilder::MakePersons(shared_ptr<Population> pop
                 const auto primaryCommunityId   = FromString<unsigned int>(values[4]);
                 const auto secondaryCommunityId = FromString<unsigned int>(values[5]);
 
-                pop->CreatePerson(person_id, age, 0, 0, householdId, schoolId, 0, workId, primaryCommunityId,
+                pop->CreatePerson(person_id, age, householdId, 0, 0, schoolId, 0, workId, primaryCommunityId,
                                   secondaryCommunityId);
                 ++person_id;
         }

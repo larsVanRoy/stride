@@ -59,7 +59,7 @@ void GeoGridHDF5Reader::ReadPeople(const H5::H5File& file)
         ReadDataset("People", person_t, people.data(), file);
 
         for (auto person : people) {
-                auto stride_person  = m_population->CreatePerson(person.id, person.age, 0, 0, person.houseHold,
+                auto stride_person  = m_population->CreatePerson(person.id, person.age, person.houseHold, 0, 0,
                                                                 person.k12School, person.college, person.workplace,
                                                                 person.primaryCommunity, person.secondaryCommunity);
                 m_people[person.id] = stride_person;

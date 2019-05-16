@@ -185,7 +185,7 @@ shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
         geoGrid->AddLocation(loc);
 
         const auto person = geoGrid->GetPopulation()->CreatePerson(
-            0, 18, 0, 0, hPool->GetId(), k12Pool->GetId(), cPool->GetId(), wPool->GetId(),
+            0, 18, hPool->GetId(), 0, 0, k12Pool->GetId(), cPool->GetId(), wPool->GetId(),
             pcPool->GetId(), scPool->GetId());
 
         k12Pool->AddMember(person);
