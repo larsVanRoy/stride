@@ -182,7 +182,7 @@ Person* GeoGridJSONReader::ParsePerson(json& person)
         const auto pcId = JSONCast<unsigned int>(person["primaryCommunity"]);
         const auto scId = JSONCast<unsigned int>(person["secondaryCommunity"]);
 
-        return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId);
+        return m_population->CreatePerson(id, age, 0, 0, hhId, ksId, coId, wpId, pcId, scId);
 }
 
 } // namespace geopop

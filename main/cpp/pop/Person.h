@@ -38,10 +38,12 @@ public:
         Person() : m_age(0.0), m_id(0), m_pool_ids(), m_health(), m_in_pools(), m_is_participant() {}
 
         /// Constructor: set the person data.
-        Person(unsigned int id, float age, unsigned int householdId, unsigned int k12SchoolId, unsigned int collegeId,
-               unsigned int workId, unsigned int primaryCommunityId, unsigned int secondaryCommunityId)
-            : m_age(age), m_id(id), m_pool_ids{householdId, k12SchoolId,        collegeId,
-                                               workId,      primaryCommunityId, secondaryCommunityId},
+        Person(unsigned int id, float age, unsigned int daycareId, unsigned int PreschoolId, unsigned int householdId,
+                unsigned int k12SchoolId, unsigned int collegeId, unsigned int workId, unsigned int primaryCommunityId,
+                unsigned int secondaryCommunityId)
+            : m_age(age), m_id(id), m_pool_ids{daycareId,          PreschoolId,        householdId,
+                                               k12SchoolId,        collegeId,          workId,
+                                               primaryCommunityId, secondaryCommunityId},
               m_health(), m_in_pools(true), m_is_participant(false)
         {
         }
