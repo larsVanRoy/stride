@@ -246,14 +246,156 @@ TEST(GeoGridJSONWriterTest, contactPoolTest)
 TEST(GeoGridJSONWriterTest, peopleTest)
 {
         auto pop = Population::Create();
-        EXPECT_TRUE(compareGeoGrid(*GetPopulatedGeoGrid(pop.get()), "test2.json"));
+        auto geoGrid = GetPopulatedGeoGrid(pop.get());
+
+        string expectedJSON = R"({
+            "locations": [
+            {
+                "contactPools": [
+                    {
+                        "class": "Household",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": [0]
+                            }
+                        ]
+                    },
+                    {
+                        "class": "K12School",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": [0]
+                            }
+                        ]
+                    },
+                    {
+                        "class": "College",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": [0]
+                            }
+                        ]
+                    },
+                    {
+                        "class": "Workplace",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": [0]
+                            }
+                        ]
+                    },
+                    {
+                        "class": "PrimaryCommunity",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": [0]
+                            }
+                        ]
+                    },
+                    {
+                        "class": "SecondaryCommunity",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": [0]
+                            }
+                        ]
+                    }
+                ],
+                "coordinate": {
+                    "latitude": 0.0,
+                    "longitude": 0.0
+                },
+                "id": 1,
+                "name": "Bavikhove",
+                "population": 2500,
+                "province": 4
+            }
+        ],
+        "persons": [
+            {
+                "age": 18,
+                "college": 1,
+                "household": 1,
+                "id": 0,
+                "k12School": 1,
+                "primaryCommunity": 1,
+                "secondaryCommunity": 1,
+                "workplace": 1
+            }
+        ]
+        })";
+
+        GeoGridJSONWriter writer;
+        stringstream ss;
+        writer.Write(*geoGrid, ss);
+
+        EXPECT_TRUE(compareJSONs(ss.str(), expectedJSON));
 }
 
 TEST(GeoGridJSONWriterTest, commutesTest)
 {
-        EXPECT_TRUE(false);
+
+        string expectedJSON = R"({
+            "locations": [
+            {
+                "commutes": [
+                    { "2": 0.5 },
+                    { "3": 0.25}
+                ],
+                "contactPools": [],
+                "coordinate": {
+                    "latitude": 0.0,
+                    "longitude": 0.0
+                },
+                "id": 1,
+                "name": "Bavikhove",
+                "population": 2500,
+                "province": 4
+            },
+            {
+                "commutes": [
+                    {"1": 0.75},
+                    {"3": 0.5}
+                ],
+                "contactPools": [],
+                "coordinate": {
+                    "latitude": 0.0,
+                    "longitude": 0.0
+                },
+                "id": 2,
+                "name": "Gent",
+                "population": 2500,
+                "province": 4
+            },
+            {
+                "contactPools": [],
+                "coordinate": {
+                    "latitude": 0.0,
+                    "longitude": 0.0
+                },
+                "id": 3,
+                "name": "Mons",
+                "population": 2500,
+                "province": 4
+            }
+        ],
+        "persons": []
+        })";
+
         auto pop = Population::Create();
-//        EXPECT_TRUE(compareGeoGrid(*GetCommutesGeoGrid(pop.get()), "test7.json"));
+        auto geoGrid = GetCommutesGeoGrid(pop.get());
+
+        GeoGridJSONWriter writer;
+        stringstream ss;
+        writer.Write(*geoGrid, ss);
+
+        EXPECT_TRUE(compareJSONs(ss.str(), expectedJSON));
 }
 
 } // namespace

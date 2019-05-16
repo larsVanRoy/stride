@@ -58,7 +58,7 @@ private:
         nlohmann::json WriteCoordinate(const Coordinate& coordinate);
 
         /// Create a JSON object containing all info needed to reconstruct a Location.
-        nlohmann::json WriteLocation(std::shared_ptr<Location> location);
+        nlohmann::json WriteLocation(const Location& location);
 
         /// Create a JSON object containing all info needed to reconstruct a Person.
         nlohmann::json WritePerson(stride::Person* person);

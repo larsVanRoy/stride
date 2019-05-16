@@ -42,7 +42,7 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
 
         for (const auto& location : geoGrid) {
                 json location_json = json::object();
-                location_json = WriteLocation(location);
+                location_json = WriteLocation(*location);
                 locations_array.push_back(location_json);
         }
 
@@ -108,20 +108,19 @@ json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
         return coordinate_object;
 }
 
-json GeoGridJSONWriter::WriteLocation(shared_ptr<Location> location)
+json GeoGridJSONWriter::WriteLocation(const Location& location)
 {
         json location_object = json::object();
 
-        location_object["id"] = location->GetID();
-        location_object["name"] = location->GetName();
-        location_object["province"] = location->GetProvince();
-        location_object["population"] = location->GetPopCount();
-        location_object["coordinate"] = WriteCoordinate(location->GetCoordinate());
+        location_object["id"] = location.GetID();
+        location_object["name"] = location.GetName();
+        location_object["province"] = location.GetProvince();
+        location_object["population"] = location.GetPopCount();
+        location_object["coordinate"] = WriteCoordinate(location.GetCoordinate());
 
         location_object["contactPools"] = json::array();
 
-        auto commutes = location->CRefOutgoingCommutes();
-
+        auto commutes = location.CRefOutgoingCommutes();
         if (!commutes.empty()) {
             json commutes_list = json::array();
             for (auto commute_pair : commutes) {
@@ -135,8 +134,8 @@ json GeoGridJSONWriter::WriteLocation(shared_ptr<Location> location)
         json contactPools_array = json::array();
 
         for (Id typ : IdList) {
-            json temp_obj = WriteContactPools(typ, location->CRefPools(typ));
-            if (temp_obj["pools"].size() != 0){
+            json temp_obj = WriteContactPools(typ, location.CRefPools(typ));
+            if (temp_obj["pools"].size() != 0) {
                 location_object["contactPools"].push_back(temp_obj);
             }
         }
