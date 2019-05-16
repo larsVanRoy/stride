@@ -29,6 +29,7 @@ using namespace stride::util;
 template<>
 void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig)
 {
+        unsigned int size{};
         // initiate workplaces using given distributions
         if (!ggConfig.param.workplace_distribution.empty())
         {
@@ -42,12 +43,13 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                 auto uniform01Generator = m_rn_man.GetUniform01Generator(0U);
                 for (const auto &loc : geoGrid) {
                         int workers =
-                                static_cast<unsigned int>(floor(loc->GetPopCount() *
-                                                                ggConfig.param.participation_workplace +
-                                                                loc->GetIncomingCommuteCount(
-                                                                        ggConfig.param.fraction_workplace_commuters) -
-                                                                loc->GetOutgoingCommuteCount(
-                                                                        ggConfig.param.fraction_workplace_commuters)));
+                                static_cast<unsigned int>(
+                                        floor(loc->GetPopCount() *
+                                        ggConfig.param.participation_workplace +
+                                        loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) *
+                                        ggConfig.param.participation_workplace -
+                                        loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters) *
+                                        ggConfig.param.participation_workplace));
 
                         while (workers > 0) {
                                 // this variable is used to determine the size of the next workplace pool
@@ -75,7 +77,10 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                                 unsigned int workplaceSize =
                                         minSize + static_cast<unsigned int>(floor(uniform01Generator() * boundary));
 
+                                workplaceSize = std::min<unsigned int>(workplaceSize, static_cast<unsigned int>(workers));
+
                                 workers -= workplaceSize;
+                                size += workplaceSize;
                                 AddPools(*loc, geoGrid.GetPopulation(), ggConfig);
                                 const auto& pool_id = loc->GetContactPoolId(stride::ContactType::Id::Workplace);
                                 ggConfig.wpPoolSizes[pool_id] = workplaceSize;
@@ -145,8 +150,9 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                         for (auto i = 0U; i < WorkplacesCount; i++) {
                                 const auto loc = geoGrid[indices[dist()]];
                                 AddPools(*loc, pop, ggConfig);
+                                size += 20;
                                 const auto& pool_id = loc->GetContactPoolId(stride::ContactType::Id::Workplace);
-                                ggConfig.wpPoolSizes[pool_id] = 0;
+                                ggConfig.wpPoolSizes[pool_id] = 20;
                         }
                 }
         }
