@@ -49,6 +49,7 @@ def plotNewCases(outputPrefix):
         for row in reader:
             if row["timestep"] == "timestep":
                 if day_index != 0:
+                    newCasesPerDay[0] = 0
                     plt.plot(days, newCasesPerDay)
                 day_index = 0
                 prevCumulativeCases = 0
@@ -57,6 +58,7 @@ def plotNewCases(outputPrefix):
             newCasesPerDay[day_index] = cumulativeCases - prevCumulativeCases
             prevCumulativeCases = cumulativeCases
             day_index += 1
+    newCasesPerDay[0] = 0
     plt.plot(days, newCasesPerDay)
     plt.xlabel("Simulation day")
     plt.ylabel("New cases per day")
@@ -76,12 +78,14 @@ def plotCummulativeCases(outputPrefix):
         for row in reader:
             if row["timestep"] == "timestep":
                 if day_index != 0:
+                    cumulativeCasesPerDay[0] = 0
                     plt.plot(days, cumulativeCasesPerDay)
                 day_index = 0
                 continue
             cumulativeCases = int(row["cases"])
             cumulativeCasesPerDay[day_index] = cumulativeCases
             day_index += 1
+    cumulativeCasesPerDay[0] = 0
     plt.plot(days, cumulativeCasesPerDay)
     plt.xlabel("Simulation day")
     plt.ylabel("Cummulative cases per day")
@@ -109,6 +113,9 @@ def main():
         os.mkdir("SimulationResults")
     if not os.path.exists("SimulationResults/simulation_plots"):
         os.mkdir("SimulationResults/simulation_plots")
+    if os.path.exists("SimulationResults/simulation_{}".format(config.split(".")[0])):
+        os.system("rm -rf SimulationResults/simulation_{}".format(config.split(".")[0]))
+    os.mkdir("SimulationResults/simulation_{}".format(config.split(".")[0]))
     outputPrefix = "SimulationResults/simulation"
     t_start = time.mktime(time.localtime())
     runSimulation(outputPrefix)
@@ -121,7 +128,7 @@ def main():
 config = "stochastic_analysis.xml"
 
 # the number of simulations
-runs = 15
+runs = 10
 
 # the number of days per simulation
 sim_days = 500
