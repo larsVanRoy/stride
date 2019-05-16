@@ -110,7 +110,11 @@ def runSimulation(level, outputPrefix):
         controller.runConfig.setParameter("num_days", sim_days)
         controller.runConfig.setParameter("output_prefix", outputPrefix + "_" + str(level))
         controller.runConfig.setParameter("seeding_rate", 0.00000334)
-        controller.runConfig.setParameter("rng_seed", random.randint(1, 99999999999999999)) 
+        seed = ""
+        for _ in range(4):
+            seed += str(random.randint(1, 999999999)) + ","
+        seed = seed[:-1]
+        controller.runConfig.setParameter("rng_seed", seed) 
         controller.registerCallback(trackCases, EventType.Stepped)
         controller.control()
 
@@ -145,13 +149,13 @@ def main():
 param = "fraction_workplace_commuters"
 
 # the used config file
-config = "run_generate_default_temp.xml"
+config = "stochastic_analysis.xml"
 
 # the number of simulations
-runs = 10
+runs = 15
 
 # the number of days per simulation
-sim_days = 100
+sim_days = 500
 
 # is the parameter a percentage (for loops can only step with whole numbers)
 percentage = True
