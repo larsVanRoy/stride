@@ -51,7 +51,7 @@ void Person::Update(bool isWorkOff, bool isSchoolOff, bool adaptiveSymptomaticBe
                 m_in_pools[Id::PrimaryCommunity]   = true;
                 m_in_pools[Id::SecondaryCommunity] = false;
         } else {
-                m_in_pools[Id::Daycare]            = true;
+                m_in_pools[Id::Household]          = true;
                 m_in_pools[Id::Daycare]            = true;
                 m_in_pools[Id::K12School]          = true;
                 m_in_pools[Id::College]            = true;
