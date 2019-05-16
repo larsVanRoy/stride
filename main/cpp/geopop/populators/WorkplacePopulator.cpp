@@ -141,8 +141,9 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                                             }
 
                                             if(not success){
-                                                const auto& pool = nearbyWp[genNonCommute()];
+                                                const auto& pool = pools[gen()];
                                                 pool->AddMember(person);
+                                                person->SetPoolId(Id::Workplace, pool->GetId());
                                             }
                                         } else {
                                             // ----------------------------
@@ -168,6 +169,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                                             if(not success){
                                                 const auto& pool = nearbyWp[genNonCommute()];
                                                 pool->AddMember(person);
+                                                person->SetPoolId(Id::Workplace, pool->GetId());
                                             }
 
                                         }

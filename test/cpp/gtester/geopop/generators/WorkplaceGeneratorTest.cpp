@@ -277,7 +277,7 @@ TEST_F(WorkplaceGeneratorTest, NullCommutingWithoutDistribution)
                                                446,  1754, 1169, 263,  1194, 1456, 1058, 594,  793,  869,
                                                1356, 591,  105,  1297, 136,  95,   139,  499,  588,  1663};
     for (auto i = 0U; i < sizes.size(); i++) {
-            EXPECT_EQ(expected[i] * m_ppwp, m_geo_grid[i]->CRefPools(Id::Workplace).size());
+        EXPECT_EQ(expected[i] * m_ppwp, m_geo_grid[i]->CRefPools(Id::Workplace).size());
     }
 }
 
@@ -349,7 +349,7 @@ TEST_F(WorkplaceGeneratorTest, TenCommutingWithoutDistribution)
                                                1355,  589,  101, 1291,  142,   93,  132, 507,  584, 1659};
 
     for (auto i = 0U; i < sizes.size(); i++) {
-            EXPECT_EQ(expected[i] * m_ppwp, m_geo_grid[i]->CRefPools(Id::Workplace).size());
+        EXPECT_EQ(expected[i] * m_ppwp, m_geo_grid[i]->CRefPools(Id::Workplace).size());
     }
 }
 

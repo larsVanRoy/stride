@@ -46,10 +46,8 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                                 static_cast<unsigned int>(
                                         floor(loc->GetPopCount() *
                                         ggConfig.param.participation_workplace +
-                                        loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) *
-                                        ggConfig.param.participation_workplace -
-                                        loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters) *
-                                        ggConfig.param.participation_workplace));
+                                        loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) -
+                                        loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters)));
 
                         while (workers > 0) {
                                 // this variable is used to determine the size of the next workplace pool
