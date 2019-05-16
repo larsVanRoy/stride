@@ -19,8 +19,9 @@
 #include "geopop/GeoGrid.h"
 #include "pop/Person.h"
 
-#include <boost/property_tree/json_parser.hpp>
 #include <iostream>
+#include <fstream>
+#include <iomanip>
 #include <omp.h>
 
 using json = nlohmann::json;
@@ -30,7 +31,6 @@ namespace geopop {
 using namespace std;
 using namespace stride;
 using namespace stride::ContactType;
-using namespace boost::property_tree;
 
 GeoGridJSONWriter::GeoGridJSONWriter() : m_persons_found() {}
 
@@ -59,7 +59,7 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
         jsonfile["persons"] = persons_array;
 
         m_persons_found.clear();
-        stream << std::setw(4) << jsonfile << std::endl;
+        stream << setw(4) << jsonfile << std::endl;
         stream.flush();
 }
 
@@ -71,22 +71,16 @@ void GeoGridJSONWriter::Write(GeoGrid &geoGrid, const std::string &filename)
 }
 
 json GeoGridJSONWriter::WriteContactPools(stride::ContactType::Id typeId,
-                                          stride::util::SegmentedVector<stride::ContactPool *>& pools)
+                                          const stride::util::SegmentedVector<stride::ContactPool *>& pools)
 {
         json contactPool_json = json::object();
         contactPool_json["class"] = ToString(typeId);
+        contactPool_json["pools"] = json::array();
 
-        json pools_array = json::array();
         for (const auto& pool : pools) {
-                json temp_pool;
-                temp_pool = WriteContactPool(pool);
-                if(temp_pool["people"].empty()){
-                        continue;
-                }
-                pools_array.push_back(temp_pool);
+                contactPool_json["pools"].push_back(WriteContactPool(pool));
         }
 
-        contactPool_json["pools"] = pools_array;
         return contactPool_json;
 }
 
@@ -94,13 +88,12 @@ json GeoGridJSONWriter::WriteContactPool(stride::ContactPool* contactPool)
 {
         json pool = json::object();
         pool["id"] = contactPool->GetId();
+        pool["people"] = json::array();
 
-        json people_array = json::array();
-        for (auto person : *contactPool) {
+        for (auto person : contactPool->GetPool()) {
                 m_persons_found.insert(person);
-                people_array.push_back(person->GetId());
+                pool["people"].push_back(person->GetId());
         }
-        pool["people"] = people_array;
 
         return pool;
 }
@@ -109,8 +102,8 @@ json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
 {
         json coordinate_object = json::object();
 
-        coordinate_object["longitude"] = boost::geometry::get<0>(coordinate);
-        coordinate_object["latitude"] = boost::geometry::get<1>(coordinate);
+        coordinate_object["longitude"] = coordinate.get<0>();
+        coordinate_object["latitude"] = coordinate.get<1>();
 
         return coordinate_object;
 }
@@ -125,6 +118,8 @@ json GeoGridJSONWriter::WriteLocation(shared_ptr<Location> location)
         location_object["population"] = location->GetPopCount();
         location_object["coordinate"] = WriteCoordinate(location->GetCoordinate());
 
+        location_object["contactPools"] = json::array();
+
         auto commutes = location->CRefOutgoingCommutes();
 
         if (!commutes.empty()) {
@@ -135,29 +130,27 @@ json GeoGridJSONWriter::WriteLocation(shared_ptr<Location> location)
                 com_obj[temp_to] = commute_pair.second;
                 commutes_list.push_back(com_obj);
             }
-            location_object["commute"] = commutes_list;
+            location_object["commutes"] = commutes_list;
         }
-        json contactCenters_array = json::array();
+        json contactPools_array = json::array();
 
         for (Id typ : IdList) {
-            json temp_obj = WriteContactPools(typ, location->RefPools(typ));
-            if (!temp_obj["pools"].empty()){
-                contactCenters_array.push_back(temp_obj);
+            json temp_obj = WriteContactPools(typ, location->CRefPools(typ));
+            if (temp_obj["pools"].size() != 0){
+                location_object["contactPools"].push_back(temp_obj);
             }
         }
-
-        location_object["contactPools"] = contactCenters_array;
 
         return location_object;
 }
 
-json GeoGridJSONWriter::WritePerson(Person* person) {
+json GeoGridJSONWriter::WritePerson(stride::Person* person) {
         using namespace ContactType;
 
         json person_json = json::object();
 
         person_json["id"] = person->GetId();
-        person_json["age"] = person->GetAge();
+        person_json["age"] = (unsigned int)person->GetAge();
         person_json["k12School"] = person->GetPoolId(Id::K12School);
         person_json["college"] = person->GetPoolId(Id::College);
         person_json["household"] = person->GetPoolId(Id::Household);

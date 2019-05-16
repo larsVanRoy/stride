@@ -181,8 +181,8 @@ void runPeopleTest(const string& filename)
         auto& geoGrid  = pop->RefGeoGrid();
         auto  location = geoGrid[0];
 
-        map<int, string> ids = {{0, "K12School"}, {1, "PrimaryCommunity"}, {2, "SecondaryCommunity"},
-                                {3, "College"},   {4, "Household"},        {5, "Workplace"}};
+        map<int, string> ids = {{0, "Household"}, {1, "K12School"}, {2, "College"},
+                                {3, "Workplace"},   {4, "PrimaryCommunity"}, {5, "SecondaryCommunity"}};
 
         EXPECT_EQ(location->GetID(), 1);
         EXPECT_EQ(location->GetName(), "Bavikhove");
@@ -198,18 +198,20 @@ void runPeopleTest(const string& filename)
                 }
         }
 
+        int loop_type = 0;
         for (const auto& center : centers) {
-                auto person   = (*center)[0];
-//                auto person = *(pool->begin());
-//                EXPECT_EQ(ids[center->GetId()], ToString(center->GetType()));
+                auto person = *(center->begin());
+                EXPECT_EQ(ids[loop_type], ToString(center->GetType()));
                 EXPECT_EQ(person->GetId(), 0);
                 EXPECT_EQ(person->GetAge(), 18);
-                EXPECT_EQ(person->GetPoolId(Id::K12School), 2);
-                EXPECT_EQ(person->GetPoolId(Id::Household), 5);
-                EXPECT_EQ(person->GetPoolId(Id::College), 4);
-                EXPECT_EQ(person->GetPoolId(Id::Workplace), 6);
-                EXPECT_EQ(person->GetPoolId(Id::PrimaryCommunity), 3);
-                EXPECT_EQ(person->GetPoolId(Id::SecondaryCommunity), 7);
+                EXPECT_EQ(person->GetPoolId(Id::K12School), 1);
+                EXPECT_EQ(person->GetPoolId(Id::Household), 1);
+                EXPECT_EQ(person->GetPoolId(Id::College), 1);
+                EXPECT_EQ(person->GetPoolId(Id::Workplace), 1);
+                EXPECT_EQ(person->GetPoolId(Id::PrimaryCommunity), 1);
+                EXPECT_EQ(person->GetPoolId(Id::SecondaryCommunity), 1);
+
+                loop_type++;
         }
 }
 
@@ -225,7 +227,7 @@ TEST(GeoGridJSONReaderTest, emptyStreamTest)
         EXPECT_THROW(geoGridJSONReader.Read(), Exception);
 }
 
-TEST(GeoGridJSONReaderTest, invalidTypeTest)
+TEST(GeoGridJSONReaderTest, invalidContactTypeTest)
 {
         auto pop = Population::Create();
         EXPECT_THROW(getGeoGridFromFile("test4.json", pop.get()), Exception);

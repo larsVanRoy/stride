@@ -166,6 +166,11 @@ include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/nlohmann-j
 
 
 #----------------------------------------------------------------------------
+# JSON for Modern C++ (nlohmann)
+#----------------------------------------------------------------------------
+include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/nlohmann-json/include)
+
+#----------------------------------------------------------------------------
 # OpenMP
 #----------------------------------------------------------------------------
 if(NOT STRIDE_FORCE_NO_OPENMP)

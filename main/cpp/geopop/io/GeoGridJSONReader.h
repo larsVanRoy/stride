@@ -48,21 +48,25 @@ public:
         void Read() override;
 
 private:
-        /// Create a ContactPools based on the information stored in the provided boost property tree.
+        /// Create a ContactPools based on the information stored in the provided JSON object.
         void ParseContactPools(std::shared_ptr<Location> loc, nlohmann::json& contactCenter);
 
-        /// Create a ContactCenter based on the information stored in the provided boost property tree.
+        /// Create a ContactCenter based on the information stored in the provided JSON object.
         void ParseContactPool(std::shared_ptr<Location> loc,
                 nlohmann::json& contactPool, stride::ContactType::Id typeId);
 
-        /// Create a Coordinate based on the information stored in the provided boost property tree.
+        /// Create a Coordinate based on the information stored in the provided JSON object.
         Coordinate ParseCoordinate(nlohmann::json& coordinate);
 
-        /// Create a Location based on the information stored in the provided boost property tree.
+        /// Create a Location based on the information stored in the provided JSON object.
         std::shared_ptr<Location> ParseLocation(nlohmann::json& location);
 
-        /// Create a Person based on the information stored in the provided boost property tree.
+        /// Create a Person based on the information stored in the provided JSON object.
         stride::Person* ParsePerson(nlohmann::json& person);
+
+        /// Take a JSON object and cast wrongly provided types to the expected type (if possible).
+        template <typename T>
+        T JSONCast(nlohmann::json& json_object);
 };
 
 } // namespace geopop
