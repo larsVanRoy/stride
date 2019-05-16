@@ -161,6 +161,10 @@ else()
     include_directories(SYSTEM ${CMAKE_BINARY_DIR}/main/resources/lib/hdf5/config)
 endif()
 
+
+include_directories(SYSTEM ${CMAKE_HOME_DIRECTORY}/main/resources/lib/nlohmann-json/include)
+
+
 #----------------------------------------------------------------------------
 # JSON for Modern C++ (nlohmann)
 #----------------------------------------------------------------------------

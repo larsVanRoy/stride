@@ -119,77 +119,57 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                                             // --------------------------------------------------------------
                                             // this person commutes to the Location and in particular to Pool
                                             // --------------------------------------------------------------
+                                            auto &pools = commuteLocations[genCommute()]->RefPools(Id::Workplace);
+                                            auto s = static_cast<int>(pools.size());
+                                            auto gen = m_rn_man.GetUniformIntGenerator(0, s);
 
-                                            // check if there are any pools with more then 0 spots left, as these will
-                                            // get priority
-                                            std::vector<ContactPool*> prioPools{};
-                                            for(auto& tempLoc : commuteLocations){
-                                                auto& pools = tempLoc->RefPools(Id::Workplace);
-                                                for(auto& pool : pools){
-                                                    auto size = geoGridConfig.wpPoolSizes[pool->GetId()];
-                                                    if(size > 0){
-                                                        prioPools.emplace_back(pool);
-                                                    }
-                                                }
-                                            }
-
-                                            // there are still workplaces with preserved space left, these will be
-                                            // filled up first
-                                            if (!prioPools.empty()){
-                                                auto s = static_cast<int>(prioPools.size());
-                                                auto genPrioPool = m_rn_man.GetUniformIntGenerator(0, s);
-                                                auto pool = prioPools[genPrioPool()];
-                                                // so that's it
-                                                pool->AddMember(person);
-                                                person->SetPoolId(Id::Workplace, pool->GetId());
-                                            }
-
-                                            // all originally preserved space has been filled up, we will now go back
-                                            // to random selection
-                                            if (prioPools.empty()) {
-                                                auto &pools = commuteLocations[genCommute()]->RefPools(Id::Workplace);
-                                                auto s = static_cast<int>(pools.size());
-                                                auto gen = m_rn_man.GetUniformIntGenerator(0, s);
+                                            bool success = false;
+                                            for (int i = 0; i < s; i ++) {
                                                 auto pool = pools[gen()];
+
+                                                if (geoGridConfig.wpPoolSizes[pool->GetId()] == 0){
+                                                    continue;
+                                                }
+
                                                 // so that's it
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
+                                                geoGridConfig.wpPoolSizes[pool->GetId()] -= 1;
+
+                                                success = true;
+                                                break;
+                                            }
+
+                                            if(not success){
+                                                const auto& pool = nearbyWp[genNonCommute()];
+                                                pool->AddMember(person);
                                             }
                                         } else {
                                             // ----------------------------
                                             // this person does not commute
                                             // ----------------------------
 
-                                            // check if there are any pools with more then 0 spots left, as these will
-                                            // get priority
-                                            std::vector<ContactPool*> prioPools{};
-                                            auto& pools = nearbyWp;
-                                            for(auto& pool : pools){
-                                                auto size = geoGridConfig.wpPoolSizes[pool->GetId()];
-                                                if(size > 0){
-                                                    prioPools.emplace_back(pool);
-                                                }
-                                            }
+                                            bool success = false;
+                                            for (unsigned int i = 0; i < nearbyWp.size(); i ++){
+                                                const auto& pool = nearbyWp[genNonCommute()];
 
-                                            // there are still workplaces with preserved space left, these will be
-                                            // filled up first
-                                            if (!prioPools.empty()){
-                                                auto s = static_cast<int>(prioPools.size());
-                                                auto genPrioPool = m_rn_man.GetUniformIntGenerator(0, s);
-                                                auto pool = prioPools[genPrioPool()];
-                                                // so that's it
+                                                if (geoGridConfig.wpPoolSizes[pool->GetId()] == 0){
+                                                    continue;
+                                                }
+
                                                 pool->AddMember(person);
                                                 person->SetPoolId(Id::Workplace, pool->GetId());
+                                                geoGridConfig.wpPoolSizes[pool->GetId()] -= 1;
 
+                                                success = true;
+                                                break;
                                             }
 
-                                            // all originally preserved space has been filled up, we will now go back
-                                            // to random selection
-                                            if (prioPools.empty()) {
-                                                const auto idraw = genNonCommute();
-                                                nearbyWp[idraw]->AddMember(person);
-                                                person->SetPoolId(Id::Workplace, nearbyWp[idraw]->GetId());
+                                            if(not success){
+                                                const auto& pool = nearbyWp[genNonCommute()];
+                                                pool->AddMember(person);
                                             }
+
                                         }
                                 } else {
                                         // -----------------------------
