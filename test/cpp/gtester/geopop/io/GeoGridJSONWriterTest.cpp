@@ -61,14 +61,25 @@ void sortTree(ptree& tree)
         }
 }
 
+bool compareJSONs(string given, string expected)
+{
+        given.erase(remove_if(given.begin(), given.end(), ::isspace), given.end());
+        expected.erase(remove_if(expected.begin(), expected.end(), ::isspace), expected.end());
+
+        return given == expected;
+}
+
 bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
         GeoGridJSONWriter writer;
+        GeoGridJSONWriter w2;
+
         stringstream      ss;
 
-        ofstream outputFileStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/blubblub.json");
+        ofstream outputFileStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/OWN_" + testname);
 
         writer.Write(geoGrid, ss);
+        w2.Write(geoGrid, outputFileStream);
         ptree result;
         read_json(ss, result);
         sortTree(result);
@@ -81,7 +92,6 @@ bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
         boost::property_tree::xml_parser::write_xml(oss1, result);
         boost::property_tree::xml_parser::write_xml(oss2, expected);
 
-        // return result == expected;
         return oss1.str() == oss2.str();
 }
 
@@ -93,35 +103,156 @@ TEST(GeoGridJSONWriterTest, locationTest)
         geoGrid.AddLocation(make_shared<Location>(2, 3, Coordinate(0, 0), "Gent", 5000));
         geoGrid.AddLocation(make_shared<Location>(3, 2, Coordinate(0, 0), "Mons", 2500));
 
-        EXPECT_TRUE(compareGeoGrid(geoGrid, "test0.json"));
+        string expectedJSON = R"({
+            "locations":[
+            {
+                "contactPools": [],
+                "coordinate": {
+                    "latitude": 0.0,
+                    "longitude": 0.0
+                },
+                "id": 1,
+                "name": "Bavikhove",
+                "population": 2500,
+                "province": 4
+            },
+            {
+                "contactPools": [],
+                "coordinate": {
+                    "latitude": 0.0,
+                    "longitude": 0.0
+                },
+                "id": 2,
+                "name": "Gent",
+                "population": 5000,
+                "province": 3
+            },
+            {
+                "contactPools": [],
+                "coordinate": {
+                    "latitude": 0.0,
+                    "longitude": 0.0
+                },
+                "id": 3,
+                "name": "Mons",
+                "population": 2500,
+                "province": 2
+            }
+            ],
+            "persons": []
+            })";
+
+        GeoGridJSONWriter writer;
+        stringstream ss;
+        writer.Write(geoGrid, ss);
+
+        EXPECT_TRUE(compareJSONs(ss.str(), expectedJSON));
 }
+
+
 TEST(GeoGridJSONWriterTest, contactPoolTest)
 {
-    EXPECT_TRUE(false);
-//        auto pop      = Population::Create();
-//        auto geoGrid  = GeoGrid(pop.get());
-//        auto location = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
-//        location->RegisterPool(make_shared<ContactPool>(0, Id::K12School));
-//        location->RegisterPool(make_shared<ContactPool>(1, Id::PrimaryCommunity));
-//        location->RegisterPool(make_shared<ContactPool>(2, Id::College));
-//        location->RegisterPool(make_shared<ContactPool>(3, Id::Household));
-//        location->RegisterPool(make_shared<ContactPool>(4, Id::Workplace));
-//        geoGrid.AddLocation(location);
-//
-//        EXPECT_TRUE(compareGeoGrid(geoGrid, "test1.json"));
+        auto pop      = Population::Create();
+        auto geoGrid  = GeoGrid(pop.get());
+
+        auto location = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+
+        auto pool1 = pop->RefPoolSys().CreateContactPool(Id::K12School);
+        location->RegisterPool(pool1, Id::K12School);
+
+        auto pool2 = pop->RefPoolSys().CreateContactPool(Id::PrimaryCommunity);
+        location->RegisterPool(pool2, Id::PrimaryCommunity);
+
+        auto pool3 = pop->RefPoolSys().CreateContactPool(Id::College);
+        location->RegisterPool(pool3, Id::College);
+
+        auto pool4 = pop->RefPoolSys().CreateContactPool(Id::Household);
+        location->RegisterPool(pool4, Id::Household);
+
+        auto pool5 = pop->RefPoolSys().CreateContactPool(Id::Workplace);
+        location->RegisterPool(pool5, Id::Workplace);
+
+        geoGrid.AddLocation(location);
+
+        GeoGridJSONWriter writer;
+        stringstream ss;
+        writer.Write(geoGrid, ss);
+
+        string expectedJSON = R"({
+            "locations": [
+            {
+                "contactPools": [
+                    {
+                        "class": "Household",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": []
+                            }
+                        ]
+                    },
+                    {
+                        "class": "K12School",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": []
+                            }
+                       ]
+                    },
+                    {
+                        "class": "College",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": []
+                            }
+                        ]
+                    },
+                    {
+                        "class": "Workplace",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": []
+                            }
+                        ]
+                    },
+                    {
+                        "class": "PrimaryCommunity",
+                        "pools": [
+                            {
+                                "id": 1,
+                                "people": []
+                            }
+                        ]
+                    }
+                ],
+                "coordinate": {
+                    "latitude": 0.0,
+                    "longitude": 0.0
+                },
+                "id": 1,
+                "name": "Bavikhove",
+                "population": 2500,
+                "province": 4
+            }],
+            "persons": []
+        })";
+
+        EXPECT_TRUE(compareJSONs(ss.str(), expectedJSON));
 }
 
 TEST(GeoGridJSONWriterTest, peopleTest)
 {
-        EXPECT_TRUE(false);
-//        auto pop = Population::Create();
-//        EXPECT_TRUE(compareGeoGrid(*GetPopulatedGeoGrid(pop.get()), "test2.json"));
+        auto pop = Population::Create();
+        EXPECT_TRUE(compareGeoGrid(*GetPopulatedGeoGrid(pop.get()), "test2.json"));
 }
 
 TEST(GeoGridJSONWriterTest, commutesTest)
 {
         EXPECT_TRUE(false);
-//        auto pop = Population::Create();
+        auto pop = Population::Create();
 //        EXPECT_TRUE(compareGeoGrid(*GetCommutesGeoGrid(pop.get()), "test7.json"));
 }
 

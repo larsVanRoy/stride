@@ -20,7 +20,6 @@
 
 #include <nlohmann/json.hpp>
 
-#include <boost/property_tree/ptree.hpp>
 #include <set>
 
 namespace stride {
@@ -48,20 +47,20 @@ public:
         void Write(GeoGrid& geoGrid, const std::string& filename) override;
 
 private:
-        /// Create a Boost Property Tree containing all info needed to reconstruct a ContactCenter.
+        /// Create a JSON object containing all info needed to reconstruct a ContactPool.
         nlohmann::json WriteContactPools(stride::ContactType::Id typeId,
-                stride::util::SegmentedVector<stride::ContactPool*>& pools);
+                const stride::util::SegmentedVector<stride::ContactPool*>& pools);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a ContactPool.
+        /// Create a JSON object containing all info needed to reconstruct a Pool.
         nlohmann::json WriteContactPool(stride::ContactPool* contactPool);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Coordinate.
+        /// Create a JSON object containing all info needed to reconstruct a Coordinate.
         nlohmann::json WriteCoordinate(const Coordinate& coordinate);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Location.
+        /// Create a JSON object containing all info needed to reconstruct a Location.
         nlohmann::json WriteLocation(std::shared_ptr<Location> location);
 
-        /// Create a Boost Property Tree containing all info needed to reconstruct a Person.
+        /// Create a JSON object containing all info needed to reconstruct a Person.
         nlohmann::json WritePerson(stride::Person* person);
 
 private:

@@ -20,6 +20,7 @@
 #include "util/Exception.h"
 
 #include <memory>
+#include <boost/lexical_cast.hpp>
 
 using json = nlohmann::json;
 
@@ -67,18 +68,38 @@ void GeoGridJSONReader::Read()
 
 }
 
+template <typename T>
+T GeoGridJSONReader::JSONCast(json& json_object)
+{
+        // If the JSON object is given in a type that was not expected cast it to the properly type.
+        if (json_object.is_string()){
+                return boost::lexical_cast<T>(json_object.get<string>());
+        } else {
+                return json_object.get<T>();
+        }
+}
+
+template <>
+string GeoGridJSONReader::JSONCast(json& json_object)
+{
+        // TEMPLATE SPECIFICATION
+        // If the expected type was a string then no casting is needed and the template can be assigned.
+        return json_object.get<string>();
+}
+
 shared_ptr<Location> GeoGridJSONReader::ParseLocation(json& location)
 {
-        const auto id         = location["id"].get<unsigned int>();
-        const auto name       = location["name"].get<string>();
-        const auto province   = location["province"].get<unsigned int>();
-        const auto population = location["population"].get<unsigned int>();
+        const auto id         = JSONCast<unsigned int>(location["id"]);
+        const auto name       = JSONCast<string>(location["name"]);
+        const auto province   = JSONCast<unsigned int>(location["province"]);
+        const auto population = JSONCast<unsigned int>(location["population"]);
+
         const auto coordinate = ParseCoordinate(location["coordinate"]);
 
         auto result         = make_shared<Location>(id, province, coordinate, name, population);
-        auto contactCenters = location["contactPools"];
-        for (auto it = contactCenters.begin(); it != contactCenters.end(); it++) {
-                ParseContactPools(result, *it);
+        auto contactPools = location["contactPools"];
+        for (auto it = contactPools.begin(); it != contactPools.end(); it++) {
+               ParseContactPools(result, *it);
         }
 
         if (location.find("commutes") != location.end()) {
@@ -86,7 +107,7 @@ shared_ptr<Location> GeoGridJSONReader::ParseLocation(json& location)
                 for (auto json_obj : commutes) {
                     for(json::iterator it2 = json_obj.begin(); it2!=json_obj.end(); ++it2){
                         const auto to = it2.key();
-                        m_commutes.emplace_back(id, std::stoul(to, nullptr,0), json_obj[to].get<double>());
+                        m_commutes.emplace_back(id, std::stoul(to, nullptr,0), JSONCast<double>(json_obj[to]));
                     }
                 }
         }
@@ -97,15 +118,15 @@ shared_ptr<Location> GeoGridJSONReader::ParseLocation(json& location)
 Coordinate GeoGridJSONReader::ParseCoordinate(json& coordinate)
 {
 
-        const auto longitude = coordinate["longitude"].get<double>();
-        const auto latitude  = coordinate["latitude"].get<double>();
+        const auto longitude = JSONCast<double>(coordinate["longitude"]);
+        const auto latitude  = JSONCast<double>(coordinate["latitude"]);
 
         return {longitude, latitude};
 }
 
 void GeoGridJSONReader::ParseContactPools(std::shared_ptr<geopop::Location> loc, nlohmann::json &contactCenter)
 {
-        const auto type = contactCenter["class"].get<string>();
+        const auto type = JSONCast<string>(contactCenter["class"]);
         ContactType::Id typeId;
 
         if (type == ToString(Id::K12School)) {
@@ -139,10 +160,10 @@ void GeoGridJSONReader::ParseContactPool(std::shared_ptr<Location> loc, json& co
         auto people = contactPool["people"];
 
         for (auto it = people.begin(); it != people.end(); it++) {
-                auto person_id = *it;
-                result->AddMember(m_people[person_id]);
+                auto person_id = JSONCast<unsigned int>(*it);
                 if(m_people[person_id]){
-                    m_people[person_id]->SetPoolId(typeId, static_cast<unsigned int>(contactPool["id"]));
+                        result->AddMember(m_people[person_id]);
+                        m_people[person_id]->SetPoolId(typeId, result->GetId());
                 } else {
                     throw Exception("Person does not exist!");
                 }
@@ -152,15 +173,14 @@ void GeoGridJSONReader::ParseContactPool(std::shared_ptr<Location> loc, json& co
 Person* GeoGridJSONReader::ParsePerson(json& person)
 {
 
-        const auto id = person["id"].get<unsigned int>();
-        const auto age = person["age"].get<double>();
-        const auto hhId = person["household"].get<unsigned int>();
-        const auto ksId = person["k12School"].get<unsigned int>();
-        const auto coId = person["college"].get<unsigned int>();
-        const auto wpId = person["workplace"].get<unsigned int>();
-        const auto pcId = person["primaryCommunity"].get<unsigned int>();
-        const auto scId = person["secondaryCommunity"].get<unsigned int>();
-
+        const auto id = JSONCast<unsigned int>(person["id"]);
+        const auto age = JSONCast<unsigned int>(person["age"]);
+        const auto hhId = JSONCast<unsigned int>(person["household"]);
+        const auto ksId = JSONCast<unsigned int>(person["k12School"]);
+        const auto coId = JSONCast<unsigned int>(person["college"]);
+        const auto wpId = JSONCast<unsigned int>(person["workplace"]);
+        const auto pcId = JSONCast<unsigned int>(person["primaryCommunity"]);
+        const auto scId = JSONCast<unsigned int>(person["secondaryCommunity"]);
 
         return m_population->CreatePerson(id, age, hhId, ksId, coId, wpId, pcId, scId);
 }
