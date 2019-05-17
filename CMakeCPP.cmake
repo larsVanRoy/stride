@@ -103,7 +103,7 @@ find_package(Threads)
 #----------------------------------------------------------------------------
 if(NOT STRIDE_FORCE_NO_PROTOC)
     include(FindProtobuf)
-    find_package(Protobuf)
+    find_package(Protobuf 3.0.0)
     if(NOT Protobuf_FOUND)
             set(Protobuf_VERSION "0.0.0")
     endif()
@@ -149,7 +149,7 @@ endif()
 # HDF5
 #----------------------------------------------------------------------------
 if(NOT STRIDE_FORCE_NO_HDF5)
-    find_package(HDF5 10.0 COMPONENTS CXX HL)
+    find_package(HDF5 1.10.0 COMPONENTS CXX HL)
 endif()
 if(HDF5_FOUND)
     include_directories(SYSTEM ${HDF5_CXX_INCLUDE_DIRS})
