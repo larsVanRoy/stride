@@ -156,6 +156,8 @@ json GeoGridJSONWriter::WritePerson(stride::Person* person) {
         person_json["workplace"] = person->GetPoolId(Id::Workplace);
         person_json["primaryCommunity"] = person->GetPoolId(Id::PrimaryCommunity);
         person_json["secondaryCommunity"] = person->GetPoolId(Id::SecondaryCommunity);
+        person_json["daycare"] = person->GetPoolId(Id::Daycare);
+        person_json["preSchool"] = person->GetPoolId(Id::PreSchool);
 
         return person_json;
 }

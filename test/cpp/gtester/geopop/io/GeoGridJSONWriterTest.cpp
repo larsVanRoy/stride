@@ -321,9 +321,11 @@ TEST(GeoGridJSONWriterTest, peopleTest)
             {
                 "age": 18,
                 "college": 1,
+                "daycare": 0,
                 "household": 1,
                 "id": 0,
                 "k12School": 1,
+                "preSchool": 0,
                 "primaryCommunity": 1,
                 "secondaryCommunity": 1,
                 "workplace": 1

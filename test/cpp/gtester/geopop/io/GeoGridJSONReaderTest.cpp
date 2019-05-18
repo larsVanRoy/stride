@@ -162,7 +162,7 @@ TEST(GeoGridJSONReaderTest, contactPoolTest)
                                {Id::PrimaryCommunity, false},
                                {Id::College, false},
                                {Id::Household, false},
-                               {Id::Workplace, false}};
+                               {Id::Workplace, false},};
 
         for (unsigned int i = 0; i < 5; i++) {
                 EXPECT_FALSE(found[centers[i]->GetType()]);
