@@ -108,7 +108,7 @@ public:
         // Whenever a locations province id is not in the map, the default will be chosen.
         // The 0 key will be used to specify the default household reference (which is required).
         // The respective provinces will be represented by their id.
-        // Key 11 will be used to store potential references for central city references.
+        // Key 11 will be used to store potential references for major city references.
         // -----------------------------------------------------------------------------------------
         std::map<unsigned int, refHH> refHHs;
 
@@ -147,10 +147,10 @@ public:
         };
 
         // -----------------------------------------------------------------------------------------
-        // Diversions in the age reference occurs when different household references are supported,
-        // therefore we need a means to store different info objects, the info object is read within
+        // Diversions in the age reference occurs when considering multiple references for provinces,
+        // therefore we need a means to store differences info objects, the info object is read within
         // the setData function and for each defined household reference (0 is the default and 11 is
-        // a special definition for central cities, which differ from the "general" households/cities
+        // a special definition for major cities, which differ from the "general" households/cities
         // -----------------------------------------------------------------------------------------
         std::map<unsigned int, info> regionInfo;
 
@@ -158,7 +158,7 @@ public:
         // simple helper map, to convert ID's to their respective names
         // Id 0 is a special id, and is the general configuration that will be used in case
         // no specific data was given.
-        // Id 11 is also a special id, and is used to symbolise the central cities, which are in
+        // Id 11 is also a special id, and is used to symbolise the major cities, which are in
         // general more densely populated.
         // All other id's represent the corresponding provinces.
         // -----------------------------------------------------------------------------------------
@@ -169,7 +169,18 @@ public:
                 {3, "West-Flanders"},
                 {4, "East-Flanders"},
                 {7, "Limburg"},
-                {11, "Central Cities"}
+                {11, "Major Cities"}
+        };
+
+        // -----------------------------------------------------------------------------------------
+        // simple vector of all known major cities, used in the household populator to check if a
+        // location is a major city
+        // -----------------------------------------------------------------------------------------
+        std::vector<std::string> majorCities = {
+                "Aalst",    "Antwerpen", "Brugge",    "Genk",
+                "Gent",     "Hasselt",   "Kortrijk",  "Leuven",
+                "Mechelen", "Oostende",  "Roeselare", "Sint-Niklaas",
+                "Turnhout"
         };
 
         // -----------------------------------------------------------------------------------------

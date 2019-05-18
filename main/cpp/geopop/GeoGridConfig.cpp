@@ -137,13 +137,76 @@ void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileN
         //----------------------------------------------------------------
         for(auto& pair: householdFileNames){
                 unsigned int provinceID = pair.first;
-                auto householdFile = pair.second;
+                const string& householdFile = pair.second;
 
                 refHHs[provinceID] = refHH{};
+                auto& householdRef = refHHs[provinceID];
 
                 auto householdReader = ReaderFactory::CreateHouseholdReader(householdFile);
-                householdReader->SetReferenceHouseholds(refHHs[provinceID].person_count, refHHs[provinceID].ages);
+                householdReader->SetReferenceHouseholds(householdRef.person_count, householdRef.ages);
 
+                const auto popSize = param.pop_size;
+
+                //----------------------------------------------------------------
+                // Determine age makeup of reference houshold population.
+                //----------------------------------------------------------------
+                const auto ref_p_count   = householdRef.person_count;
+                const auto averageHhSize = static_cast<double>(ref_p_count) / static_cast<double>(householdRef.ages.size());
+
+                auto ref_daycare   = 0U;
+                auto ref_preschool = 0U;
+                auto ref_k12school = 0U;
+                auto ref_college   = 0U;
+                auto ref_workplace = 0U;
+                for (const auto& hhAgeProfile : householdRef.ages) {
+                        for (const auto& age : hhAgeProfile) {
+                                if (Daycare::HasAge(age)) {
+                                        ref_daycare++;
+                                }
+                                if (PreSchool::HasAge(age)) {
+                                        ref_preschool++;
+                                }
+                                if (K12School::HasAge(age)) {
+                                        ref_k12school++;
+                                }
+                                if (College::HasAge(age)) {
+                                        ref_college++;
+                                }
+                                if (Workplace::HasAge(age)) {
+                                        ref_workplace++;
+                                }
+                        }
+                }
+                //----------------------------------------------------------------
+                // Scale up to the generated population size.
+                //----------------------------------------------------------------
+                const auto fraction_daycare_age   = static_cast<double>(ref_daycare) / static_cast<double>(ref_p_count);
+                const auto fraction_preschool_age = static_cast<double>(ref_preschool) / static_cast<double>(ref_p_count);
+                const auto fraction_k12school_age = static_cast<double>(ref_k12school) / static_cast<double>(ref_p_count);
+                const auto fraction_college_age   = static_cast<double>(ref_college) / static_cast<double>(ref_p_count);
+                const auto fraction_workplace_age = static_cast<double>(ref_workplace) / static_cast<double>(ref_p_count);
+
+                const auto age_count_daycare   = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
+                const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
+                const auto age_count_k12school = static_cast<unsigned int>(floor(popSize * fraction_k12school_age));
+                const auto age_count_college   = static_cast<unsigned int>(floor(popSize * fraction_college_age));
+                const auto age_count_workplace = static_cast<unsigned int>(floor(popSize * fraction_workplace_age));
+
+                auto& provInfo = regionInfo[provinceID];
+
+                provInfo.popcount_daycare = static_cast<unsigned int>(floor(param.participation_daycare * age_count_daycare));
+
+                provInfo.popcount_preschool = static_cast<unsigned int>(
+                        floor(param.participation_preschool * age_count_preschool));
+
+                provInfo.popcount_k12school = age_count_k12school;
+
+                provInfo.popcount_college = static_cast<unsigned int>(floor(param.participation_college * age_count_college));
+
+                provInfo.popcount_workplace = static_cast<unsigned int>(
+                        floor(param.participation_workplace * (age_count_workplace - provInfo.popcount_college)));
+
+                provInfo.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
         }
 }
 
@@ -169,7 +232,7 @@ ostream& operator<<(ostream& out, const GeoGridConfig& config)
         out << "Calculated:"
             << "\n";
         for(const auto& pair: config.regionInfo){
-            out << setw(w) << "for province:" << config.idNames.at(pair.first) << "\n";
+            out << setw(w) << "for region:" << config.idNames.at(pair.first) << "\n";
             const auto& poolInfo = pair.second;
             out << setw(w) << "\tDaycare toddler count:" << intToDottedString(poolInfo.popcount_daycare) << "\n";
             out << setw(w) << "\tPreSchool student count:" << intToDottedString(poolInfo.popcount_preschool) << "\n";
