@@ -234,11 +234,11 @@ ostream& operator<<(ostream& out, const GeoGridConfig& config)
         for(const auto& pair: config.regionInfo){
             out << setw(w) << "for region:" << config.idNames.at(pair.first) << "\n";
             const auto& poolInfo = pair.second;
-            out << setw(w) << "\tDaycare toddler count:" << intToDottedString(poolInfo.popcount_daycare) << "\n";
-            out << setw(w) << "\tPreSchool student count:" << intToDottedString(poolInfo.popcount_preschool) << "\n";
-            out << setw(w) << "\tK12School student count:" << intToDottedString(poolInfo.popcount_k12school) << "\n";
-            out << setw(w) << "\tCollege student count:" << intToDottedString(poolInfo.popcount_college) << "\n";
-            out << setw(w) << "\tWorkplace person count:" << intToDottedString(poolInfo.popcount_workplace) << "\n";
+            out << setw(w) << "    Daycare toddler count:" << intToDottedString(poolInfo.popcount_daycare) << "\n";
+            out << setw(w) << "    PreSchool student count:" << intToDottedString(poolInfo.popcount_preschool) << "\n";
+            out << setw(w) << "    K12School student count:" << intToDottedString(poolInfo.popcount_k12school) << "\n";
+            out << setw(w) << "    College student count:" << intToDottedString(poolInfo.popcount_college) << "\n";
+            out << setw(w) << "    Workplace person count:" << intToDottedString(poolInfo.popcount_workplace) << "\n";
             out << endl;
         }
 
