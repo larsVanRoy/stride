@@ -39,16 +39,16 @@ using boost::property_tree::ptree;
 
 namespace {
 
-void sortContactCenters(ptree& pt)
+/*void sortContactCenters(ptree& pt)
 {
         auto& contactCenters       = pt.get_child("contactPools");
         auto  compareContactCenter = [](const pair<string, ptree>& a, const pair<string, ptree>& b) {
                 return a.second.get<string>("class") < b.second.get<string>("class");
         };
         contactCenters.sort<decltype(compareContactCenter)>(compareContactCenter);
-}
+}*/
 
-void sortTree(ptree& tree)
+/*void sortTree(ptree& tree)
 {
         auto compareLocation = [](const pair<string, ptree>& a, const pair<string, ptree>& b) {
                 return a.second.get<string>("id") < b.second.get<string>("id");
@@ -59,7 +59,7 @@ void sortTree(ptree& tree)
         for (auto it = locations.begin(); it != locations.end(); it++) {
                 sortContactCenters(it->second.get_child(""));
         }
-}
+}*/
 
 bool compareJSONs(string given, string expected)
 {
@@ -69,7 +69,7 @@ bool compareJSONs(string given, string expected)
         return given == expected;
 }
 
-bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
+/*bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
 {
         GeoGridJSONWriter writer;
         GeoGridJSONWriter w2;
@@ -93,7 +93,7 @@ bool compareGeoGrid(GeoGrid& geoGrid, const string& testname)
         boost::property_tree::xml_parser::write_xml(oss2, expected);
 
         return oss1.str() == oss2.str();
-}
+}*/
 
 TEST(GeoGridJSONWriterTest, locationTest)
 {
@@ -259,6 +259,24 @@ TEST(GeoGridJSONWriterTest, peopleTest)
                                 "id": 1,
                                 "people": [0]
                             }
+                        ]
+                    },
+                    {
+                        "class": "Daycare",
+                        "pools": [
+                           {
+                                "id": 1,
+                                "people": []
+                           }
+                        ]
+                    },
+                    {
+                        "class": "PreSchool",
+                        "pools": [
+                           {
+                                "id": 1,
+                                "people": []
+                           }
                         ]
                     },
                     {
