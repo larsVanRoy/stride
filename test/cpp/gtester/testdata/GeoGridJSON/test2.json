@@ -88,7 +88,9 @@
             "household": 5,
             "workplace": 6,
             "primaryCommunity": 3,
-            "secondaryCommunity": 7
+            "secondaryCommunity": 7,
+            "daycare": 0,
+            "preSchool": 0
         }
     ]
 }

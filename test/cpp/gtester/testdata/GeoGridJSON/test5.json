@@ -90,7 +90,9 @@
             "workplace": 6,
             "primaryCommunity": 3,
             "secondaryCommunity": 7,
-            "college": 4
+            "college": 4,
+            "daycare": 0,
+            "preSchool": 0
         }
     ]
 }

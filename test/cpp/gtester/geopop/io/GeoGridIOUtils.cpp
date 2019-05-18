@@ -44,6 +44,7 @@ void compareGeoGrid(const GeoGrid& geoGrid, proto::GeoGrid& protoGrid)
                 auto        location      = geoGrid.GetById(static_cast<unsigned int>(protoLocation.id()));
                 CompareLocation(*location, protoLocation);
         }
+
         ASSERT_EQ(persons_found.size(), protoGrid.persons_size());
         for (int idx = 0; idx < protoGrid.persons_size(); idx++) {
                 const auto& protoPerson = protoGrid.persons(idx);
