@@ -46,6 +46,32 @@ The following input fields were added, and will be used as their respective hous
 		major\_cities
 \end{description}
 
+\subsection{New implementations for generators}
+A few decisions had to be made in order to make this work. The basis was simple, we had to make a reader that read the corresponding configuration files which would store these into the memory. What was more difficult, was determining whether or not these changes should be applied to certain pools and why. The following generators are altered in the following manner.
+
+\begin{description}
+	\item[Households Generator]: 
+		The $household$ $generator$ will iterate over the different regions, it will consider all locations within that region and will, for each of these locations, generate the corresponding households. It will use the given household configuration, if it was available, or the default configuration if not.
+		
+	\item[College Generator]:
+		The $college$ $generator$ will iterate over the different regions and will generate colleges where needed, it will however not consider any specific household data, as this is irrelevant to the existence of colleges. People go to colleges all over the country, so it is more dependent on how accessible and how many people live in an area, rather than the possible configurations of set households in that area.
+		
+	\item[K12School Generator]:
+		The $K12school$ $generator$ will iterate over the different specified regions and will use the possibly available data for that region. It is logic for a k12school to be dependent on the population in the surrounding environment since most of the students will generally go to a nearby k12 school. 
+		
+	\item[PreSchool Generator]:
+		The $preschool$ $generator$ will follow the same logic as the k12school did in which it will use the specific province's/major city's household data, if available.
+		
+	\item[DayCare Generator]:
+		The $daycare$ $generator$ will follow the same logic as the k12school did in which it will use the specific province's/major city's household data, if available.
+		
+	\item[Workplace Generator]:
+		The $workplace$ $generator$ is a bit more difficult, in the sense that bigger workplaces will behave like the college pools did, in which they would attract people from all over the country, and other factors would become more important, while the small workplaces would behave just like K12school did, in which it would attract people from the neighboring area most of the time. We made the decision to make workplaces dependent on the household configurations of the specific areas, since almost all of the workplaces would be of a small size.
+		
+	\item[Primary- and Secondary Community]:
+		These are not affected by household factors, and are therefore left unaltered.
+\end{description}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Workplace Size Distribution
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -58,3 +84,6 @@ The intial idea for this feature was based on the fact that not all workplaces a
 
 \subsection{Input}
 This addition adds one extra, optional, input tag, $workpalce\_file$, in the geopop gen section of the populations config file which will be used to generate the workplaces.
+
+\subsection{Workplace Generator}
+Rather then creating a workplace for every 20 persons, we will now iterate for as long as we dont have sufficient space to allow all people that should work, to work. In each iteration we will generate a random size (taking in account the given chances for each size) for a new workplace pool.
