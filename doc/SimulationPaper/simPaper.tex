@@ -27,35 +27,44 @@
 	\maketitle              % typeset the header of the contribution
 	%
 	\begin{abstract}
-		In this paper we will examine the Stride tool and discover its functionalities.
-		We will discuss some findings about the use of different parameters, populations and more.
-		In the end there is a brief discussion of the performance of the program, a very important topic within computer related problems.
+		As described within the following paper, we have analyzed the extend of the randomness factor within Stride, the extinction threshold (aka the point at which no outbreaks occur), we have estimated factors like the immunity level and r0 for a given result, we have analyzed the individual influence of factors like demography, vaccines, commuting to work and finally we have performed a couple of benchmarks to see which aspects of the code where the most demanding. All of these analyses (wherever needed of course) are based upon an average of multiple seeded runs, and all results are obtained by analyses over a range of values, rather then a predetermined range/goal. We have for example been able to prove that commuting to work, contrary to expectations, on its own, does not affect the spreading of diseases in a significant manner. We have also been able to prove that vaccines, on their own, do affect the spreading of diseases. $<$insert conclusion here$>$
 		
 		%\keywords{First keyword  \and Second keyword \and Another keyword.}
+		
 	\end{abstract}
+	
+	
+	\section{Introduction}
+	In this paper we will discuss a couple of the aspects that are part of stride, as well as a brief look towards a couple of possible factors that may or may not influence the spreading of diseases (this will be proven by the analyses). Every aspect will be analyzed individually, so there wont be any regards to correlations of data. All analyses regarding these factors will be done by performing multiple seeded runs where the average will be considered our final result. Finally, we will do a couple of benchmark runs where we vary some of the parameters, in order to determine which types of parameters affect the runtime of Stride, as well as an attempt on determining why this is the case. \\
+	\\
+	The paper itself will consist out of a simulation section, where we will perform a regular simple simulation, as well as an analysis on a couple of parameters, and their expected value, regarding a given simulation result. After the simulation section we have a section regarding the generation of populations. This section will quickly analyse the effect of a couple of parameters, on their own. The paper will end with the benchmark section where we will quickly demonstrate and explain our findings about the performance of different sections of code.
 	
 	\section{Simulation}
 	
+	\subsection{Introduction}
+	The following subsections will contain a first view of the Stride tool along with a description of its output, as well as an estimation for the extinction threshold and a few simple analyses in order to approach used values for a given evolution of a disease within a population.
+	
 	\subsection{Stochastic variation}
-	We use the Stan (STochatsic ANalysis) controller to examine the influence of stochasticity on the results obtained from the simulation. \\ \\
-	In Figure \ref{fig1} the number of cummulative cases per time-step is plotted. Here we can observe an exponential grow of the number of cases througout time. This is not surprisingly because it can be deducted from common reasoning. If per time more people are affected, a larger contactpool is possibly infected. These people who are now new carriers of the disease will enter their personal contactpool and again more people will be reached.\\ \\
-	Towards the end a flattening of the curve occurs. This is not something totally unexpected because the population is obviously not infinite. At one point anyone who can be infected will effectively become a carrier of the disease.\\ \\
-	The same reasoning can explain the curve in Figure \ref{fig2}. Now the cases are not the cummulative ones but the number of new cases in each time-step. A similar course of the curve can be observed.
+	We use the Stan (STochatsic ANalysis) controller to examine the impact of stochasticity on the results obtained from the simulation. For this analysis we used a total of 15 simulations, since these will suffice to show the effects of randomness within the stride tool. More simulations and the resulting graph would no longer be clear, less simulations and the resulting graph might not properly display the differences.\\ 
+	\\
+	In Figure \ref{stochastic_analysis.png} the number of cumulative cases (total amount of infected persons) per time-step is plotted. Here we can observe an exponential growth of the number of cases throughout time. This is not surprising because it can be deducted from common reasoning. If per iteration more people are affected, a larger contactpool is possibly infected, the newly diseased will enter their personal contactpool and again more people will be reached.\\ 
+	\\
+	Towards the end a flattening of the curve occurs. This is not something totally unexpected because the population is obviously not infinite. At one point anyone who can be infected will effectively become a carrier of the disease. Something else that is important to note, are the flat lines at the bottom of the graph. These are what we call extinctions and they represent the evolution of diseases that died out.\\ 
+	\\
+	In order for these simulations to stand out more, a different number of seeding rate(the percentage of the population thats starts out as being diseased). This allowed for a quicker climb in a shorter amount of time. Starting out with a lower number might/could have given us the same results (it definitively could, but its not given that it would do to the randomness) but it would take longer to show real differences, as they would all start out the same way.\\
+	\\
+	We can clearly see that randomness plays a major role within Stride, considering that there are two big sets of curves, the ones following an upwards curve and the ones that go extinct, we cannot base conclusions on a small set of simulations as these might all be very different, we will from now on consider large sets of runs to determine the true expected evolution of a disease.\\
 	
 	\begin{figure}
-		\includegraphics[width=\textwidth]{fig1.png}
-		\caption{Result of a number of stochastic runs. The figure displays the distribution of the number of cummulative cases per time-step.} 	
-		\label{fig1}
-		
-		\includegraphics[width=\textwidth]{fig2.png}
-		\caption{Result of a number of stochastic runs. The figure displays the distribution of the number of new cases per time-step.} 
-		\label{fig2}
+		\centering
+		\includegraphics[width=0.90\textwidth]{stochastic_analysis.png}
+		\caption{Result of 15 stochastic runs. The figure displays the distribution of the number of cummulative cases per time-step.} 	
+		\label{stochastic_analysis.png}
 	\end{figure} 
-	\newpage
 	
 	
 	\subsection{Determining an extinction threshold}
-	Looking at figure \ref{fig1} it is clear that in some cases an outbreak doesn't occur. These cases can be called extinctions of the outbreak or disease. Determining if a simulation is an extinction or an outbreak is neccessary to be able to divide the two possible outcomes. If we can find some threshold where there is a clear difference between large outbreaks and extinctions we can seperate the two scenarios.\\ \\
+	Looking at figure \ref{stochastic_analysis.png} it is clear that in some cases an outbreak doesn't occur. These cases can be called extinctions of the outbreak or disease. Determining if a simulation is an extinction or an outbreak is neccessary to be able to divide the two possible outcomes. If we can find some threshold where there is a clear difference between large outbreaks and extinctions we can seperate the two scenarios.\\ \\
 	After running fifty simulations we can plot the total number of infected cases and their frequency.  We used the file "stochastic\_analysis.xml" for the simulations. After running the simulator the outcome is plotted in the histogram in Figure \ref{fig3} where the frequency of the amount of infected cases is plotted.\\ \\
 	There is a clear distinction between large outbreaks and smaller ones. The smaller ones are again plotted in the second histogram "extinction\_small.jpg". There it can be noticed that small outbreaks are really small (20 maximum). Which can be called an extinction afterIt is neccessary to be able to exclusively look at outbreaks.  500 days. The threshold for this example can be set between than 50 and 25 000. Either of those thresholds should eliminate all extinctions in this case.\\ \\
 	A very low threshold might allow some extinctions to be passed while a high threshold might eliminate an outbreak. What can be noticed is the total lack of simulations between 100 and 25000 infected cases. But there can still be exceptions in the infected cases. A threshold of 1000 would be more than adequate. It will eliminate all extinctions while keeping the outbreaks.\\ \\
@@ -174,17 +183,27 @@
 	\clearpage
 	
 	\subsection{Is commuting to work important for disease spread?}
-	One could easily assume that working at a different location affects the rate at which a disease spreads, as it enhances it's reach. To get an idea of the effect of the parameter we did a simulation for 11 different percentages, ranging from 0 to 100. The displayed data is an average derived from 50 different runs for each percentage.
-	
-% we missen het plaatje?	
-%	\begin{figure}
-%		\includegraphics[width=\textwidth]{fraction_workplace_commutersnew_0_100_10.png}
-%		\caption{Results of 11 different percentages of commuters in a range from 0 to 100.}
-%	\end{figure}
+	One could easily assume that working at a different location affects the rate at which a disease spreads, as it enhances it's reach. To get an idea of the effect of the parameter we did a simulation for 6 different percentages, ranging from 0 to 100. The displayed data is an average derived from 30 different runs for each percentage. In order to obtain these results, "general" values for all other parameters were used so that we would only look at the effects of commuting, rather then the combined influences of multiple parameters. \\
+	\\
+	\noindent 
+	It is true that taking an average might devalue part of the estimation of the data, therefore we made a boxplot of the found data, to see what the biggest outliers were, and how far the mean was from the average run. We can clearly see that there are little to no outliers and that all the data is more or less centralized around the actual found average.
+	\begin{figure}
+		\includegraphics[width=\textwidth]{commuting_boxplot.png}
+		\caption{Boxplot made from final infection counts derived from 30 runs per percentage.}
+	\end{figure}
 	
 	\noindent
-	As we can clearly see, there is little to no difference between the different commuting percentages and, even though the graph is kinda clouded by the amount of different graphs drawn on top of each other. We can clearly see that the fraction of workplace commuters is negligible. It might still have a slight effect when we were to zoom in, but it is soo small that it can not be considered to be a determining factor for the spread of diseases. 
-	\newpage
+	Now for the actual graph, we can't see any obvious difference between the different runs, on this scale. The same can be seen from the boxplot, where the general result is all within a very similar range. There are differences, but these could just be related to the randomness of stride, and they do not have to be specifically caused due to the commuters. 
+	
+	\begin{figure}
+		\includegraphics[width=\textwidth]{commuting_new.png}
+		\caption{Results of 6 different percentages of commuters in a range from 0 to 100.}
+	\end{figure}
+
+	\noindent
+	As a conclusion I would say that there might be small effects of the percentage of commuters, as the results are not identical, however the differences are soo small that these might as well be due to randomness. I do not think that the percentage on its own will be significant to the final results.
+	
+	
 	\section{Performance profiling of sequential code}
 	To study the performance of the code we will discuss a few parameters. We used the GPROF tool to profile the code. Based on these result we could see the influence of different parameters on the runtime.
 	\\

@@ -58,6 +58,8 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // Set the GeoGridConfig.
         // ------------------------------------------------------------
 
+        m_stride_logger->trace("Starting Reading of Household files.");
+
         GeoGridConfig ggConfig(m_config);
 
         // default config
@@ -93,13 +95,17 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
             ggConfig.SetMajorCitiesData(m_config.get<string>("run.geopop_gen.major_cities"));
         }
 
+        m_stride_logger->trace("Finished Reading of Household files.");
+
         // ------------------------------------------------------------
         // Set the workplace data.
         // ------------------------------------------------------------
+        m_stride_logger->trace("Starting Reading of Workplace files.");
         boost::optional<const ptree& > workplace_config = m_config.get_child_optional("run.geopop_gen.workplace_file");
         if(workplace_config) {
                 ggConfig.SetWorkplaceData(m_config.get<string>("run.geopop_gen.workplace_file"));
         }
+        m_stride_logger->trace("Finished Reading of Workplace files.");
 
         // ------------------------------------------------------------
         // Get GeoGrid associated with 'pop'.
