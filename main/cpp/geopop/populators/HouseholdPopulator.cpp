@@ -37,7 +37,8 @@ void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, GeoG
 
         GeoGridConfig::refHH HHReference{};
 
-        for (const shared_ptr<Location>& loc : geoGrid) {
+        for (unsigned i = 0; i <geoGrid.size(); ++i) {
+                const auto& loc = geoGrid[i];
                 // major city
                 if(std::find(geoGridConfig.majorCities.begin(), geoGridConfig.majorCities.end(), loc->GetName())
                         != geoGridConfig.majorCities.end() and

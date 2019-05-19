@@ -40,6 +40,7 @@ set_property(SOURCE ${PROTO_HDR} ${PROTO_SRC}
 #============================================================================
 # Sources.
 #============================================================================
+message("BOOST_FOUND: " ${Boost_FOUND})
 set(STRIDE_SRC
     #---
     calendar/Calendar.cpp
@@ -64,7 +65,9 @@ set(STRIDE_SRC
     execs/StanController.cpp
     #---
     #geopop/ContactCenter.cpp
-    geopop/Coordinate.h
+    geopop/geo/Coordinate.h
+    geopop/geo/Region.cpp
+    geopop/geo/GeoLocation.cpp
     geopop/GeoGrid.cpp
     geopop/GeoGridConfig.cpp
     geopop/Location.cpp

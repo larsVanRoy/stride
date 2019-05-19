@@ -41,7 +41,8 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                 //      2.4 reduce the total number of available workers and continue
 
                 auto uniform01Generator = m_rn_man.GetUniform01Generator(0U);
-                for (const auto &loc : geoGrid) {
+                for (unsigned i = 0; i < geoGrid.size(); ++i) {
+                        const auto &loc = geoGrid[i];
                         int workers =
                                 static_cast<unsigned int>(
                                         floor(loc->GetPopCount() *

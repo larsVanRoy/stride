@@ -89,7 +89,8 @@ TEST(CommutesCSVReaderTest, test1)
         CommutesCSVReader reader(move(instream));
         reader.FillGeoGrid(geoGrid);
 
-        for (const auto& loc : geoGrid) {
+        for (unsigned j = 0; j < geoGrid.size(); ++j) {
+                const auto& loc = geoGrid[j];
                 int         i                = 0;
                 const auto& expectedLoc      = expectedGeoGrid.GetById(loc->GetID());
                 const auto& outGoingExpected = expectedLoc->CRefOutgoingCommutes();

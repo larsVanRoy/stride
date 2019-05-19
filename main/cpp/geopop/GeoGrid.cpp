@@ -17,8 +17,6 @@
 
 #include "contact/ContactPool.h"
 #include "geopop/Location.h"
-#include "geopop/geo/GeoAggregator.h"
-#include "geopop/geo/GeoGridKdTree.h"
 #include "pop/Population.h"
 
 #include <queue>
@@ -32,65 +30,39 @@ using stride::ContactPool;
 using stride::ContactType::Id;
 
 GeoGrid::GeoGrid(stride::Population* population)
-    : m_locations(), m_id_to_index(), p_id_to_index(), m_population(population), m_finalized(false), m_tree()
+    : m_region(), m_population(population)
 {
 }
 
 void GeoGrid::AddLocation(shared_ptr<Location> location)
 {
-        if (m_finalized) {
-                throw std::runtime_error("Calling addLocation while GeoGrid is finalized not supported!");
-        }
-        m_locations.emplace_back(location);
-        m_id_to_index[location->GetID()] = static_cast<unsigned int>(m_locations.size() - 1);
-        if (p_id_to_index.find(location->GetProvince()) != p_id_to_index.end()){
-                p_id_to_index[location->GetProvince()].emplace_back(static_cast<unsigned int>(m_locations.size() - 1));
-        }
-        else{
-                p_id_to_index[location->GetProvince()] = {static_cast<unsigned int>(m_locations.size() - 1)};
-        }
+        m_region.AddGeoLocation(location);
 }
 
 template <typename Policy, typename F>
 GeoAggregator<Policy, F> GeoGrid::BuildAggregator(F functor, typename Policy::Args&& args) const
 {
-        return GeoAggregator<Policy, F>(m_tree, functor, std::forward<typename Policy::Args>(args));
+        return m_region.BuildAggregator(functor, args);
 }
 
 template <typename Policy>
 GeoAggregator<Policy> GeoGrid::BuildAggregator(typename Policy::Args&& args) const
 {
-        return GeoAggregator<Policy>(m_tree, std::forward<typename Policy::Args>(args));
-}
-
-void GeoGrid::CheckFinalized(const string& functionName) const
-{
-        if (!m_finalized) {
-                throw std::runtime_error("Calling \"" + functionName + "\" with GeoGrid not finalized not supported!");
-        }
+        return m_region.BuildAggregator(args);
 }
 
 void GeoGrid::Finalize()
 {
-        vector<geogrid_detail::KdTree2DPoint> points;
-        for (const auto& loc : m_locations) {
-                points.emplace_back(geogrid_detail::KdTree2DPoint(loc.get()));
-        }
-        m_tree      = GeoGridKdTree::Build(points);
-        m_finalized = true;
+        m_region.Finalize();
 }
 
 set<const Location*> GeoGrid::LocationsInBox(double long1, double lat1, double long2, double lat2) const
 {
-        CheckFinalized(__func__);
-
+        set<const GeoLocation*> s = m_region.GeoLocationsInBox(long1, lat1, long2, lat2);
         set<const Location*> result;
-
-        auto agg = BuildAggregator<BoxPolicy>(
-            MakeCollector(inserter(result, result.begin())),
-            make_tuple(min(long1, long2), min(lat1, lat2), max(long1, long2), max(lat1, lat2)));
-        agg();
-
+        for(const GeoLocation* g : s){
+                result.insert(static_cast<const Location*>(g));
+        }
         return result;
 }
 
@@ -103,14 +75,12 @@ set<const Location*> GeoGrid::LocationsInBox(Location* loc1, Location* loc2) con
 
 vector<const Location*> GeoGrid::LocationsInRadius(const Location& start, double radius) const
 {
-        CheckFinalized(__func__);
-
-        geogrid_detail::KdTree2DPoint startPt(&start);
-        vector<const Location*>       result;
-
-        auto agg = BuildAggregator<RadiusPolicy>(MakeCollector(back_inserter(result)), make_tuple(startPt, radius));
-        agg();
-
+        vector<const GeoLocation*> s = m_region.GeoLocationsInRadius(start, radius);
+        vector<const Location*> result;
+        result.reserve(s.size());
+        for(const GeoLocation* g : s){
+                result.push_back(static_cast<const Location*>(g));
+        }
         return result;
 }
 
@@ -129,30 +99,18 @@ vector<ContactPool*> GeoGrid::GetNearbyPools(Id id, const Location& start, doubl
                         break;
                 }
         }
-        auto pooool = pools;
-        return pooool;
+        return pools;
 }
 
 vector<Location*> GeoGrid::TopK(size_t k) const
 {
-        auto cmp = [](Location* rhs, Location* lhs) { return rhs->GetPopCount() > lhs->GetPopCount(); };
-
-        priority_queue<Location*, vector<Location*>, decltype(cmp)> queue(cmp);
-        for (const auto& loc : m_locations) {
-                queue.push(loc.get());
-                if (queue.size() > k) {
-                        queue.pop();
-                }
+        vector<GeoLocation*> s = m_region.TopK(k);
+        vector<Location*> result;
+        result.reserve(s.size());
+        for(GeoLocation* g : s){
+                result.push_back(static_cast<Location*>(g));
         }
-
-        vector<Location*> topLocations;
-        while (!queue.empty()) {
-                auto loc = queue.top();
-                topLocations.push_back(loc);
-                queue.pop();
-        }
-
-        return topLocations;
+        return result;
 }
 
 } // namespace geopop

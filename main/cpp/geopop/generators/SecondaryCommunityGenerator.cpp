@@ -39,8 +39,8 @@ void Generator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoG
         const auto communityCount = static_cast<unsigned int>(ceil(popCount / static_cast<double>(communitySize)));
 
         vector<double> weights;
-        for (const auto& loc : geoGrid) {
-                const auto weight = static_cast<double>(loc->GetPopCount()) / static_cast<double>(popCount);
+        for (unsigned i = 0; i < geoGrid.size(); ++i) {
+                const auto weight = static_cast<double>(geoGrid[i]->GetPopCount()) / static_cast<double>(popCount);
                 AssertThrow(weight >= 0 && weight <= 1 && !std::isnan(weight),
                             "SecondaryCommunityGenerator> Invalid weight: " + to_string(weight), m_logger);
                 weights.push_back(weight);

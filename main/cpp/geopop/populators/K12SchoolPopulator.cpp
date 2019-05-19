@@ -32,7 +32,8 @@ void Populator<stride::ContactType::Id::K12School>::Apply(GeoGrid& geoGrid, GeoG
 {
         m_logger->trace("Starting to populate Schools");
 
-        for (const auto& loc : geoGrid) {
+        for (unsigned i = 0; i <geoGrid.size(); ++i) {
+                const auto& loc = geoGrid[i];
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }

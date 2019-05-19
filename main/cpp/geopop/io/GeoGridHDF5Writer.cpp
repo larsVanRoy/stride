@@ -41,8 +41,8 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, const std::string& filename)
         H5File file(filename, H5F_ACC_TRUNC);
         auto locations = file.createGroup("Locations");
 
-        for (const auto& location : geoGrid) {
-                WriteLocation(file, location);
+        for (unsigned i = 0; i < geoGrid.size(); ++i) {
+                WriteLocation(file, geoGrid[i]);
         }
         WriteAttribute("size", geoGrid.size(), locations);
         WritePeople(file);

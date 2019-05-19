@@ -32,7 +32,8 @@ namespace geopop {
     {
         m_logger->trace("Starting to populate Daycares");
 
-        for (const auto& loc : geoGrid) {
+        for (unsigned i = 0; i <geoGrid.size(); ++i) {
+            const auto& loc = geoGrid[i];
             if (loc->GetPopCount() == 0) {
                 continue;
             }

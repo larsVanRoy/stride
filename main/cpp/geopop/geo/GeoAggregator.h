@@ -38,7 +38,7 @@ inline double DegreeToRadian(double deg) { return deg / 180.0 * M_PI; }
 
 namespace geopop {
 
-class Location;
+class GeoLocation;
 
 /// Aggregates into a vector that must should remain alive for the usage duration of the Collector.
 template <typename InsertIter, typename T>

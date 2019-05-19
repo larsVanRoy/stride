@@ -71,15 +71,15 @@ TEST_F(CollegePopulatorTest, NoStudents)
         // Brasschaat and Schoten are close to each other. There is no commuting, but they will
         // receive students from each other. Kortrijk will only receive students from Kortrijk.
 
-        auto brasschaat = *m_geo_grid.begin();
+        auto brasschaat = m_geo_grid[0];
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
         m_college_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
 
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = m_geo_grid[1];
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_college_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
 
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = m_geo_grid[2];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_college_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
 
@@ -90,8 +90,8 @@ TEST_F(CollegePopulatorTest, NoStudents)
                 EXPECT_EQ(0, person.GetPoolId(Id::College));
         }
 
-        for (auto& loc : m_geo_grid) {
-                for (auto& pool : loc->RefPools(Id::College)) {
+        for (unsigned i = 0; i < m_geo_grid.size(); ++i) {
+                for (auto& pool : m_geo_grid[i]->RefPools(Id::College)) {
                         ASSERT_EQ(pool->size(), 0);
                 }
         }
@@ -106,15 +106,15 @@ TEST_F(CollegePopulatorTest, NotCommuting)
         // Brasschaat and Schoten are close to each other. There is no commuting, but they will
         // receive students from each other. Kortrijk will only receive students from Kortrijk.
 
-        auto brasschaat = *m_geo_grid.begin();
+        auto brasschaat = m_geo_grid[0];
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
         m_college_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
 
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = m_geo_grid[1];
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_college_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
 
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = m_geo_grid[2];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_college_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
 
@@ -206,11 +206,11 @@ TEST_F(CollegePopulatorTest, OnlyCommuting)
         m_gg_config.param.fraction_college_commuters = 1;
         m_gg_config.param.participation_college      = 1;
 
-        auto schoten = *(m_geo_grid.begin());
+        auto schoten = m_geo_grid[0];
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_college_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
 
-        auto kortrijk = *(m_geo_grid.begin() + 1);
+        auto kortrijk = m_geo_grid[1];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_college_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
 
@@ -253,15 +253,15 @@ TEST_F(CollegePopulatorTest, OnlyCommutingButNoCommutingAvaiable)
         m_gg_config.param.fraction_college_commuters = 1;
         m_gg_config.param.participation_college      = 1;
 
-        auto brasschaat = *m_geo_grid.begin();
+        auto brasschaat = m_geo_grid[0];
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
         m_college_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
 
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = m_geo_grid[1];
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_college_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
 
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = m_geo_grid[2];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_college_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
 

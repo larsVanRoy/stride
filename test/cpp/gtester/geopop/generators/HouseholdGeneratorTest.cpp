@@ -91,7 +91,8 @@ TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
         m_geo_grid.AddLocation(loc4);
         m_geo_grid.AddLocation(loc5);
 
-        for (const auto& loc : m_geo_grid) {
+        for (unsigned i = 0; i < m_geo_grid.size(); ++i) {
+                const auto& loc = m_geo_grid[i];
                 loc->SetPopFraction(static_cast<double>(loc->GetPopCount()) /
                                     static_cast<double>(m_gg_config.param.pop_size));
         }
