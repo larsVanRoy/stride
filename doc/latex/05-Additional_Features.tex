@@ -1,0 +1,60 @@
+%%!TEX root = ./UserManual.tex
+\chapter{Additional Features}
+\label{chap:code}
+
+
+\section{Introduction}
+\label{section:AdditionalFeatureIntro}
+
+For our bachelor thesis, we were asked to implement a couple of additional features to the original Stride project. We were requested to add two additional contact pools, being Daycare and PreSchool, and two additional data formats, being JSON and HDF5, where JSON would be used for GeoGrid's and households, and HDF5 would be just for GeoGrid's, a visualization tool which will allow the user to get a visual overview of an instance, demographic profiles, for more specific households and finally workplace size distribution, to distinguish different workplace sizes and their chance of occurring.
+
+Each of these expansions came along with their respective implementations and tests. The following implementations were added to the system, and they are used, if not automatically, in the following manner.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Demographic Profile
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Demographic Profile}
+\label{section:demographicprofile}
+
+\subsection{Idea}
+
+The initial idea for this feature was that we were previously incorrectly assuming that every household is the same in the entire country. We therefore wanted to be able to read, whenever given, multiple configurations for households, so that we would be able to generate the household in a more specific manner, rather than using a general set that is the same for the entire population.
+
+A secondary issue was that not all city types have the same household data, the major cities might have a way different ratio for young and old (which is what the differences between the household configurations are based on) than for example a smaller village might have. Since it is very difficult to determine what each city's type is, we considered the major cities versus all other cities.
+
+\subsection{Input}
+The way this data is given to stride is via the config file for the population. There already was a required field in the geopop\_gen section (if it exists) which was household\_file, this field will still be used, and will still be required, it will now hold the data which will be used if there is no more specific configuration at hand.
+
+The following input fields were added, and will be used as their respective household configuration, if given. The final file is the file used to determine which cities are considered major:
+
+\begin{description}
+	\item[Antwerp]: \\ 
+		antwerp\_household\_file 
+	\item[Flemish Brabant]: \\
+		flemish\_brabant\_household\_file
+	\item[West Flanders]: \\
+		west\_flanders\_household\_file
+	\item[East Flanders]: \\
+		east\_flanders\_household\_file
+	\item[Limburg]: \\
+		limburg\_household\_file
+	\item[Major Cities Households]: \\
+		major\_cities\_file 
+	\item[Major Cities]: \\
+		major\_cities
+\end{description}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Workplace Size Distribution
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Workplace Size Distribtution}
+\label{section:WorkplaceSizeDistribution}
+
+\subsection{Idea}
+The intial idea for this feature was based on the fact that not all workplaces are equal in size, and not all of the sizes are equally as common. In order to resolve this we added an extra input file which specifies the different sizes, allong with the chance that they occur.
+
+\subsection{Input}
+This addition adds one extra, optional, input tag, $workpalce\_file$, in the geopop gen section of the populations config file which will be used to generate the workplaces.

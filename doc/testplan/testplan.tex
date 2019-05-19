@@ -347,13 +347,13 @@ We will achieve this by passing a GeoGridConfig object that has no workers. Afte
 This test will check whether the generator can handle a configuration that has no commuting but does have a workplace distribution.\\
 \newline
 \textbf{How will we achieve this?}
-We will achieve this by passing a GeoGridConfig object that has no commuters and a workplace distribution configuration. After this we can check each whether each poolsize is within the expected boundaries given by the distribution.
+We will achieve this by passing a GeoGridConfig object that has no commuters and a workplace distribution configuration. After this we can check whether each poolsize is within the expected boundaries given by the distribution.
 
 \newpage
 
 \subsubsection{WorkplaceGeneratorTest.NullCommutingWithDistribution}
 \textbf{What will it test?}
-This test will check whether the generator can handle a configuration where there as many commuters from A to B as from B to A.\\
+This test will check whether the generator can handle a configuration where there are as many commuters from A to B as from B to A.\\
 \newline
 \textbf{How will we achieve this?}
 We will achieve this by passing a GeoGridConfig where such a situation occurs and one that has a workplace distribution. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig were in fact true followed by checking whether the poolsizes are withing the expected boundaries.
