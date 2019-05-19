@@ -54,7 +54,6 @@ protected:
     unsigned int           m_ppwp = m_gg_config.pools[Id::Workplace];
 };
 
-// Check that generator can handle empty GeoGrid.
 TEST_F(WorkplaceScenarioTest, WorkplaceScenarioWithDistribution)
 {
     m_gg_config.param.pop_size                     = 5 * 1000 * 1000;

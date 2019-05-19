@@ -27,6 +27,7 @@ Participation fraction of daycare:                   0.45
 Participation fraction of preschool:                 0.99
 Participation fraction of college:                   0.7
 Participation fraction of workplace:                 0.7
+Number of major cities                               0
 Target population size                               60.000
 
 Calculated:
@@ -59,6 +60,7 @@ Participation fraction of daycare:                   0.45
 Participation fraction of preschool:                 0.99
 Participation fraction of college:                   0.7
 Participation fraction of workplace:                 0.7
+Number of major cities                               0
 Target population size                               60.000
 
 Calculated:
@@ -99,6 +101,7 @@ Participation fraction of daycare:                   0.45
 Participation fraction of preschool:                 0.99
 Participation fraction of college:                   0.7
 Participation fraction of workplace:                 0.7
+Number of major cities                               13
 Target population size                               60.000
 
 Calculated:
@@ -124,6 +127,7 @@ for region:                                          Major Cities
     ggConfig.param.participation_college = 0.7;
     ggConfig.SetData("households_general.csv");
     ggConfig.SetData(std::map<unsigned int, string>{{11, "households_Major_Cities.csv"}});
+    ggConfig.SetMajorCitiesData("major_cities.csv");
     stringstream ss;
     ss << ggConfig;
 

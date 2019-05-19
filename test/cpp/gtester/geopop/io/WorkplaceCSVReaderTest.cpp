@@ -11,7 +11,7 @@ using namespace std;
 using namespace geopop;
 using namespace stride;
 
-TEST(WorkplaceCSVReader, Test1){
+TEST(WorkplaceCSVReader, TestValidInput){
     string csvString =
     R"(ratio,size_min,size_max
     0.778532842256952,1,9

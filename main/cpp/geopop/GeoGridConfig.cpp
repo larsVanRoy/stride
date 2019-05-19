@@ -20,7 +20,9 @@
 #include "geopop/io/HouseholdReader.h"
 #include "geopop/io/WorkplaceReader.h"
 #include "geopop/io/ReaderFactory.h"
+#include "util/FileSys.h"
 #include "util/StringUtils.h"
+#include "util/CSV.h"
 
 #include <boost/property_tree/ptree.hpp>
 #include <cmath>
@@ -34,7 +36,7 @@ using namespace stride::AgeBrackets;
 using namespace stride::ContactType;
 using stride::util::intToDottedString;
 
-GeoGridConfig::GeoGridConfig() : param{}, refHHs{}, regionInfo{} {
+GeoGridConfig::GeoGridConfig() : param{}, refHHs{}, regionInfo{}, majorCities{} {
     refHHs[0] = refHH{};
 }
 
@@ -216,6 +218,12 @@ void GeoGridConfig::SetWorkplaceData(const std::string &workplaceFileName)
         workplaceReader->SetReferenceWorkplaces(param.workplace_distribution);
 }
 
+void GeoGridConfig::SetMajorCitiesData(const std::string &majorCitiesFileName)
+{
+        auto majorCitiesReader = ReaderFactory::CreateMajorCitiesReader(majorCitiesFileName);
+        majorCitiesReader->SetReferenceCities(majorCities);
+}
+
 ostream& operator<<(ostream& out, const GeoGridConfig& config)
 {
         const int w = 53;
@@ -227,6 +235,7 @@ ostream& operator<<(ostream& out, const GeoGridConfig& config)
         out << setw(w) << "Participation fraction of preschool:" << config.param.participation_preschool << "\n";
         out << setw(w) << "Participation fraction of college:" << config.param.participation_college << "\n";
         out << setw(w) << "Participation fraction of workplace:" << config.param.participation_workplace << "\n";
+        out << setw(w) << "Number of major cities" << config.majorCities.size() << "\n";
         out << setw(w) << "Target population size" << intToDottedString(config.param.pop_size) << "\n"
             << "\n";
         out << "Calculated:"

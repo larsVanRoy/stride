@@ -103,8 +103,10 @@ set(STRIDE_SRC
     geopop/io/HouseholdCSVReader.cpp
     geopop/io/HouseholdJSONReader.h
     geopop/io/HouseholdJSONReader.cpp
-        geopop/io/WorkplaceCSVReader.h
+    geopop/io/WorkplaceCSVReader.h
     geopop/io/WorkplaceCSVReader.cpp
+    geopop/io/MajorCitiesReader.cpp
+    geopop/io/MajorCitiesReader.h
     geopop/io/ReaderFactory.cpp
     #---
     geopop/populators/DaycarePopulator.cpp

@@ -58,8 +58,9 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // Set the GeoGridConfig.
         // ------------------------------------------------------------
 
-        // default config
         GeoGridConfig ggConfig(m_config);
+
+        // default config
         ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
 
         // specific configs
@@ -84,6 +85,12 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         }
         if( !files.empty() ){
                 ggConfig.SetData(files);
+        }
+
+        // major cities
+        boost::optional<const ptree&> temp_config = m_config.get_child_optional("run.geopop_gen.major_cities");
+        if (temp_config){
+            ggConfig.SetMajorCitiesData(m_config.get<string>("run.geopop_gen.major_cities"));
         }
 
         // ------------------------------------------------------------

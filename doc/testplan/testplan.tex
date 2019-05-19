@@ -45,7 +45,7 @@
 \newpage
 
 \section{Introduction}
-For the rest of this document we will give a short summary of every newly created test that will check if the new features work as we expected. These new additions include the two new contact types, being Daycare and PreSchool, new data formats, being JSON and HDF5 as well as global schemes that will be used by all students. There will also be a visual output for the data via QT and an improvement to the generation of the population by factoring in new parameters that will make the generation of the population more diverse, so that we can check even more parameters for their influence on the spread of diseases.
+For the rest of this document we will give a short summary of every newly created test that will check if the new features work as we expected. These new additions include the two new contact types, being Daycare and PreSchool, new data formats, being JSON and HDF5 as well as global schemes that will be used by all students. There will also be a visual output for the data via QT and an improvement to the generation of the population by factoring in new parameters that will make the generation of the population more diverse, so that we can check even more parameters for their influence on the spread of diseases. Every student will write the tests related to their code that they wrote. Scenario tests may overlap and those will be written by the student that felt the need for them.
 
 \section{Daycare and PreSchool}
 \subsection{Generators}
@@ -307,76 +307,101 @@ We will achieve this by comparing the resulting HDF5 file with the correct HDF5 
 \section{QT}
 No tests will be made for QT, as this is hard to test via code. The testing of QT will happen via simulations done by ourselves and outsiders checking if our interface is obvious and well made
 \section{Improved population generation}
+\subsection{Introduction}
+All tests related to this section, unit or scenario, will be written by Lars Van Roy, the same student that wrote the related code.
 \subsection{Demographic profile}
-\subsubsection{DemographicProfile.age} 
+\subsubsection{UnitDemographicProfileTest.onlyDefaultConfiguration} 
 \textbf{What will it test?} 
-This test will check whether a given demographic profile for the young/old ratio is used. \\
+This test will check whether the original stride implementation is still functional (regarding reading the csv). \\
 \newline
 \textbf{How will we achieve this?} 
-We will achieve this by generating a population using a demographic profile for these ratios. We can check if the profile was used by comparing the generated population with the expected percentages.
+We will achieve this by calling the SetData function, part of GeoGridConfig, with a csv file. We can then check if the data was correctly read into the GeoGridConfig.
 
-\subsubsection{DemographicProfile.cities}
+\newpage
+
+\subsubsection{UnitDemographicProfileTest.oneAdditionalProvince}
 \textbf{What will it test?} 
-This test will check whether a given demographic profile for the distribution of central cities compared to other cities is used. \\
+This test will check whether everything goes fine when we give a second csv, linked to a province. \\
 \newline
 \textbf{How will we achieve this?}
-We will achieve this by generating a population using a demographic profile for the different central cities versus other cities. We can check if the profile was used by comparing the generated population with the expected percentages.
+We will achieve this by calling the SetData function twice, once for the original and once for the province csv. We can then compare the data saved in the GeoGridConfig to the actually expected data.
+
+\subsubsection{UnitDemographicProfileTest.additionalMajorCities}
+\textbf{What will it test?} 
+This test will check whether we are able to read major city distribution data. \\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by calling the SetData function twice, once for the original and once for the major city csv. We can then compare the data saved in the GeoGridConfig to the actually expected data.
+
 \subsection{Workplace contactpools}
 
-\subsubsection{WorkplaceCSVReader.Test1}
+\subsubsection{WorkplaceGeneratorTest.ZeroLocationTest}
+\textbf{What will it test?}
+This test will check whether the generator can handle empty GeoGrid.\\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by passing a GeoGridConfig object that has no workers. After this we can check if the workplace generator added any pools by looking at the size function.
+
+\subsubsection{WorkplaceGeneratorTest.NoCommutingWithDistribution}
+\textbf{What will it test?}
+This test will check whether the generator can handle a configuration that has no commuting but does have a workplace distribution.\\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by passing a GeoGridConfig object that has no commuters and a workplace distribution configuration. After this we can check each whether each poolsize is within the expected boundaries given by the distribution.
+
+\newpage
+
+\subsubsection{WorkplaceGeneratorTest.NullCommutingWithDistribution}
+\textbf{What will it test?}
+This test will check whether the generator can handle a configuration where there as many commuters from A to B as from B to A.\\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by passing a GeoGridConfig where such a situation occurs and one that has a workplace distribution. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig were in fact true followed by checking whether the poolsizes are withing the expected boundaries.
+
+\subsubsection{WorkplaceGeneratorTest.TenCommutingWithDistribution}
+\textbf{What will it test?}
+This test will check whether the generator can handle a configuration where there are multiple commuters from different places along with a workplace distribution configuration.\\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by passing a GeoGridConfig where such a situation occurs and one that has a workplace distribution. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig were in fact true followed by checking whether the poolsizes are withing the expected boundaries.
+
+\subsubsection{WorkplaceGeneratorTest.NoCommutingWithoutDistribution}
+\textbf{What will it test?}
+This test will check whether the generator can handle a configuration that has no commuting and no workplace distribution configuration.\\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by passing a GeoGridConfig object that has no commuters and no workplace distribution configuration. After this we can check each whether each poolsize is equal to the expected value.
+
+\subsubsection{WorkplaceGeneratorTest.NullCommutingWithoutDistribution}
+\textbf{What will it test?}
+This test will check whether the generator can handle a configuration where there as many commuters from A to B as from B to A and no workplace distribution configuration.\\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by passing a GeoGridConfig where such a situation occurs and where there is no workplace distribution configuration. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig where in fact true followed by checking whether the poolsizes are equal to the expected values.
+
+\subsubsection{WorkplaceGeneratorTest.TenCommutingWithoutDistribution}
+\textbf{What will it test?}
+This test will check whether the generator can handle a configuration where there are multiple commuters from different places and no workplace distribution configuration.\\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by passing a GeoGridConfig where such a situation occurs and where there is no workplace distribution configuration. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig where in fact true followed by checking whether the poolsizes are equal to their expected values.
+
+\subsubsection{WorkplaceCSVReader.TestValidInput}
 \textbf{What will it test?}
 This test will check whether we are able to read Workplace distribution CSV's.\\
 \newline
 \textbf{How will we achieve this?}
 We will achieve this by passing a possible CSV configuration to the reader. The returned format can then be checked in order to ensure that the configuration is read correctly.
 
-\subsubsection{WorkplaceSizePopulatorTest.NoPopulationTest}
+\subsubsection{WorkplacePopulatorTest}
+For populating the original tests where kept, as it did not change by adding the workplace distribution configurations. It did however change in the sense that the way data is stored changed, therefore the tests where slightly altered.
+
+\subsubsection{WorkplaceScenarioTest.WorkplaceScenarioWithDistribution}
 \textbf{What will it test?}
-The test will check whether the workplace size populator still works when there is no population available.\\
+This test will check if everything works out when we create a scenario, using the workplace reader, workplace generator and the workplace populator.\\
 \newline
 \textbf{How will we achieve this?}
-We can easily check this by passing a geogrid to the populator who has a population size of 0. If there are no exception thrown we know that the function did finish correctly.
+We will achieve this by passing a csv to the reader, followed by calling the generator and populator using the result of the prev steps. We will not verify if the populator worked as expected (as this is not changed within the context, it is just tested to ensure that it does not crash when using the data from the previous step), we will only check if the generated pools are within the expected bounds.
 
-\subsubsection{WorkplaceSizePopulatorTest.OneWorkplaceTypeTest}
-\textbf{What will it test?}
-The test will check whether the workplace size populator can handle one single workplace type.\\
-\newline
-\textbf{How will we achieve this?}
-We can achieve this by passing a single workplace size to populator. We can check if this process was successful by analyzing the altered object.
-
-\subsubsection{WorkplaceSizePopulatorTest.TwoWorkplaceTypesTest}
-\textbf{What will it test?}
-The test will check whether the workplace size populator can handle two workplace types.\\
-\newline
-\textbf{How will we achieve this?} 
-We can achieve this by passing two workplace sizes to the populator. In order to check if this was successful we can analyze the altered object by checking whether there are two different pools.
-
-\subsubsection{WorkplaceSizePopulatorTest.MultipleWorkplaceTypesTest}
-\textbf{What will it test?}
-This test will check whether the workplace size populator can handle multiple types and sizes. \\
-\newline
-\textbf{How will we achieve this?}
-We will achieve this by altering the configuration of the workplace sizes in such way that there are multiple. We can check if this was successful by analyzing the new populations data.
-
-\subsubsection{WorkplaceSizeGeneratorTest.OneWorkplaceTypeTest}
-\textbf{What will it test?}
-This test will check whether the workplace size generator can handle one single type of workplace.\\
-\newline
-\textbf{How will we achieve this?}
-We can achieve this by passing one single type to the generator. We can check whether this was successful by checking the resulting populations data.
-
-\subsubsection{WorkplaceSizeGeneratorTest.ZeroWorkplaceTypesTest}
-\textbf{What will it test?}
-This test will check whether the workplace size generator can handle zero types of workplaces.\\
-\newline
-\textbf{How will we achieve this?}
-We can achieve this by passing no types to the generator. To check if this was successful we can check whether the generated population has any workplace data.
-
-\subsubsection{WorkplaceSizeGeneratorTest.FiveWorkplaceTypesTest}
-\textbf{What will it test?}
-This test will check whether the workplace size generator can handle multiple types of workplaces.\\
-\newline
-\textbf{How will we achieve this?}
-We achieve this by passing five different types to the generator. The generated population will, if the process was successful, have five different workplaces, all with their expected sizes.
 
 \end{document}

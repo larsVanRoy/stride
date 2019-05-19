@@ -100,4 +100,22 @@ shared_ptr<WorkplaceReader> ReaderFactory::CreateWorkplaceReader(const filesys::
         }
 }
 
+shared_ptr<MajorCitiesReader> ReaderFactory::CreateMajorCitiesReader(const std::string& filename)
+{
+        return CreateMajorCitiesReader(FileSys::GetDataDir() / filesys::path(filename));
+}
+
+shared_ptr<MajorCitiesReader> ReaderFactory::CreateMajorCitiesReader(const filesys::path& path)
+{
+        if(!filesys::exists(path)) {
+                throw runtime_error("File not found: " + path.string());
+        }
+        if(path.extension().string() == ".csv") {
+                return make_shared<MajorCitiesReader>(OpenFile(path));
+        } else {
+                throw runtime_error("Unsupported file extension: " + path.extension().string());
+        }
+
+}
+
 } // namespace geopop

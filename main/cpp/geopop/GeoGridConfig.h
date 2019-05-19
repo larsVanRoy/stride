@@ -176,12 +176,7 @@ public:
         // simple vector of all known major cities, used in the household populator to check if a
         // location is a major city
         // -----------------------------------------------------------------------------------------
-        std::vector<std::string> majorCities = {
-                "Aalst",    "Antwerpen", "Brugge",    "Genk",
-                "Gent",     "Hasselt",   "Kortrijk",  "Leuven",
-                "Mechelen", "Oostende",  "Roeselare", "Sint-Niklaas",
-                "Turnhout"
-        };
+        std::vector<std::string> majorCities;
 
         // -----------------------------------------------------------------------------------------
         /// Read the househould data file, parse it and set data.
@@ -198,6 +193,11 @@ public:
         /// Read the workplace data file, parse it and set data.
         // -----------------------------------------------------------------------------------------
         void SetWorkplaceData(const std::string& workplaceFileName);
+
+        // -----------------------------------------------------------------------------------------
+        /// Read the major cities data file, parse it and set data.
+        // -----------------------------------------------------------------------------------------
+        void SetMajorCitiesData(const std::string& majorCitiesFileName);
 
         // -----------------------------------------------------------------------------------------
         /// helper function for << overload
