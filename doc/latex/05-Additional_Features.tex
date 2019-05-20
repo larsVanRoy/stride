@@ -54,10 +54,10 @@ A few decisions had to be made in order to make this work. The basis was simple,
 		The $household$ $generator$ will iterate over the different regions, it will consider all locations within that region and will, for each of these locations, generate the corresponding households. It will use the given household configuration, if it was available, or the default configuration if not.
 		
 	\item[College Generator]:
-		The $college$ $generator$ will iterate over the different regions and will generate colleges where needed, it will however not consider any specific household data, as this is irrelevant to the existence of colleges. People go to colleges all over the country, so it is more dependent on how accessible and how many people live in an area, rather than the possible configurations of set households in that area.
+		The $college$ $generator$ will iterate over the different regions and will generate colleges where needed, it will however not consider any specific household data, as this is irrelevant to the existence of colleges. People go to colleges all over the country, so it is more dependent on how accessible they are and how many people live in an area, rather than the possible configurations of set households in that area.
 		
 	\item[K12School Generator]:
-		The $K12school$ $generator$ will iterate over the different specified regions and will use the possibly available data for that region. It is logic for a k12school to be dependent on the population in the surrounding environment since most of the students will generally go to a nearby k12 school. 
+		The $K12school$ $generator$ will iterate over the different specified regions and will use the possibly available data for that region. It is logical for a k12school to be dependent on the population in the surrounding environment since most of the students will generally go to a nearby k12 school. 
 		
 	\item[PreSchool Generator]:
 		The $preschool$ $generator$ will follow the same logic as the k12school did in which it will use the specific province's/major city's household data, if available.
@@ -80,10 +80,10 @@ A few decisions had to be made in order to make this work. The basis was simple,
 \label{section:WorkplaceSizeDistribution}
 
 \subsection{Idea}
-The intial idea for this feature was based on the fact that not all workplaces are equal in size, and not all of the sizes are equally as common. In order to resolve this we added an extra input file which specifies the different sizes, allong with the chance that they occur.
+The initial idea for this feature was based on the fact that not all workplaces are equal in size, and not all of the sizes are equally as common. In order to resolve this we added an extra input file which specifies the different sizes, along with the chance that they occur.
 
 \subsection{Input}
 This addition adds one extra, optional, input tag, $workpalce\_file$, in the geopop gen section of the populations config file which will be used to generate the workplaces.
 
 \subsection{Workplace Generator}
-Rather then creating a workplace for every 20 persons, we will now iterate for as long as we dont have sufficient space to allow all people that should work, to work. In each iteration we will generate a random size (taking in account the given chances for each size) for a new workplace pool.
+Rather then creating a workplace for every 20 persons, we will now iterate for as long as we do not have sufficient space to allow all people that should work, to work. In each iteration we will generate a random size (taking in account the given chances for each size) for a new workplace pool.
