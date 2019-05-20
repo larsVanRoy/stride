@@ -37,7 +37,7 @@ bool IsId(const string& s)
             make_pair("DAYCARE", Id::Daycare),
             make_pair("PRESCHOOL", Id::PreSchool),
             make_pair("SCHOOL", Id::K12School),
-            make_pair("SCHOOL", Id::College),
+            make_pair("COLLEGE", Id::College),
             make_pair("WORKPLACE", Id::Workplace),
             make_pair("PRIMARY_COMMUNITY", Id::PrimaryCommunity),
             make_pair("SECONDARY_COMMUNITY", Id::SecondaryCommunity),

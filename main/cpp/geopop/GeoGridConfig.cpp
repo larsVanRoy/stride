@@ -132,7 +132,7 @@ void GeoGridConfig::SetData(const string& householdsFileName)
         provInfo.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
 }
 
-void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileNames)
+void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileNames, GeoGrid& geoGrid)
 {
         //----------------------------------------------------------------
         // Read the given householdFiles
@@ -146,8 +146,6 @@ void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileN
 
                 auto householdReader = ReaderFactory::CreateHouseholdReader(householdFile);
                 householdReader->SetReferenceHouseholds(householdRef.person_count, householdRef.ages);
-
-                const auto popSize = param.pop_size;
 
                 //----------------------------------------------------------------
                 // Determine age makeup of reference houshold population.
@@ -187,6 +185,22 @@ void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileN
                 const auto fraction_k12school_age = static_cast<double>(ref_k12school) / static_cast<double>(ref_p_count);
                 const auto fraction_college_age   = static_cast<double>(ref_college) / static_cast<double>(ref_p_count);
                 const auto fraction_workplace_age = static_cast<double>(ref_workplace) / static_cast<double>(ref_p_count);
+
+                auto popSize = 0;
+                if (provinceID == 11){
+                        for(const auto& loc : geoGrid){
+                                if(find(majorCities.begin(), majorCities.end(), loc->GetName()) != majorCities.end()){
+                                        popSize += loc->GetPopCount();
+                                }
+                        }
+                }
+                else{
+                        for(const auto& loc : geoGrid){
+                                if(loc->GetProvince() == provinceID){
+                                        popSize += loc->GetPopCount();
+                                }
+                        }
+                }
 
                 const auto age_count_daycare   = static_cast<unsigned int>(floor(popSize * fraction_daycare_age));
                 const auto age_count_preschool = static_cast<unsigned int>(floor(popSize * fraction_preschool_age));
