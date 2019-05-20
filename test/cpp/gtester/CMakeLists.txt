@@ -63,6 +63,7 @@ set(SRC
     geopop/io/GeoGridIOUtils.cpp
     geopop/io/GeoGridJSONReaderTest.cpp
     geopop/io/GeoGridJSONWriterTest.cpp
+    geopop/io/GeoGridJSONReaderWriterTest.cpp
     geopop/io/GeoGridProtoReaderTest.cpp
     geopop/io/GeoGridProtoWriterTest.cpp
     geopop/io/GeoGridHDF5ReaderTest.cpp
