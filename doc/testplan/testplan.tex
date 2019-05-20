@@ -333,6 +333,20 @@ This test will check whether we are able to read major city distribution data. \
 \textbf{How will we achieve this?}
 We will achieve this by calling the SetData function twice, once for the original and once for the major city csv. We can then compare the data saved in the GeoGridConfig to the actually expected data.
 
+\subsubsection{ScenarioDemographicProfileTest.CorrectUseOfProvinces}
+\textbf{What will it test?} 
+This test will check whether we correctly read province distribution data, and whether we prefer these over the default data. \\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by calling the SetData function for all possible demographic profile input tags, followed by generating all possible pools. We can then compare the data saved in the GeoGridConfig to the actually expected data, along with counting the number of pools that got created.
+
+\subsubsection{ScenarioDemographicProfileTest.CorrectUseInGenerator}
+\textbf{What will it test?} 
+This test will check whether we correctly read province distribution data, and whether we correctly apply the included percentages within these configurations. \\
+\newline
+\textbf{How will we achieve this?}
+We will achieve this by calling the SetData function for all possible demographic profile input tags, followed by generating all possible pools. We can then compare the data saved in the GeoGridConfig to the actually expected data, along with counting the number of pools that got created.
+
 \subsection{Workplace contactpools}
 
 \subsubsection{WorkplaceGeneratorTest.ZeroLocationTest}

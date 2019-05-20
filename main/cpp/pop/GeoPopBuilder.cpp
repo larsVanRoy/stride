@@ -55,6 +55,11 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         m_stride_logger->trace("Building geopop.");
 
         // ------------------------------------------------------------
+        // Get GeoGrid associated with 'pop'.
+        // ------------------------------------------------------------
+        auto& geoGrid = pop->RefGeoGrid();
+
+        // ------------------------------------------------------------
         // Set the GeoGridConfig.
         // ------------------------------------------------------------
 
@@ -64,6 +69,12 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
 
         // default config
         ggConfig.SetData(m_config.get<string>("run.geopop_gen.household_file"));
+
+        // major cities
+        boost::optional<const ptree&> temp_config = m_config.get_child_optional("run.geopop_gen.major_cities");
+        if (temp_config){
+                ggConfig.SetMajorCitiesData(m_config.get<string>("run.geopop_gen.major_cities"));
+        }
 
         // specific configs
         map<unsigned int, string> possible_household_files =
@@ -86,13 +97,7 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
                 }
         }
         if( !files.empty() ){
-                ggConfig.SetData(files);
-        }
-
-        // major cities
-        boost::optional<const ptree&> temp_config = m_config.get_child_optional("run.geopop_gen.major_cities");
-        if (temp_config){
-            ggConfig.SetMajorCitiesData(m_config.get<string>("run.geopop_gen.major_cities"));
+                ggConfig.SetData(files, geoGrid);
         }
 
         m_stride_logger->trace("Finished Reading of Household files.");
@@ -106,11 +111,6 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
                 ggConfig.SetWorkplaceData(m_config.get<string>("run.geopop_gen.workplace_file"));
         }
         m_stride_logger->trace("Finished Reading of Workplace files.");
-
-        // ------------------------------------------------------------
-        // Get GeoGrid associated with 'pop'.
-        // ------------------------------------------------------------
-        auto& geoGrid = pop->RefGeoGrid();
 
         // ------------------------------------------------------------
         // Read locations file (commute file only if present).
