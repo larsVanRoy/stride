@@ -31,10 +31,10 @@ using namespace stride;
 using namespace stride::ContactType;
 using namespace stride::util;
 
-class ScenarioDemographicProfile : public testing::Test
+class ScenarioDemographicProfileTest : public testing::Test
 {
 public:
-    ScenarioDemographicProfile()
+    ScenarioDemographicProfileTest()
             : m_rn_man(RnInfo()), m_gg_config(), m_pop(Population::Create()), m_geo_grid(m_pop.get())
     {
     }
@@ -46,7 +46,7 @@ protected:
     GeoGrid                m_geo_grid;
 };
 
-TEST_F(ScenarioDemographicProfile, correctUseOfProvinces)
+TEST_F(ScenarioDemographicProfileTest, correctUseOfProvinces)
 {
     m_gg_config.param.pop_size = 60000;
     m_gg_config.param.participation_college = 0.8;
@@ -185,7 +185,7 @@ for region:                                          Limburg
     EXPECT_EQ(secondaryCount, 30 * m_gg_config.pools[Id::SecondaryCommunity]);
 }
 
-TEST_F(ScenarioDemographicProfile, correctUseOfMajorCity)
+TEST_F(ScenarioDemographicProfileTest, correctUseInGenerator)
 {
     m_gg_config.param.pop_size = 120000;
     m_gg_config.param.participation_college = 0.8;
