@@ -27,7 +27,8 @@
 	\maketitle              % typeset the header of the contribution
 	%
 	\begin{abstract}
-		As described within the following paper, we have analyzed the extend of the randomness factor within Stride, the extinction threshold (aka the point at which no outbreaks occur), we have estimated factors like the immunity level and r0 for a given result, we have analyzed the individual influence of factors like demography, vaccines, commuting to work and finally we have performed a couple of benchmarks to see which aspects of the code where the most demanding. All of these analyses (wherever needed of course) are based upon an average of multiple seeded runs, and all results are obtained by analyses over a range of values, rather then a predetermined range/goal. We have for example been able to prove that commuting to work, contrary to expectations, on its own, does not affect the spreading of diseases in a significant manner. We have also been able to prove that vaccines, on their own, do affect the spreading of diseases. $<$insert conclusion here$>$
+		As described within the following paper, we have analyzed the extend of the randomness factor within Stride, the extinction threshold (aka the point at which no outbreaks occur), we have estimated factors like the immunity level and r0 for a given result, we have analyzed the individual influence of factors like demography, vaccines, commuting to work and finally we have performed a couple of benchmarks to see which aspects of the code where the most demanding. All of these analyses (wherever needed of course) are based upon an average of multiple seeded runs, and all results are obtained by analyses over a range of values, rather then a predetermined range/goal. We have for example been able to prove that commuting to work, contrary to expectations, on its own, does not affect the spreading of diseases in a significant manner. We have also been able to prove that vaccines, on their own, do affect the spreading of diseases. In general, we have found out that the individual parameters have little to no significant effect on their own, but that it is always a combination of parameters that influences the spread of a disease.
+
 		
 		%\keywords{First keyword  \and Second keyword \and Another keyword.}
 		
@@ -35,9 +36,9 @@
 	
 	
 	\section{Introduction}
-	In this paper we will discuss a couple of the aspects that are part of stride, as well as a brief look towards a couple of possible factors that may or may not influence the spreading of diseases (this will be proven by the analyses). Every aspect will be analyzed individually, so there wont be any regards to correlations of data. All analyses regarding these factors will be done by performing multiple seeded runs where the average will be considered our final result. Finally, we will do a couple of benchmark runs where we vary some of the parameters, in order to determine which types of parameters affect the runtime of Stride, as well as an attempt on determining why this is the case. \\
+	In this paper we will discuss a couple of the aspects that are part of stride, as well as a brief look towards a couple of possible factors that may or may not influence the spreading of diseases (this will be proven by the analyses). Every aspect will be analyzed individually, so we will not do any analysis on correlations of parameters. All analyses regarding these factors will be done by performing multiple seeded runs where the average will be considered our final result. Finally, we will do a couple of benchmark runs where we vary some of the parameters, in order to determine which types of parameters affect the runtime of Stride, as well as an attempt on determining why this is the case. \\
 	\\
-	The paper itself will consist out of a simulation section, where we will perform a regular simple simulation, as well as an analysis on a couple of parameters, and their expected value, regarding a given simulation result. After the simulation section we have a section regarding the generation of populations. This section will quickly analyse the effect of a couple of parameters, on their own. The paper will end with the benchmark section where we will quickly demonstrate and explain our findings about the performance of different sections of code.
+	The paper itself will consist out of a simulation section, where we will perform a regular simple simulation, as well as an analysis on a couple of parameters, and their expected value, regarding a given simulation result. After the simulation section we have a section regarding the generation of populations. This section will quickly analyze the effect of a couple of parameters, on their own. The paper will end with the benchmark section where we will quickly demonstrate and explain our findings about the performance of different sections of code.
 	
 	\section{Simulation}
 	
@@ -51,9 +52,9 @@
 	\\
 	Towards the end a flattening of the curve occurs. This is not something totally unexpected because the population is obviously not infinite. At one point anyone who can be infected will effectively become a carrier of the disease. Something else that is important to note, are the flat lines at the bottom of the graph. These are what we call extinctions and they represent the evolution of diseases that died out.\\ 
 	\\
-	In order for these simulations to stand out more, a different number of seeding rate(the percentage of the population thats starts out as being diseased). This allowed for a quicker climb in a shorter amount of time. Starting out with a lower number might/could have given us the same results (it definitively could, but its not given that it would do to the randomness) but it would take longer to show real differences, as they would all start out the same way.\\
+	In order for these simulations to stand out more, a different number of seeding rate(the percentage of the population that starts out as being diseased). This allowed for a quicker climb in a shorter amount of time. Starting out with a lower number might/could have given us the same results (it definitively could, but its not given that it would due to the randomness) but it would take longer to show real differences, as they would all start out the same way.\\
 	\\
-	We can clearly see that randomness plays a major role within Stride, considering that there are two big sets of curves, the ones following an upwards curve and the ones that go extinct, we cannot base conclusions on a small set of simulations as these might all be very different, we will from now on consider large sets of runs to determine the true expected evolution of a disease.\\
+	We can clearly see that randomness plays a major role within Stride, considering that there are two big sets of curves, the ones following an upward curve and the ones that go extinct, we cannot base conclusions on a small set of simulations as these might all be very different, we will from now on consider large sets of runs to determine the true expected evolution of a disease.\\
 	
 	\begin{figure}
 		\centering
@@ -183,7 +184,7 @@
 	\clearpage
 	
 	\subsection{Is commuting to work important for disease spread?}
-	One could easily assume that working at a different location affects the rate at which a disease spreads, as it enhances it's reach. To get an idea of the effect of the parameter we did a simulation for 6 different percentages, ranging from 0 to 100. The displayed data is an average derived from 30 different runs for each percentage. In order to obtain these results, "general" values for all other parameters were used so that we would only look at the effects of commuting, rather then the combined influences of multiple parameters. \\
+	One could easily assume that working at a different location affects the rate at which a disease spreads, as it enhances it's reach. To get an idea of the effect of the parameter we did a simulation for 6 different percentages, ranging from 0 to 100. The displayed data are an average derived from 30 different runs for each percentage. In order to obtain these results, "general" values for all other parameters were used so that we would only look at the effects of commuting, rather than the combined influences of multiple parameters. \\
 	\\
 	\noindent 
 	It is true that taking an average might devalue part of the estimation of the data, therefore we made a boxplot of the found data, to see what the biggest outliers were, and how far the mean was from the average run. We can clearly see that there are little to no outliers and that all the data is more or less centralized around the actual found average.
@@ -196,12 +197,12 @@
 	Now for the actual graph, we can't see any obvious difference between the different runs, on this scale. The same can be seen from the boxplot, where the general result is all within a very similar range. There are differences, but these could just be related to the randomness of stride, and they do not have to be specifically caused due to the commuters. 
 	
 	\begin{figure}
-		\includegraphics[width=\textwidth]{commuting_new.png}
+		\includegraphics[width=\textwidth]{commuting_cumul.png}
 		\caption{Results of 6 different percentages of commuters in a range from 0 to 100.}
 	\end{figure}
 
 	\noindent
-	As a conclusion I would say that there might be small effects of the percentage of commuters, as the results are not identical, however the differences are soo small that these might as well be due to randomness. I do not think that the percentage on its own will be significant to the final results.
+	As a conclusion I would say that there might be small effects of the percentage of commuters, as the results are not identical, however the differences are so small that these might as well be due to randomness. I do not think that the percentage on its own will be significant to the final results.
 	
 	
 	\section{Performance profiling of sequential code}
