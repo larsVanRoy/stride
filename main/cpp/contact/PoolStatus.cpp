@@ -18,8 +18,6 @@
  * Header for PoolStatus
  */
 
-#pragma once
-
 #include "PoolStatus.h"
 
 #include <vector>
@@ -38,8 +36,8 @@ namespace stride {
 //    return true;
 //}
 
-void PoolStatus::addStatus(stride::ContactType::Id ID, std::shared_ptr<std::vector<double>> status) {
-    m_status[stride::ContactType::ToSizeT(ID)] = status;
+void PoolStatus::addStatus(stride::ContactType::Id ID, std::shared_ptr<HealthPool> status) {
+    m_status[ContactType::ToSizeT(ID)] = status;
 }
 
 void HealthPool::setHealth(HealthStatus ID, double fraction) {

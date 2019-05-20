@@ -39,13 +39,13 @@ public:
 //    bool operator==(const PoolStatus& other);
 
     /// Adds a status (vector of percentages) for a ContactType
-    void addStatus(stride::ContactType::Id ID, std::shared_ptr<std::vector<double>> status);
+    void addStatus(stride::ContactType::Id ID, std::shared_ptr<HealthPool> status);
 
     /// Returns the status of a ContactType
-    std::shared_ptr<std::vector<double>> getStatus(stride::ContactType::Id ID) { return m_status[ID]; }
+    std::shared_ptr<HealthPool> getStatus(stride::ContactType::Id ID) { return m_status[ContactType::ToSizeT(ID)]; }
 
-    using iterator          = std::vector<std::shared_ptr<std::vector<double>>>::iterator;
-    using const_iterator    = std::vector<std::shared_ptr<std::vector<double>>>::const_iterator;
+    using iterator          = std::vector<std::shared_ptr<HealthPool>>::iterator;
+    using const_iterator    = std::vector<std::shared_ptr<HealthPool>>::const_iterator;
 
     iterator begin() { return m_status.begin(); }
 
@@ -56,7 +56,7 @@ public:
     const_iterator cend() { return m_status.cend(); }
 
 private:
-    std::vector<std::shared_ptr<std::vector<double>>> m_status;   ///< matrix of the health status of a ContactType m_status[ContactType::Id][HealthStatus]
+    std::vector<std::shared_ptr<HealthPool>> m_status;   ///< matrix of the health status of a ContactType m_status[ContactType::Id][HealthStatus]
 };
 
 class HealthPool {
@@ -79,7 +79,13 @@ public:
 
     double getHealth(HealthStatus ID);
 
+    /// Sum of fractions of all given ID
     double sum(const std::vector<HealthStatus>& ID);
-};
 
+    /// returns size of HealthPool
+    static unsigned size() { return 7; };
+
+    std::vector<double> toVector(){ return {m_susceptible, m_exposed, m_infectious, m_symptomatic,
+                                            m_infectiousAndSympomatic, m_recovered, m_immune}; }
+};
 }   // namespace stride

@@ -51,7 +51,6 @@ private:
     /// Create an EpiLocation based on the information stored in the provided JSON object.
     std::shared_ptr<Location> ParseLocation(nlohmann::json& location);
 
-    std::
 
     /// Take a JSON object and cast wrongly provided types to the expected type (if possible).
     template <typename T>

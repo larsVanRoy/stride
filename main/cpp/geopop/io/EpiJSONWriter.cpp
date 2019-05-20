@@ -119,32 +119,19 @@ json EpiJSONWriter::WriteHealthStatus(const std::shared_ptr<geopop::Location> lo
     return pool;
 }
 
-json EpiJSONWriter::WritePoolHealthStatus(const std::shared_ptr<geopop::Location> location, Id id)
-{
+json EpiJSONWriter::WritePoolHealthStatus(const std::shared_ptr<geopop::Location> location, Id id) {
     json health_status = json::array();
 
-    vector<unsigned long> status = {0,0,0,0};
+    vector<unsigned long> status(NumOfHealthStatus(), 0);
 
-    for (const auto& pool : location->CRefPools(id)) {
+    for (const auto &pool : location->CRefPools(id)) {
         for (const auto &person : *pool) {
-            const auto &h = person->GetHealth();
-                if (h.IsImmune()) {
-                    status[0]++;
-                } else if (h.IsInfected()) {
-                    status[1]++;
-                } else if (h.IsRecovered()) {
-                    status[2]++;
-                } else if (h.IsSusceptible()) {
-                    status[3]++;
-                }
+            status[ToSize(person->GetHealth().GetStatus())]++;
         }
     }
-
-    for (unsigned long i : status) {
-        health_status.push_back((double)i/location->GetPopCount());
+    for(int i = 0; i < status.size(); ++i){
+        health_status.push_back(status[i]/location->GetPopCount());
     }
-
     return health_status;
 }
-
 } // namespace geopop
