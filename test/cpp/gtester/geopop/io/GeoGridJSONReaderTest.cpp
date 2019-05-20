@@ -162,9 +162,11 @@ TEST(GeoGridJSONReaderTest, contactPoolTest)
                                {Id::PrimaryCommunity, false},
                                {Id::College, false},
                                {Id::Household, false},
-                               {Id::Workplace, false},};
+                               {Id::Workplace, false},
+                               {Id::PreSchool, false},
+                               {Id::Daycare, false},};
 
-        for (unsigned int i = 0; i < 5; i++) {
+        for (unsigned int i = 0; i < 7; i++) {
                 EXPECT_FALSE(found[centers[i]->GetType()]);
                 found[centers[i]->GetType()] = true;
         }
@@ -210,6 +212,8 @@ void runPeopleTest(const string& filename)
                 EXPECT_EQ(person->GetPoolId(Id::Workplace), 1);
                 EXPECT_EQ(person->GetPoolId(Id::PrimaryCommunity), 1);
                 EXPECT_EQ(person->GetPoolId(Id::SecondaryCommunity), 1);
+                EXPECT_EQ(person->GetPoolId(Id::Daycare), 0);
+                EXPECT_EQ(person->GetPoolId(Id::PreSchool), 0);
 
                 loop_type++;
         }

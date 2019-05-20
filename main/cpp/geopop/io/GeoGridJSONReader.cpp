@@ -188,7 +188,7 @@ Person* GeoGridJSONReader::ParsePerson(json& person)
         const auto dcId = JSONCast<unsigned int>(person["daycare"]);
         const auto psId = JSONCast<unsigned int>(person["preSchool"]);
 
-        return m_population->CreatePerson(id, age, dcId, psId, hhId, ksId, coId, wpId, pcId, scId);
+        return m_population->CreatePerson(id, age, hhId, dcId, psId, ksId, coId, wpId, pcId, scId);
 }
 
 } // namespace geopop
