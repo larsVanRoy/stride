@@ -40,7 +40,7 @@ class GeoAggregator;
  * A Geographic grid of simulation region contains Locations that in turn contain
  * an index to the ContactPools situated at that Location.
  */
-class GeoGrid
+class GeoGrid : private Region
 {
 public:
         /// GeoGrid and associated Population.
@@ -59,7 +59,7 @@ public:
         void Finalize();
 
         /// Gets a Location by Id and check if the Id exists.
-        std::shared_ptr<Location> GetById(unsigned int id) const { return std::static_pointer_cast<Location>(m_region.GetById(id)); }
+        std::shared_ptr<Location> GetById(unsigned int id) const { return std::static_pointer_cast<Location>(Region::GetById(id)); }
 
         /// Get the Population associated with this GeoGrid
         stride::Population* GetPopulation() const { return m_population; }
@@ -105,23 +105,20 @@ public:
         using const_iterator = std::vector<std::shared_ptr<Location>>::const_iterator;
 
         /// Gets a Location by index, doesn't performs a range check.
-        std::shared_ptr<Location> operator[](size_t index) { return std::static_pointer_cast<Location>(m_region[index]); }
+        std::shared_ptr<Location> operator[](size_t index) { return std::static_pointer_cast<Location>(Region::operator[](index)); }
 
         /// Gets a Location by index, doesn't performs a range check.
-        const std::shared_ptr<Location> operator[](size_t index) const { return std::static_pointer_cast<Location>(m_region[index]); }
+        const std::shared_ptr<Location> operator[](size_t index) const { return std::static_pointer_cast<Location>(Region::operator[](index)); }
 
         /// Gets a range of Location indices by province ID
-        const std::vector<unsigned int> get_L_for_P(const unsigned int& province){ return m_region.get_L_for_P(province); }
+        const std::vector<unsigned int> get_L_for_P(const unsigned int& province){ return Region::get_L_for_P(province); }
 
         /// Gets current size of Location storage.
-        size_t size() const { return m_region.size(); }
+        size_t size() const { return Region::size(); }
 
 private:
         ///< Stores pointer to Popluation, but does not take ownership.
         stride::Population* m_population;
-
-        ///< Internal KdTree for quick spatial lookup.
-        Region m_region;
 };
 
 } // namespace geopop

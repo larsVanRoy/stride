@@ -15,14 +15,12 @@
 
 #pragma once
 
-#include "contact/ContactType.h"
-#include "contact/IdSubscriptArray.h"
+#include "disease/Health.h"
 #include "geopop/geo/GeoLocation.h"
-#include "util/SegmentedVector.h"
 
 #include <iostream>
 #include <memory>
-#include <set>
+#include <map>
 #include <string>
 #include <typeindex>
 #include <typeinfo>
@@ -30,109 +28,31 @@
 #include <vector>
 
 namespace stride {
-class ContactPool;
+class PoolStatus;
 }
 
 namespace geopop {
 
 /**
- * Location for use within the GeoGrid, contains GeoLocation and index to ContactPools.
+ * EpiLocation for use within the GeoGrid, contains GeoLocation and index to ContactPools.
  */
-class Location : public GeoLocation
+class EpiLocation : public GeoLocation
 {
 public:
         /// Parametrized constructor with population count.
-        Location(unsigned int id, unsigned int province, Coordinate coordinate = Coordinate(0.0, 0.0),
-                 std::string name = "", unsigned int popCount = 0U);
+        EpiLocation(unsigned int id, unsigned int province, Coordinate coordinate = Coordinate(0.0, 0.0),
+                 std::string name = "", unsigned int popCount = 0U, unsigned int size = 0);
 
         /// Perform a full comparison with the other location.
-        bool operator==(const Location& other) const;
+        bool operator==(const EpiLocation& other) const;
 
-        /// Adds a Location and a proportion to the incoming commute vector.
-        /// I.e. fraction of commuting population at otherLocation commuting to this Location.
-        void AddIncomingCommute(std::shared_ptr<Location> otherLocation, double fraction);
-
-        /// Adds a Location and a fraction to the outgoing commute vector.
-        /// I.e. fraction of commuting population at this Location commuting to otherLocation.
-        void AddOutgoingCommute(std::shared_ptr<Location> otherLocation, double fraction);
-
-        /// Calculates number of incomming commuters, given the fraction of the population that commutes.
-        int GetIncomingCommuteCount(double fractionCommuters) const;
-
-        /// Gets the number of people infected in the contactpools at this location.
-        unsigned int GetInfectedCount() const;
-
-        /// Calculates number of outgoing commuters, given the fraction of the population that commutes.
-        unsigned int GetOutgoingCommuteCount(double fractionCommuters) const;
-
-        /// Get the last contactPool ID for a given contactType
-        unsigned int GetContactPoolId(stride::ContactType::Id id);
-
-public:
-        /// Access through const reference to ContactPools of type 'id'.
-        /// \param id   ContactType::Id of pools container you want to access.
-        /// \return     The requested reference.
-        const stride::util::SegmentedVector<stride::ContactPool*>& CRefPools(stride::ContactType::Id id) const
-        {
-                return m_pool_index[id];
-        }
-
-        /// Templated version of @CRefPools for use when the type id is fixed
-        /// \tparam T   ContactType::Id of pools container you want to access.
-        /// \return     The requested reference.
-        template <stride::ContactType::Id T>
-        const stride::util::SegmentedVector<stride::ContactPool*>& CRefPools() const
-        {
-                return m_pool_index[T];
-        }
-
-        /// Access through reference to ContactPools of type 'id'.
-        /// \param id   ContactType::Id of pools container you want to access.
-        /// \return     The requested reference.
-        stride::util::SegmentedVector<stride::ContactPool*>& RefPools(stride::ContactType::Id id)
-        {
-                return m_pool_index[id];
-        }
-
-        /// Templated version of @RefPools for use when the type id is fixed
-        /// \tparam T   ContactType::Id of pools container you want to access.
-        /// \return     The requested reference.
-        template <stride::ContactType::Id T>
-        stride::util::SegmentedVector<stride::ContactPool*>& RefPools()
-        {
-                return m_pool_index[T];
-        }
-
-        /// Register a ContactPool pointer in this Location's pool system.
-        /// Prior to this the pool should have been created in Population's pool system.
-        void RegisterPool(stride::ContactPool* p, stride::ContactType::Id typeId)
-        {
-                m_pool_index[typeId].emplace_back(p);
-        }
-
-        /// Templated version of @RegisterPool
-        template <stride::ContactType::Id T>
-        void RegisterPool(stride::ContactPool* p)
-        {
-                m_pool_index[T].emplace_back(p);
-        }
-
-public:
-        /// References incoming commute Locations + fraction of commutes to that Location.
-        const std::vector<std::pair<Location*, double>>& CRefIncomingCommutes() const { return m_inCommutes; }
-
-        /// References outgoing commute Locations + fraction of commutes to that Location.
-        const std::vector<std::pair<Location*, double>>& CRefOutgoingCommutes() const { return m_outCommutes; }
-
+        unsigned size(){ return m_size; }
 private:
-        /// Incomming commutes stored as pair of Location and fraction of population at that Location.
-        std::vector<std::pair<Location*, double>> m_inCommutes;
+        /// Stores the history of the location for every step
+        std::vector<std::shared_ptr<stride::PoolStatus>> m_history;
 
-        ///< Outgoing commutes stored as pair of Location and fraction of population to this this Location.
-        std::vector<std::pair<Location*, double>> m_outCommutes;
-
-        ///< The system holding pointers to the contactpools (for each type id) at this Location.
-        stride::ContactType::IdSubscriptArray<stride::util::SegmentedVector<stride::ContactPool*>> m_pool_index;
+        /// Size of m_history
+        unsigned m_size;
 };
 
 } // namespace geopop

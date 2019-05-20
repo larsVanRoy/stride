@@ -52,6 +52,7 @@ set(STRIDE_SRC
     contact/ContactType.cpp
     contact/Infector.cpp
     contact/TransmissionProfile.cpp
+    contact/PoolStatus.cpp
     #---
     disease/DiseaseSeeder.cpp
     disease/Health.cpp
@@ -111,6 +112,9 @@ set(STRIDE_SRC
     geopop/io/MajorCitiesReader.cpp
     geopop/io/MajorCitiesReader.h
     geopop/io/ReaderFactory.cpp
+    geopop/io/EpiWriterFactory.cpp
+    geopop/io/EpiJSONWriter.cpp
+    geopop/io/EpiWriter.h
     #---
     geopop/populators/DaycarePopulator.cpp
     geopop/populators/PreSchoolPopulator.cpp
@@ -124,9 +128,11 @@ set(STRIDE_SRC
     ${PROTO_HEADER}
     ${PROTO_SRC}
     #---
+    geopop/EpiLocation.cpp
     viewers/InfectedFile.cpp
     viewers/PersonsFile.cpp
     viewers/SummaryFile.cpp
+    viewers/EpiViewer.cpp
     #---
     pop/AbstractPopBuilder.cpp
     pop/Person.cpp

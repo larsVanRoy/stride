@@ -30,35 +30,35 @@ using stride::ContactPool;
 using stride::ContactType::Id;
 
 GeoGrid::GeoGrid(stride::Population* population)
-    : m_region(), m_population(population)
+    : Region(), m_population(population)
 {
 }
 
 void GeoGrid::AddLocation(shared_ptr<Location> location)
 {
-        m_region.AddGeoLocation(location);
+        Region::AddGeoLocation(location);
 }
 
 template <typename Policy, typename F>
 GeoAggregator<Policy, F> GeoGrid::BuildAggregator(F functor, typename Policy::Args&& args) const
 {
-        return m_region.BuildAggregator(functor, args);
+        return Region::BuildAggregator(functor, args);
 }
 
 template <typename Policy>
 GeoAggregator<Policy> GeoGrid::BuildAggregator(typename Policy::Args&& args) const
 {
-        return m_region.BuildAggregator(args);
+        return Region::BuildAggregator(args);
 }
 
 void GeoGrid::Finalize()
 {
-        m_region.Finalize();
+        Region::Finalize();
 }
 
 set<const Location*> GeoGrid::LocationsInBox(double long1, double lat1, double long2, double lat2) const
 {
-        set<const GeoLocation*> s = m_region.GeoLocationsInBox(long1, lat1, long2, lat2);
+        set<const GeoLocation*> s = Region::GeoLocationsInBox(long1, lat1, long2, lat2);
         set<const Location*> result;
         for(const GeoLocation* g : s){
                 result.insert(static_cast<const Location*>(g));
@@ -75,7 +75,7 @@ set<const Location*> GeoGrid::LocationsInBox(Location* loc1, Location* loc2) con
 
 vector<const Location*> GeoGrid::LocationsInRadius(const Location& start, double radius) const
 {
-        vector<const GeoLocation*> s = m_region.GeoLocationsInRadius(start, radius);
+        vector<const GeoLocation*> s = Region::GeoLocationsInRadius(start, radius);
         vector<const Location*> result;
         result.reserve(s.size());
         for(const GeoLocation* g : s){
@@ -104,7 +104,7 @@ vector<ContactPool*> GeoGrid::GetNearbyPools(Id id, const Location& start, doubl
 
 vector<Location*> GeoGrid::TopK(size_t k) const
 {
-        vector<GeoLocation*> s = m_region.TopK(k);
+        vector<GeoLocation*> s = Region::TopK(k);
         vector<Location*> result;
         result.reserve(s.size());
         for(GeoLocation* g : s){

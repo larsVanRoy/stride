@@ -60,7 +60,7 @@ public:
         /// Gets the province.
         unsigned int GetProvince() const { return m_province; }
 
-        /// Get GeoLocation's population fraction (of the total populaion count).
+        /// Get GeoLocation's population fraction (of the total population count).
         double GetPopFraction() const;
 
         /// Sets the Coordinate of this GeoLocation.

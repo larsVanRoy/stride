@@ -47,7 +47,7 @@ public:
     /// Adds a location to this Region.
     void AddGeoLocation(std::shared_ptr<GeoLocation> location);
 
-    /// Disables the addGeoLocation method and builds the kdtree.
+    /// Disables the addLocation method and builds the kdtree.
     void Finalize();
 
     /// Gets a GeoLocation by Id and check if the Id exists.
