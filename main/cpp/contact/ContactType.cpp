@@ -39,8 +39,8 @@ bool IsId(const string& s)
             make_pair("SCHOOL", Id::K12School),
             make_pair("COLLEGE", Id::College),
             make_pair("WORKPLACE", Id::Workplace),
-            make_pair("PRIMARY_COMMUNITY", Id::PrimaryCommunity),
-            make_pair("SECONDARY_COMMUNITY", Id::SecondaryCommunity),
+            make_pair("PRIMARYCOMMUNITY", Id::PrimaryCommunity),
+            make_pair("SECONDARYCOMMUNITY", Id::SecondaryCommunity),
         };
         string t{s};
         to_upper(t);
@@ -56,8 +56,8 @@ Id ToId(const string& s)
             make_pair("K12SCHOOL", Id::K12School),
             make_pair("COLLEGE", Id::College),
             make_pair("WORKPLACE", Id::Workplace),
-            make_pair("PRIMARY_COMMUNITY", Id::PrimaryCommunity),
-            make_pair("SECONDARY_COMMUNITY", Id::SecondaryCommunity),
+            make_pair("PRIMARYCOMMUNITY", Id::PrimaryCommunity),
+            make_pair("SECONDARYCOMMUNITY", Id::SecondaryCommunity),
         };
         string t{s};
         to_upper(t);

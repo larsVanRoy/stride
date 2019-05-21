@@ -20,6 +20,8 @@ CompType GetPersonType()
         CompType person_t(sizeof(H5Person));
         person_t.insertMember("id", HOFFSET(H5Person, id), PredType::NATIVE_UINT);
         person_t.insertMember("age", HOFFSET(H5Person, age), PredType::NATIVE_FLOAT);
+        person_t.insertMember("daycare", HOFFSET(H5Person, daycare), PredType::NATIVE_UINT);
+        person_t.insertMember("preschool", HOFFSET(H5Person, preschool), PredType::NATIVE_UINT);
         person_t.insertMember("k12School", HOFFSET(H5Person, k12School), PredType::NATIVE_UINT);
         person_t.insertMember("houseHold", HOFFSET(H5Person, houseHold), PredType::NATIVE_UINT);
         person_t.insertMember("workplace", HOFFSET(H5Person, workplace), PredType::NATIVE_UINT);
