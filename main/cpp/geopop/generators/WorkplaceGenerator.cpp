@@ -29,7 +29,6 @@ using namespace stride::util;
 template<>
 void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoGridConfig& ggConfig)
 {
-        unsigned int size{};
         // initiate workplaces using given distributions
         if (!ggConfig.param.workplace_distribution.empty())
         {
@@ -40,48 +39,85 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                 //      2.3 generate a pool and add the correct size to the GeoGridConfig object
                 //      2.4 reduce the total number of available workers and continue
 
+                // store the indices of the locations that are part of the key (which is a region id)
+                std::map<unsigned int, vector<unsigned int>> loc_indices;
+
                 auto uniform01Generator = m_rn_man.GetUniform01Generator(0U);
-                for (const auto &loc : geoGrid) {
-                        int workers =
-                                static_cast<unsigned int>(
-                                        floor(loc->GetPopCount() *
-                                        ggConfig.param.participation_workplace +
+
+                bool majorCitySpecified = false;
+
+                // initialise the loc_indices map, so that every specified region has its required vector initialised
+                for (const auto& pair : ggConfig.regionInfo){
+                        loc_indices[pair.first] = {};
+                        if (pair.first == 11){
+                                majorCitySpecified = true;
+                        }
+                }
+
+                // store the Location indices in their correct spot in the loc_indices map
+                for (size_t i = 0; i < geoGrid.size(); i++){
+                        const auto& region = geoGrid[i]->GetProvince();
+                        if(majorCitySpecified and
+                           find(ggConfig.majorCities.begin(), ggConfig.majorCities.end(), geoGrid[i]->GetName()) !=
+                           ggConfig.majorCities.end()){
+                                loc_indices[11].emplace_back(i);
+                        }
+                        else if(loc_indices.find(region) != loc_indices.end()){
+                                loc_indices[region].emplace_back(i);
+                        }
+                        else{
+                                loc_indices[0].emplace_back(i);
+                        }
+                }
+
+                // 1. active people count and the commuting people count are given
+                // 2. count the workplaces
+                // 3. count the working people at each location = #residents + #incoming commuters - #outgoing commuters
+                // 4. use that information for the distribution
+                // 5. assign each workplaces to a location
+                for (const auto& pair : ggConfig.regionInfo){
+                        unsigned int EmployeeCount = pair.second.popcount_workplace;
+                        unsigned int RegionPopCount = pair.second.popcount;
+                        double ratio = static_cast<double>(EmployeeCount) / RegionPopCount;
+                        for (const auto& index : loc_indices[pair.first]){
+                                const auto& loc = geoGrid[index];
+                                int workers = static_cast<unsigned int>(floor(loc->GetPopCount() * ratio)+
                                         loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) -
-                                        loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters)));
+                                        loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters));
 
-                        while (workers > 0) {
-                                // this variable is used to determine the size of the next workplace pool
-                                double workplaceType = uniform01Generator();
+                                while (workers > 0) {
+                                        // this variable is used to determine the size of the next workplace pool
+                                        double workplaceType = uniform01Generator();
 
-                                // these variables represent the boundaries of the chosen pool size
-                                unsigned int minSize = 0;
-                                unsigned int maxSize = 0;
-                                for (const std::vector<double> &workplaceSize: ggConfig.param.workplace_distribution) {
-                                        workplaceType -= workplaceSize[0];
-                                        if (workplaceType <= 0) {
-                                                minSize = static_cast<unsigned int>(workplaceSize[1]);
-                                                maxSize = static_cast<unsigned int>(workplaceSize[2]);
-                                                break;
+                                        // these variables represent the boundaries of the chosen pool size
+                                        unsigned int minSize = 0;
+                                        unsigned int maxSize = 0;
+                                        for (const std::vector<double> &workplaceSize: ggConfig.param.workplace_distribution) {
+                                                workplaceType -= workplaceSize[0];
+                                                if (workplaceType <= 0) {
+                                                        minSize = static_cast<unsigned int>(workplaceSize[1]);
+                                                        maxSize = static_cast<unsigned int>(workplaceSize[2]);
+                                                        break;
+                                                }
                                         }
+
+                                        // if this code is reached, the percentages given in the config file did not add up to 1
+                                        if (workplaceType > 0) {
+                                                minSize = static_cast<unsigned int>(ggConfig.param.workplace_distribution.back()[1]);
+                                                maxSize = static_cast<unsigned int>(ggConfig.param.workplace_distribution.back()[2]);
+                                        }
+
+                                        unsigned int boundary = maxSize - minSize;
+                                        unsigned int workplaceSize =
+                                                minSize + static_cast<unsigned int>(floor(uniform01Generator() * boundary));
+
+                                        workplaceSize = std::min<unsigned int>(workplaceSize, static_cast<unsigned int>(workers));
+
+                                        workers -= workplaceSize;
+                                        AddPools(*loc, geoGrid.GetPopulation(), ggConfig);
+                                        const auto& pool_id = loc->GetContactPoolId(stride::ContactType::Id::Workplace);
+                                        ggConfig.wpPoolSizes[pool_id] = workplaceSize;
                                 }
-
-                                // if this code is reached, the percentages given in the config file did not add up to 1
-                                if (workplaceType > 0) {
-                                        minSize = static_cast<unsigned int>(ggConfig.param.workplace_distribution.back()[1]);
-                                        maxSize = static_cast<unsigned int>(ggConfig.param.workplace_distribution.back()[2]);
-                                }
-
-                                unsigned int boundary = maxSize - minSize;
-                                unsigned int workplaceSize =
-                                        minSize + static_cast<unsigned int>(floor(uniform01Generator() * boundary));
-
-                                workplaceSize = std::min<unsigned int>(workplaceSize, static_cast<unsigned int>(workers));
-
-                                workers -= workplaceSize;
-                                size += workplaceSize;
-                                AddPools(*loc, geoGrid.GetPopulation(), ggConfig);
-                                const auto& pool_id = loc->GetContactPoolId(stride::ContactType::Id::Workplace);
-                                ggConfig.wpPoolSizes[pool_id] = workplaceSize;
                         }
                 }
         }
@@ -157,7 +193,6 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                         for (auto i = 0U; i < WorkplacesCount; i++) {
                                 const auto loc = geoGrid[indices[dist()]];
                                 AddPools(*loc, pop, ggConfig);
-                                size += 20;
                                 const auto& pool_id = loc->GetContactPoolId(stride::ContactType::Id::Workplace);
                                 ggConfig.wpPoolSizes[pool_id] = 20;
                         }

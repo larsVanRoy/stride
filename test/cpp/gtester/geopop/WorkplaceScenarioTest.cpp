@@ -61,6 +61,9 @@ TEST_F(WorkplaceScenarioTest, WorkplaceScenarioWithDistribution)
     m_gg_config.param.participation_workplace       = 0.20;
     m_gg_config.param.fraction_workplace_commuters = 0.10;
 
+    // make it so that the default configuration is general and includes all kinds of ages ranges
+    m_gg_config.SetData("households_workers.csv");
+
     string csvString =
     R"(ratio,size_min,size_max
     1, 95, 105)";
