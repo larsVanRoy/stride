@@ -130,6 +130,8 @@ void GeoGridConfig::SetData(const string& householdsFileName)
             floor(param.participation_workplace * (age_count_workplace - provInfo.popcount_college)));
 
         provInfo.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+
+        provInfo.popcount = popSize;
 }
 
 void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileNames, GeoGrid& geoGrid)
@@ -186,7 +188,7 @@ void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileN
                 const auto fraction_college_age   = static_cast<double>(ref_college) / static_cast<double>(ref_p_count);
                 const auto fraction_workplace_age = static_cast<double>(ref_workplace) / static_cast<double>(ref_p_count);
 
-                auto popSize = 0;
+                unsigned int popSize = 0;
                 if (provinceID == 11){
                         for(const auto& loc : geoGrid){
                                 if(find(majorCities.begin(), majorCities.end(), loc->GetName()) != majorCities.end()){
@@ -223,6 +225,8 @@ void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileN
                         floor(param.participation_workplace * (age_count_workplace - provInfo.popcount_college)));
 
                 provInfo.count_households = static_cast<unsigned int>(floor(static_cast<double>(popSize) / averageHhSize));
+
+                provInfo.popcount = popSize;
         }
 }
 

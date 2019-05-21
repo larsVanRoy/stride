@@ -71,6 +71,9 @@ TEST_F(WorkplaceGeneratorTest, NoCommutingWithDistribution)
         m_gg_config.param.fraction_workplace_commuters = 0;
         m_gg_config.param.workplace_distribution       = {{1, 95, 105}};
 
+        // make it so that the default configuration is general and includes all kinds of ages ranges
+        m_gg_config.SetData("households_workers.csv");
+
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
                                       63673,  49438,  45590,  164666, 185249, 141389, 82525,  40397, 123307, 168128,
                                       172937, 15581,  22891,  143505, 178516, 116959, 144659, 20775, 156009, 91951,
@@ -101,6 +104,9 @@ TEST_F(WorkplaceGeneratorTest, NullCommutingWithDistribution)
         m_gg_config.param.participation_workplace       = 0.20;
         m_gg_config.param.fraction_workplace_commuters = 0.10;
         m_gg_config.param.workplace_distribution       = {{1, 95, 105}};
+
+        // make it so that the default configuration is general and includes all kinds of ages ranges
+        m_gg_config.SetData("households_workers.csv");
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
                                       63673,  49438,  45590,  164666, 185249, 141389, 82525,  40397, 123307, 168128,
@@ -144,6 +150,9 @@ TEST_F(WorkplaceGeneratorTest, TenCommutingWithDistribution)
         m_gg_config.param.participation_workplace       = 0.20;
         m_gg_config.param.fraction_workplace_commuters = 0.10;
         m_gg_config.param.workplace_distribution       = {{1, 95, 105}};
+
+        // make it so that the default configuration is general and includes all kinds of ages ranges
+        m_gg_config.SetData("households_workers.csv");
 
         array<unsigned int, 50> sizes{128331, 50784,  191020, 174476, 186595, 105032, 136388, 577,   111380, 171014,
                                       63673,  49438,  45590,  164666, 185249, 141389, 82525,  40397, 123307, 168128,

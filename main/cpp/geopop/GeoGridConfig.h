@@ -145,6 +145,9 @@ public:
 
                 /// The number of households.
                 unsigned int count_households;
+
+                /// The size of the population within the region.
+                unsigned int popcount;
         };
 
         // -----------------------------------------------------------------------------------------
