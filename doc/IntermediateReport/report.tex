@@ -1,0 +1,35 @@
+\documentclass[runningheads]{llncs}
+
+\usepackage{graphicx}
+% Used for displaying a sample figure. If possible, figure files should
+% be included in EPS format.
+\usepackage{float}
+
+\begin{document}
+	%
+	\title{Intermediate Report}
+	
+	\author{Benjamin Vandersmissen\inst{1} \and
+		Lars Van Roy\inst{2} \and \\
+		Evelien Daems\inst{3} \and
+		Frank Jan Fekkes\inst{4}}
+
+	\institute{
+		\email{benjamin.vandersmissen@student.uantwerpen.be} \and
+		\email{lars.vanroy@student.uantwerpen.be} \and
+		\email{evelien.daems@student.uantwerpen.be} \and
+		\email{franciscus.fekkes@student.uantwerpen.be}}
+	%
+	\maketitle              % typeset the header of the contribution
+	%
+	
+	\section{Demographic Profile}
+	The demographic profile section is completely finished. It currently reads the proper configuration and applies the provided information where needed. The used algorithms are described in section 5.2 of the user manual.\\
+	\\
+	There are unit and scenario test that test the implementation of demographic profile. The scenario tests will test whether the information is properly read and that this information is properly applied in the respective generators. These tests will only test the generator for extreme values, where there are only a few types of ages, since the distribution can not exactly be tested if there are multiple (as randomness would influence this). I did however manually test a couple of scenarios where the results were all reasonable and within the expected bounds. The available tests and the functionality they intend to test are all documented in the test plan under section 5.2
+	
+	\section{Workplace Distribution}
+	The workplace distribution is completely finished. It currently reads from an input file in case this file is given, or, in case this was not given, it will fall back to the original implementation of the workplace distributions. In case the workplace distribution configuration was given, the algorithm described in the user manual under section 5.3 will be used. \\
+	\\
+	There are also tests, that will test most of the functionality of this section. It is both tested in unit tests, and scenario tests of which the last ones will test if the reader will properly pass the read information to the generator. The tests will only test the generator for the more extreme values where there is only one type of workplace size, with a 100\% chance of occurring. It has been manually tested for multiple kinds of workplaces and this does seem correct, but this is far harder to test as the generated values could be widely spread out due to randomness. The made tests and the functionality they intend to test is all documented in the test plan under section 5.3
+\end{document}
