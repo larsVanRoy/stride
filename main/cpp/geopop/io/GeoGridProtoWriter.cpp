@@ -116,6 +116,7 @@ void GeoGridProtoWriter::WriteLocation(Location& location, proto::GeoGrid_Locati
                 commute->set_proportion(commute_pair.second);
         }
 
+
         for (Id typ : IdList) {
                 WriteContactPools(typ, location.RefPools(typ), protoLocation->add_contactpools());
         }

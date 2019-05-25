@@ -20,19 +20,24 @@
 #============================================================================
 if(Protobuf_FOUND)
     protobuf_generate_cpp(PROTO_SRC PROTO_HDR geopop/io/proto/geogrid.proto)
+    protobuf_generate_cpp(EPI_PROTO_SRC EPI_PROTO_HDR geopop/io/proto/epigeogrid.proto)
 else()
     set(PROTO_SRC ${Protobuf_PBS_DIR}/geogrid.pb.cc)
     set(PROTO_HDR ${Protobuf_PBS_DIR}/geogrid.pb.h)
+    set(EPI_PROTO_SRC ${Protobuf_PBS_DIR}/epigeogrid.pb.cc)
+    set(EPI_PROTO_HDR ${Protobuf_PBS_DIR}/epigeogrid.pb.h)
 endif()
 
 set_source_files_properties(
     geopop/io/GeoGridProtoReader.cpp
     geopop/io/GeoGridProtoWriter.cpp
+    geopop/io/EpiProtoWriter.h
+    geopop/io/EpiProtoWriter.cpp
     PROPERTIES
     COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
 )
 
-set_property(SOURCE ${PROTO_HDR} ${PROTO_SRC}
+set_property(SOURCE ${PROTO_HDR} ${PROTO_SRC} ${EPI_PROTO_SRC} ${EPI_PROTO_HDR}
     PROPERTY
     COMPILE_FLAGS "-Wno-all -Wno-effc++ -Wno-extra -Wno-pedantic"
 )
@@ -87,6 +92,11 @@ set(STRIDE_SRC
     geopop/generators/SecondaryCommunityGenerator.cpp
     geopop/generators/WorkplaceGenerator.cpp
     #---
+    ${PROTO_HEADER}
+    ${PROTO_SRC}
+    ${EPI_PROTO_HDR}
+    ${EPI_PROTO_SRC}
+    #---
     geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
     geopop/io/GeoGridJSONReader.cpp
@@ -116,6 +126,8 @@ set(STRIDE_SRC
     geopop/io/ReaderFactory.cpp
     geopop/io/EpiWriterFactory.cpp
     geopop/io/EpiJSONWriter.cpp
+    geopop/io/EpiProtoWriter.cpp
+    geopop/io/EpiProtoWriter.h
     geopop/io/EpiWriter.h
     geopop/io/EpiReader.h
     geopop/io/EpiReaderFactory.cpp
@@ -133,6 +145,7 @@ set(STRIDE_SRC
     ${PROTO_HEADER}
     ${PROTO_SRC}
     #---
+    geopop/EpiLocation.cpp\
     viewers/InfectedFile.cpp
     viewers/PersonsFile.cpp
     viewers/SummaryFile.cpp

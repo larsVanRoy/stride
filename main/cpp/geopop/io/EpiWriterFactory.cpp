@@ -14,6 +14,7 @@
  */
 
 #include "EpiJSONWriter.h"
+#include "EpiProtoWriter.h"
 #include "EpiWriterFactory.h"
 #include "util/Exception.h"
 
@@ -37,9 +38,9 @@ namespace geopop {
         if (path.extension().string() == ".json") {
             return std::make_shared<EpiJSONWriter>(filename);
         }
-//        else if (path.extension().string() == ".proto") {
-//            return std::make_shared<EpiJSONWriter>();
-//        }
+        else if (path.extension().string() == ".proto") {
+            return std::make_shared<EpiProtoWriter>(filename);
+        }
 //        else if (path.extension().string() == ".h5") {
 //            return std::make_shared<EpiJSONWriter>();
 //        }

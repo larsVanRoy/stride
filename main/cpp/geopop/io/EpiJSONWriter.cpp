@@ -52,7 +52,7 @@ void EpiJSONWriter::Finalize() {
     stream.close();
 }
 
-void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, unsigned timeStep, std::ostream& stream)
+void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, unsigned timeStep)
 {
     json locations_array = json::array();
 
@@ -128,7 +128,7 @@ json EpiJSONWriter::WritePoolHealthStatus(const std::shared_ptr<geopop::Location
             status[ToSize(person->GetHealth().GetStatus())]++;
         }
     }
-    for(int i = 0; i < status.size(); ++i){
+    for(unsigned i = 0; i < status.size(); ++i){
         health_status.push_back(status[i]/location->GetPopCount());
     }
     return health_status;
