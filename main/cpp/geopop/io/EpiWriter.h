@@ -31,12 +31,12 @@ class EpiJSONWriter;
 class EpiWriter
 {
 public:
-    EpiWriter(const std::string& filename) {};
+    EpiWriter() {};
     /// Construct the Writer.
     virtual ~EpiWriter() {};
 
     /// Write the epidemiological status to ostream.
-    virtual void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep, std::ostream& stream) = 0;
+    virtual void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep) = 0;
 
     virtual void Initialize(const geopop::GeoGrid& geoGrid) = 0;
 

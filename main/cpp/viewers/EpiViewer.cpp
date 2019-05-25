@@ -38,11 +38,10 @@ namespace viewers {
 
 using namespace stride::util;
 
-EpiViewer::EpiViewer(std::shared_ptr <SimRunner> runner, const std::string &output_prefix) : m_runner(std::move(runner)) {
+EpiViewer::EpiViewer(std::shared_ptr <SimRunner> runner, const std::string &output_prefix) :
+        m_epi_output(), m_runner(std::move(runner)), m_timestep(0), m_step_size(1), m_file(){
     const auto p = FileSys::BuildPath(output_prefix, "epi_output.json");
     m_epi_output = geopop::EpiWriterFactory::CreateEpiWriter(p.c_str());
-    m_timestep = 0;
-    m_step_size = 1;
 }
 
 void EpiViewer::Update(const sim_event::Id id)
@@ -53,14 +52,14 @@ void EpiViewer::Update(const sim_event::Id id)
         case Id::Stepped: {
             if(m_timestep%m_step_size == 0){
                 const geopop::GeoGrid& geoGrid = m_runner->GetSim()->GetPopulation()->CRefGeoGrid();
-                m_epi_output->Write(geoGrid, ++m_timestep, m_file);
+                m_epi_output->Write(geoGrid, ++m_timestep);
             }
             break;
         }
         case Id::Finished: {
             if(m_timestep%m_step_size != 0){
                 const geopop::GeoGrid& geoGrid = m_runner->GetSim()->GetPopulation()->CRefGeoGrid();
-                m_epi_output->Write(geoGrid, ++m_timestep, m_file);
+                m_epi_output->Write(geoGrid, ++m_timestep);
             }
             m_epi_output->Finalize();
         }

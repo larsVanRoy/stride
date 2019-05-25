@@ -40,14 +40,14 @@ class EpiJSONWriter : public EpiWriter
 {
 public:
     /// Construct the EpiJSONWriter.
-    EpiJSONWriter(const std::string& filename) : EpiWriter(filename), m_filename(filename), m_json()
+    EpiJSONWriter(const std::string& filename) : EpiWriter(), m_json(), m_filename(filename)
     {
     };
 
     ~EpiJSONWriter() = default;
 
     /// Convert the provided GeoGrid to an the epidemiological status and write the status to the proved ostream in JSON format.
-    void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep, std::ostream& stream) override;
+    void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep) override;
 
 //    /// Convert the provided GeoGrid to an the epidemiological status and write the status to the proved file in JSON format.
 //    void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep);
