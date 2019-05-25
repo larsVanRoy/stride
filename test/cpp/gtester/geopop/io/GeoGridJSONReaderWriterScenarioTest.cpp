@@ -44,7 +44,7 @@ namespace {
     {
         given.erase(remove_if(given.begin(), given.end(), ::isspace), given.end());
         expected.erase(remove_if(expected.begin(), expected.end(), ::isspace), expected.end());
-        
+
         return given == expected;
     }
 
@@ -101,7 +101,7 @@ namespace {
         return geoGrid;
     }
 
-    TEST(GeoGridJSONReaderWriterTest, mainTest)
+    TEST(GeoGridJSONReaderWriterScenarioTest, mainTest)
     {
         auto pop = Population::Create();
         auto geoGrid = CreateGeoGrid(pop.get());

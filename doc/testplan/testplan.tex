@@ -150,96 +150,103 @@ It will test if a wrongly formatted JSON is given to the household reader.\\
 \textbf{How will we achieve this?}
 Given a wrongly formatted input, the reader function is called. Then it will be checked if an exception is throw and if it is the expected error that occured.
 
-\subsubsection{GeoGridJSONReaderTest.locationsTest}
+\subsubsection{GeoGridJSONReaderUnitTest.locationsTest}
 \textbf{What will it test?}
 It will test if the reader has extracted the right location information from a JSON file. \\
 \newline
 \textbf{How will we achieve this?}
 Given a JSON file we can read, the test will compare the ID's with the expected value and for each location all attributes will be tested on their contents.
 
-\subsubsection{GeoGridJSONReaderTest.commutesTest}
+\subsubsection{GeoGridJSONReaderUnitTest.commutesTest}
 \textbf{What will it test?}
 It will test if the reader has extracted the right commuting information from a JSON file. \\
 \newline
 \textbf{How will we achieve this?}
 Given a JSON file we can read, the test will consider all locations and in specific if their commutes object contains the right location ID and percentage of commuters.
 
-\subsubsection{GeoGridJSONReaderTest.contactPoolTest}
+\subsubsection{GeoGridJSONReaderUnitTest.contactPoolTest}
 \textbf{What will it test?}
 This test will check if each pool has the right type according to the internal coding of the different types of centers.
 \newline
 \textbf{How will we achieve this?}
 Given a JSON file we extract all the contactPools and their information and then we will check for each if the numeric class is available in the code. All types were specified in the JSON file and thus we can check if all types are compatible with their numerical values.
 
-\subsubsection{GeoGridJSONReaderTest.peopleTest}
+\subsubsection{GeoGridJSONReaderUnitTest.peopleTest}
 \textbf{What will it test?}
 This test will check if a person within a contactpool can be linked to a defined person with the same ID.
 \newline
 \textbf{How will we achieve this?}
 From a JSON formatted file we will check if the person within a center has a pointer to the correct object with the right information by checking all its attributes againts the expected values.
 
-\subsubsection{GeoGridJSONReaderTest.intTest}
+\subsubsection{GeoGridJSONReaderUnitTest.intTest}
 \textbf{What will it test?}
 It will test if there occurs an error if a double is given and not an integer in the JSON file.
 \newline
 \textbf{How will we achieve this?}
 The test simply follows the same steps as the peopleTest and sees if the error occurs or everything can be simply casted to the right types.
 
-\subsubsection{GeoGridJSONReaderTest.emptyStreamTest}
+\subsubsection{GeoGridJSONReaderUnitTest.emptyStreamTest}
 \textbf{What will it test?}
 This test will examine if an idle input can be properly handled by the reader.
 \newline
 \textbf{How will we achieve this?}
 We will simply pass along an empty stream to the reader and observe its response in the form of an exception.
 
-\subsubsection{GeoGridJSONReaderTest.invalidTypeTest}
+\subsubsection{GeoGridJSONReaderUnitTest.invalidTypeTest}
 \textbf{What will it test?}
 This test will examine if a correct response is produced when a wrong type is used for a contactPool in the JSON format.
 \newline
 \textbf{How will we achieve this?}
 A JSON file is given to the reader with a wrong type for a contactPool. Then it is checked if an exception has been throw to indicate something went wrong.
 
-\subsubsection{GeoGridJSONReaderTest.invalidPersonTest}
+\subsubsection{GeoGridJSONReaderUnitTest.invalidPersonTest}
 \textbf{What will it test?}
 This test sees if it is possible to reference a non-existing person within a contactPool without defining this person with its attributes. 
 \newline
 \textbf{How will we achieve this?}
 A JSON file with a wrong person in a contactPool is given to the reader to test its response. If it returns an exception indicating something has gone wrong, the test will succeed.
 
-\subsubsection{GeoGridJSONReaderTest.invalidJSONTest}
+\subsubsection{GeoGridJSONReaderUnitTest.invalidJSONTest}
 \textbf{What will it test?}
 A test to see what will happen if a random word is given within a JSON formatted file.
 \newline
 \textbf{How will we achieve this?}
 By passing a random string within a JSON file the test will determine if a proper exception is thrown and the execution is aborted.
 
-\subsubsection{GeoGridJSONWriterTest.locationTest}
+\subsubsection{GeoGridJSONWriterUnitTest.locationTest}
 \textbf{What will it test?}
 A test to determine if the location information retrieved from a GeoGrid is correctly formatted in a JSON file. \\
 \newline
 \textbf{How will we achieve this?}
 The test will create a GeoGrid and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file to an XML format and check if they are the same.
 
-\subsubsection{GeoGridJSONWriterTest.contactPoolTest}
+\subsubsection{GeoGridJSONWriterUnitTest.contactPoolTest}
 \textbf{What will it test?}
 A test to determine if the contactPool information retrieved from a GeoGrid is correctly formatted in a JSON file.\\
 \newline
 \textbf{How will we achieve this?}
 The test will create a GeoGrid and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file to an XML format and check if they are the same.
 
-\subsubsection{GeoGridJSONWriterTest.peopleTest}
+\subsubsection{GeoGridJSONWriterUnitTest.peopleTest}
 \textbf{What will it test?}
 This test will look in specific if the people are correctly represented in the resulting JSON file.\\
 \newline
 \textbf{How will we achieve this?}
 The test will create a population and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file to an XML format and check if they are the same.
 
-\subsubsection{GeoGridJSONWriterTest.commutesTest}
+\subsubsection{GeoGridJSONWriterUnitTest.commutesTest}
 \textbf{What will it test?}
 This test will look in specific if the commuting information is correctly represented in the written JSON file.\\
 \newline
 \textbf{How will we achieve this?}
 The test will create a population and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file to an XML format and check if they are the same.
+
+\subsection{GeoGridJSONReaderWriterScenarioTest.mainTest}
+\textbf{What will it test?}
+This is a test that will examine if the JSON writes outputs a JSON formatted file and reads the excact information in JSON formats.\\
+\newline
+\textbf{How will we achieve this?}
+The test creates a population and writes it to a JSON file wich will be converted to a string to chech wit the expected output. Next the same file is used to be read by the JSON reader ans all values are inspected.
 
 \subsection{HDF5}
 \subsubsection{HDF5Reader.locationsTest}
