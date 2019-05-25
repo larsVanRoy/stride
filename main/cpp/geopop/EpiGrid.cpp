@@ -30,13 +30,12 @@ using stride::ContactPool;
 using stride::ContactType::Id;
 
 EpiGrid::EpiGrid()
-    : Region()
 {
 }
 
-void EpiGrid::AddLocation(shared_ptr<EpiLocation> location)
+void EpiGrid::AddLocation(shared_ptr<EpiLocation> loc)
 {
-        Region::AddGeoLocation(std::dynamic_pointer_cast<GeoLocation>(location));
+    this->AddGeoLocation(std::dynamic_pointer_cast<GeoLocation>(loc));
 }
 
 template <typename Policy, typename F>

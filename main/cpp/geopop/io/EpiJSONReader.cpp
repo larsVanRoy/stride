@@ -36,8 +36,12 @@ void EpiJSONReader::Read() {
     try {
         auto location = json_file["locations"];
         ParseLocations(location);
+
+        auto history = json_file["history"];
+        ParseHistory(history);
     }
-    catch(...){
+    catch(std::exception& e){
+        std::cout << e.what() << std::endl;
         throw stride::util::Exception("Problem parsing JSON file, check whether empty or invalid JSON. 2");
     }
     m_stream->close();
@@ -60,29 +64,13 @@ Coordinate EpiJSONReader::ParseCoordinate(const nlohmann::json &coordinate) {
 
 void EpiJSONReader::ParseLocations(const nlohmann::json &location_array) {
 
-    try {
-        std::cout << location_array.size() << std::endl;
-        std::cout << std::setw(4) << location_array[80] << std::endl;
-        std::cout << "first:\n";
-        m_grid->AddLocation(std::make_shared<EpiLocation>(0,1,Coordinate(0,0),"test", 10000));
-        std::cout << "second:\n";
-        m_grid->AddLocation(std::make_shared<EpiLocation>(1,1,Coordinate(0,1),"test2", 10000));
-        for(unsigned int i = 0; i < location_array.size(); ++i){
-            std::cout << "Parse Location: " << i << std::endl;
-            std::shared_ptr<EpiLocation> t = ParseLoc(location_array[i]);
-            std::cout << "\tname:   " << t->GetName() << std::endl;
-            std::cout << "\tprov:   " << t->GetProvince() << std::endl;
-            std::cout << "\tpopcount:   " << t->GetPopCount() << std::endl;
-//            m_grid->AddLocation(std::make_shared<EpiLocation>(t->GetID(),t->GetProvince(),t->GetCoordinate(),t->GetName(), t->GetPopCount()));
-        }
-    }
-    catch(...)
-    {
-        printf("Woops");
+    for(unsigned int i = 0; i < location_array.size(); ++i){
+        auto t = ParseLocation(location_array[i]);
+        m_grid->AddLocation(t);
     }
 }
 
-std::shared_ptr<EpiLocation> EpiJSONReader::ParseLoc(const nlohmann::json& location) {
+std::shared_ptr<EpiLocation> EpiJSONReader::ParseLocation(const nlohmann::json& location) {
 
 
     unsigned int id         =   location["id"];
@@ -95,16 +83,78 @@ std::shared_ptr<EpiLocation> EpiJSONReader::ParseLoc(const nlohmann::json& locat
     return result;
 }
 
-std::shared_ptr<EpiLocation> EpiJSONReader::ParseLocation(const nlohmann::json &location) {
-
+void EpiJSONReader::ParseHistory(const nlohmann::json &history) {
+    for (unsigned int i = 0; i < history.size(); ++i) {
+        nlohmann::json locations;
+        try {
+            const nlohmann::json &step = history[i];
+            std::cout << "step:\n" << std::setw(4) << step << std::endl;
+            locations = step["locations"];
+            const nlohmann::json &day = step["timestep"];
+        }
+        catch(std::exception& e){
+            std::cout << "Error: ParseHistory" << e.what() << std::endl;
+            throw e;
+        }
+        ParseHistoryLocation(locations);
+    }
 }
-Coordinate ParseCoordinate(const nlohmann::json& coordinate);
 
-std::shared_ptr<EpiLocation> EpiJSONReader::ParsePools(const nlohmann::json &location) {
+void EpiJSONReader::ParseLocationPools(const nlohmann::json &pools, std::shared_ptr<EpiLocation> loc) {
+    std::shared_ptr<stride::PoolStatus> status = std::make_shared<stride::PoolStatus>();
+    try {
+        for (stride::ContactType::Id i : stride::ContactType::IdList) {
+            std::shared_ptr<stride::HealthPool> h = ParsePool(pools[stride::ContactType::ToString(i)]);
+            status->addStatus(i, h);
+        }
+    }
+    catch(std::exception& e){
+        std::cout << "Error in ParseLocationPools: " << e.what() << std::endl;
+        throw e;
+    }
 
+    loc->AddPoolStatus(status);
 }
-std::shared_ptr<EpiLocation> EpiJSONReader::ParsePool(const nlohmann::json &location) {
 
+void EpiJSONReader::ParseHistoryLocation(const nlohmann::json &location) {
+    std::cout << "location: \n" << location.is_array() << "\ndone" << std::endl;
+
+    try {
+        for(unsigned int i = 0; i < location.size(); ++i){
+            const auto& j = location[i];
+            unsigned int locationID = j["id"];
+            std::shared_ptr<EpiLocation> loc = m_grid->GetById(locationID);
+            std::cout << "id: " << locationID << std::endl;
+            ParseLocationPools(j["pools"], loc);
+        }
+    }
+    catch(std::exception& e){
+        std::cout << "Error in ParseHistoryLocation: " << e.what() << std::endl;
+        throw e;
+    }
+}
+
+Coordinate ParseCoordinate(const nlohmann::json& coordinate) {
+
+    double latitude = coordinate["lat"];
+    double longitude = coordinate["long"];
+
+    return Coordinate(longitude, longitude);
+}
+
+std::shared_ptr<stride::HealthPool> EpiJSONReader::ParsePool(const nlohmann::json &pool) {
+    std::shared_ptr<stride::HealthPool> result = std::make_shared<stride::HealthPool>();
+    try {
+        for (unsigned short i = 0; i < pool.size(); ++i) {
+            double fraction = pool[i];
+            result->setHealth(static_cast<stride::HealthStatus>(i), fraction);
+        }
+    }
+    catch(std::exception& e){
+        std::cout << "Error in ParsePool: " << e.what() << std::endl;
+        throw e;
+    }
+    return result;
 }
 
 }

@@ -35,8 +35,9 @@ class EpiJSONReader : public EpiReader
 {
 public:
     /// Construct the EpiJSONReader with the istream which contains the JSON.
-    explicit EpiJSONReader(std::unique_ptr<std::ifstream> inputStream) : EpiReader(std::move(inputStream)), m_grid()
+    explicit EpiJSONReader(std::unique_ptr<std::ifstream> inputStream) : EpiReader(std::move(inputStream))
     {
+        m_grid = std::make_shared<EpiGrid>();
     };
 
     ~EpiJSONReader() = default;
@@ -57,17 +58,19 @@ private:
     /// Create EpiGrid and fills it with EpiLocations based on the information stored in the provided JSON object.
     void ParseLocations(const nlohmann::json& location);
 
-
-    std::shared_ptr<EpiLocation> ParseLoc(const nlohmann::json& location);
-
     /// Create an EpiLocation based on the information stored in the provided JSON object.
     std::shared_ptr<EpiLocation> ParseLocation(const nlohmann::json& location);
 
+
+    void ParseHistory(const nlohmann::json& history);
+
+    void ParseHistoryLocation(const nlohmann::json &location);
+
     /// Adds HealthPool to EpiLocation based on the information stored in the provided JSON object.
-    std::shared_ptr<EpiLocation> ParsePools(const nlohmann::json& location);
+    void ParseLocationPools(const nlohmann::json& pools, std::shared_ptr<EpiLocation> loc);
 
     /// Adds to HealthPool based on the information stored in the provided JSON object.
-    std::shared_ptr<EpiLocation> ParsePool(const nlohmann::json& location);
+    std::shared_ptr<stride::HealthPool> ParsePool(const nlohmann::json& pool);
 
     /// Take a JSON object and cast wrongly provided types to the expected type (if possible).
     template <typename T>

@@ -44,9 +44,13 @@ public:
         /// Perform a full comparison with the other location.
         bool operator==(const EpiLocation& other) const;
 
+        std::shared_ptr<stride::PoolStatus> GetPoolStatus(unsigned int day) { return m_history.at(day); };
+
+        void AddPoolStatus(std::shared_ptr<stride::PoolStatus> status) { m_history.push_back(status); };
+
 private:
         /// Stores the history of the location for every step
-        stride::PoolStatus m_history;
+        std::vector<std::shared_ptr<stride::PoolStatus>> m_history;
 
 };
 

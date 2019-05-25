@@ -51,7 +51,7 @@ public:
     void Finalize();
 
     /// Gets a GeoLocation by Id and check if the Id exists.
-    std::shared_ptr<GeoLocation> GetById(unsigned int id) const { return m_locations[m_id_to_index.at(id)]; }
+    std::shared_ptr<GeoLocation> GetById(unsigned int id) const { return m_locations.at(m_id_to_index.at(id)); }
 
     /// Search for locations in \p radius (in km) around \p start.
     std::vector<const GeoLocation*> GeoLocationsInRadius(const GeoLocation& start, double radius) const;
