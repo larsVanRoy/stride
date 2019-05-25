@@ -30,3 +30,6 @@
 \contentsline {subsection}{\numberline {5.3.2}Input}{19}{subsection.5.3.2}
 \contentsline {subsection}{\numberline {5.3.3}Workplace Generator}{19}{subsection.5.3.3}
 \contentsline {subsection}{\numberline {5.3.4}Workplace Populator}{19}{subsection.5.3.4}
+\contentsline {section}{\numberline {5.4}Data Formats}{19}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}JSON}{19}{subsection.5.4.1}
+\contentsline {subsubsection}{GeoGrid}{19}{subsubsection*.2}
