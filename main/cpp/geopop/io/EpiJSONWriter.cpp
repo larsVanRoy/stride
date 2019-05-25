@@ -41,7 +41,7 @@ using namespace boost::property_tree;
 
 void EpiJSONWriter::Initialize(const geopop::GeoGrid& geoGrid) {
     m_json = json::object();
-    m_json["Locations"]     = WriteLocations(geoGrid);
+    m_json["locations"]     = WriteLocations(geoGrid);
     m_json["history"]       = json::array();
 }
 
@@ -71,17 +71,16 @@ void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, unsigned timeStep, std
 
 json EpiJSONWriter::WriteLocations(const geopop::GeoGrid &geoGrid)
 {
-    std::cout << "Writing location" << endl;
     json location_array = json::array();
 
     for(unsigned i = 0; i < geoGrid.size(); ++i){
         const auto& location = geoGrid[i];
-        std::cout << "name: " << location->GetName() << "\n";
         json location_object = json::object();
         location_object["id"]           = location->GetID();
         location_object["coordinates"]  = WriteCoordinate(location->GetCoordinate());
         location_object["population"]   = location->GetPopCount();
         location_object["name"]         = location->GetName();
+        location_object["province"]         = location->GetProvince();
         location_array.push_back(location_object);
     }
 

@@ -17,6 +17,7 @@
 
 #include "disease/Health.h"
 #include "geopop/geo/GeoLocation.h"
+#include "contact/PoolStatus.h"
 
 #include <iostream>
 #include <memory>
@@ -27,9 +28,6 @@
 #include <unordered_map>
 #include <vector>
 
-namespace stride {
-class PoolStatus;
-}
 
 namespace geopop {
 
@@ -41,18 +39,15 @@ class EpiLocation : public GeoLocation
 public:
         /// Parametrized constructor with population count.
         EpiLocation(unsigned int id, unsigned int province, Coordinate coordinate = Coordinate(0.0, 0.0),
-                 std::string name = "", unsigned int popCount = 0U, unsigned int size = 0);
+                 std::string name = "", unsigned int popCount = 0U);
 
         /// Perform a full comparison with the other location.
         bool operator==(const EpiLocation& other) const;
 
-        unsigned size(){ return m_size; }
 private:
         /// Stores the history of the location for every step
-        std::vector<std::shared_ptr<stride::PoolStatus>> m_history;
+        stride::PoolStatus m_history;
 
-        /// Size of m_history
-        unsigned m_size;
 };
 
 } // namespace geopop

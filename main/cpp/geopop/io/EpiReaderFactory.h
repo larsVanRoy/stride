@@ -16,6 +16,7 @@
 #pragma once
 
 #include "EpiReader.h"
+#include "EpiJSONReader.h"
 
 #include <memory>
 #include <string>

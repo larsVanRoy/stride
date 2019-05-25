@@ -71,9 +71,7 @@ public:
                 double participation_college;
 
                 /// Participation of workplace (fraction of people of work age and not going to
-                
                 /// college and having employment).
-
                 double participation_workplace;
 
                 /// Fraction of college students that commute.

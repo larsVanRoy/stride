@@ -15,15 +15,17 @@
 
 #pragma once
 
-#include "EpiJSONReader.h"
+#include "geopop/io/EpiReader.h"
 #include "geopop/EpiLocation.h"
+#include "geopop/EpiGrid.h"
+#include "util/Exception.h"
 
 #include <nlohmann/json.hpp>
 
 #include <boost/property_tree/ptree_fwd.hpp>
+#include <memory>
 
 namespace geopop {
-
 
 /**
  * An implementation of the EpiReader using JSON.
@@ -33,7 +35,11 @@ class EpiJSONReader : public EpiReader
 {
 public:
     /// Construct the EpiJSONReader with the istream which contains the JSON.
-    EpiJSONReader(std::unique_ptr<std::istream> inputStream, stride::Population* pop);
+    explicit EpiJSONReader(std::unique_ptr<std::ifstream> inputStream) : EpiReader(std::move(inputStream)), m_grid()
+    {
+    };
+
+    ~EpiJSONReader() = default;
 
     /// No copy constructor.
     EpiJSONReader(const EpiJSONReader&) = delete;
@@ -46,15 +52,29 @@ public:
 
 private:
     /// Create a Coordinate based on the information stored in the provided JSON object.
-    Coordinate ParseCoordinate(nlohmann::json& coordinate);
+    Coordinate ParseCoordinate(const nlohmann::json& coordinate);
+
+    /// Create EpiGrid and fills it with EpiLocations based on the information stored in the provided JSON object.
+    void ParseLocations(const nlohmann::json& location);
+
+
+    std::shared_ptr<EpiLocation> ParseLoc(const nlohmann::json& location);
 
     /// Create an EpiLocation based on the information stored in the provided JSON object.
-    std::shared_ptr<Location> ParseLocation(nlohmann::json& location);
+    std::shared_ptr<EpiLocation> ParseLocation(const nlohmann::json& location);
 
+    /// Adds HealthPool to EpiLocation based on the information stored in the provided JSON object.
+    std::shared_ptr<EpiLocation> ParsePools(const nlohmann::json& location);
+
+    /// Adds to HealthPool based on the information stored in the provided JSON object.
+    std::shared_ptr<EpiLocation> ParsePool(const nlohmann::json& location);
 
     /// Take a JSON object and cast wrongly provided types to the expected type (if possible).
     template <typename T>
-    T JSONCast(nlohmann::json& json_object);
+    T JSONCast(const nlohmann::json& json_object);
+
+private:
+    std::shared_ptr<EpiGrid> m_grid;
 };
 
 } // namespace geopop

@@ -72,6 +72,8 @@ set(STRIDE_SRC
     geopop/GeoGrid.cpp
     geopop/GeoGridConfig.cpp
     geopop/Location.cpp
+    geopop/EpiLocation.cpp
+    geopop/EpiGrid.cpp
     #---
     geopop/geo/GeoGridKdTree.cpp
     geopop/geo/KdTree2DPoint.cpp
@@ -115,6 +117,9 @@ set(STRIDE_SRC
     geopop/io/EpiWriterFactory.cpp
     geopop/io/EpiJSONWriter.cpp
     geopop/io/EpiWriter.h
+    geopop/io/EpiReader.h
+    geopop/io/EpiReaderFactory.cpp
+    geopop/io/EpiJSONReader.cpp
     #---
     geopop/populators/DaycarePopulator.cpp
     geopop/populators/PreSchoolPopulator.cpp
@@ -128,7 +133,6 @@ set(STRIDE_SRC
     ${PROTO_HEADER}
     ${PROTO_SRC}
     #---
-    geopop/EpiLocation.cpp
     viewers/InfectedFile.cpp
     viewers/PersonsFile.cpp
     viewers/SummaryFile.cpp

@@ -36,13 +36,17 @@ class PoolStatus {
 public:
     PoolStatus() = default;
 
-//    bool operator==(const PoolStatus& other);
+    bool operator==(const PoolStatus& other) const;
 
     /// Adds a status (vector of percentages) for a ContactType
     void addStatus(stride::ContactType::Id ID, std::shared_ptr<HealthPool> status);
 
     /// Returns the status of a ContactType
     std::shared_ptr<HealthPool> getStatus(stride::ContactType::Id ID) { return m_status[ContactType::ToSizeT(ID)]; }
+
+    std::shared_ptr<HealthPool> operator[](stride::ContactType::Id ID){ return m_status[ContactType::ToSizeT(ID)]; }
+
+    std::vector<double> operator[](HealthStatus h) const;
 
     using iterator          = std::vector<std::shared_ptr<HealthPool>>::iterator;
     using const_iterator    = std::vector<std::shared_ptr<HealthPool>>::const_iterator;
@@ -51,14 +55,16 @@ public:
 
     iterator end() { return m_status.end(); }
 
-    const_iterator cbegin() { return m_status.cbegin(); }
+    const_iterator cbegin() const { return m_status.cbegin(); }
 
-    const_iterator cend() { return m_status.cend(); }
+    const_iterator cend() const { return m_status.cend(); }
 
 private:
     std::vector<std::shared_ptr<HealthPool>> m_status;   ///< matrix of the health status of a ContactType m_status[ContactType::Id][HealthStatus]
 };
 
+
+/// container to hold the fractions of health per HealthStatus
 class HealthPool {
 private:
     double m_susceptible;
@@ -77,15 +83,19 @@ public:
 
     void setHealth(HealthStatus ID, double fraction);
 
-    double getHealth(HealthStatus ID);
+    double getHealth(HealthStatus ID) const;
+
+    double operator[](HealthStatus ID) const { return getHealth(ID); };
+
+    bool operator==(const HealthPool& other) const;
 
     /// Sum of fractions of all given ID
-    double sum(const std::vector<HealthStatus>& ID);
+    double sum(const std::vector<HealthStatus>& ID) const;
 
     /// returns size of HealthPool
     static unsigned size() { return 7; };
 
-    std::vector<double> toVector(){ return {m_susceptible, m_exposed, m_infectious, m_symptomatic,
+    std::vector<double> toVector() { return {m_susceptible, m_exposed, m_infectious, m_symptomatic,
                                             m_infectiousAndSympomatic, m_recovered, m_immune}; }
 };
 }   // namespace stride

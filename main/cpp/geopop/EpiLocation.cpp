@@ -25,8 +25,8 @@ namespace geopop {
 using namespace std;
 using namespace stride::ContactType;
 
-EpiLocation::EpiLocation(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount, unsigned int size)
-    : GeoLocation(id, province, coordinate, name, popCount), m_size(size)
+EpiLocation::EpiLocation(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount)
+    : GeoLocation(id, province, coordinate, name, popCount)
 {
 }
 
@@ -34,14 +34,9 @@ bool EpiLocation::operator==(const EpiLocation& other) const
 {
         using boost::geometry::get;
 
-        for(const auto& status : m_history){
-                for(const auto& other_status : other.m_history){
-                        if(status != other_status)
-                                return false;
-                }
-        }
+        bool temp = (m_history == other.m_history);
 
-        return m_size != other.m_size && GetID() == other.GetID() && get<0>(GetCoordinate()) == get<0>(other.GetCoordinate()) &&
+        return temp && GetID() == other.GetID() && get<0>(GetCoordinate()) == get<0>(other.GetCoordinate()) &&
                get<1>(GetCoordinate()) == get<1>(other.GetCoordinate()) && GetName() == other.GetName() &&
                GetProvince() == other.GetProvince() && GetPopCount() == other.GetPopCount();
 }

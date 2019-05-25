@@ -26,15 +26,23 @@
 
 namespace stride {
 
-//bool PoolStatus::operator==(const PoolStatus &other) {
-//    for (stride::ContactType::Id ID : stride::ContactType::IdList) {
-//        const auto v1 = m_status[ID];
-//        const auto v2 = other.m_status[ID];
-//        if(v1 != v2)
-//            return false;
-//    }
-//    return true;
-//}
+bool PoolStatus::operator==(const PoolStatus &other) const{
+    for (stride::ContactType::Id ID : stride::ContactType::IdList) {
+        const auto v1 = m_status[ContactType::ToSizeT(ID)];
+        const auto v2 = other.m_status[ContactType::ToSizeT(ID)];
+        if(v1 != v2)
+            return false;
+    }
+    return true;
+}
+
+std::vector<double> PoolStatus::operator[](HealthStatus h) const {
+    std::vector<double> result;
+    for(const auto status : m_status){
+        result.push_back(status->getHealth(h));
+    }
+    return result;
+}
 
 void PoolStatus::addStatus(stride::ContactType::Id ID, std::shared_ptr<HealthPool> status) {
     m_status[ContactType::ToSizeT(ID)] = status;
@@ -74,7 +82,7 @@ void HealthPool::setHealth(HealthStatus ID, double fraction) {
     }
 }
 
-double HealthPool::getHealth(HealthStatus ID) {
+double HealthPool::getHealth(HealthStatus ID) const {
     switch (ID) {
         case HealthStatus::Susceptible:
             return m_susceptible;
@@ -95,7 +103,14 @@ double HealthPool::getHealth(HealthStatus ID) {
     }
 }
 
-double HealthPool::sum(const std::vector<HealthStatus>& ID){
+bool HealthPool::operator==(const HealthPool& other) const {
+    return m_immune == other.m_immune && m_recovered == other.m_recovered &&
+    m_infectiousAndSympomatic == other.m_infectiousAndSympomatic &&
+    m_infectious == other.m_infectious && m_symptomatic == other.m_symptomatic &&
+    m_exposed == other.m_exposed && m_susceptible == other.m_susceptible;
+}
+
+double HealthPool::sum(const std::vector<HealthStatus>& ID) const {
     double result = 0;
     for (HealthStatus i : ID){
         result += getHealth(i);

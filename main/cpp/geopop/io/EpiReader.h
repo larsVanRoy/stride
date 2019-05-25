@@ -18,7 +18,7 @@
 #include "geopop/GeoGrid.h"
 
 #include <memory>
-#include <ostream>
+#include <fstream>
 
 namespace geopop {
 
@@ -30,12 +30,16 @@ class EpiJSONReader;
 class EpiReader
 {
 public:
-    EpiReader() {};
+    explicit EpiReader(std::unique_ptr<std::ifstream> input_stream) : m_stream(std::move(input_stream)) {};
     /// Construct the Writer.
-    virtual ~EpiReader();
+
+    virtual ~EpiReader() {m_stream->close(); };
 
     /// Write the epidemiological status to ostream.
-    virtual void Read(const geopop::GeoGrid& geoGrid, const std::string& filename) = 0;
+    virtual void Read() = 0;
+
+protected:
+    std::unique_ptr<std::ifstream> m_stream;
 };
 
 } // namespace geopop

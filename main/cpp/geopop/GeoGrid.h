@@ -22,7 +22,7 @@
 #include <set>
 #include <unordered_map>
 #include <vector>
-#include <boost/shared_ptr.hpp>
+#include <memory>
 
 namespace stride {
 class ContactPool;
