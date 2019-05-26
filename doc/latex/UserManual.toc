@@ -33,3 +33,5 @@
 \contentsline {section}{\numberline {5.4}Data Formats}{19}{section.5.4}
 \contentsline {subsection}{\numberline {5.4.1}JSON: GeoGrid}{19}{subsection.5.4.1}
 \contentsline {subsection}{\numberline {5.4.2}JSON: Household}{20}{subsection.5.4.2}
+\contentsline {subsection}{\numberline {5.4.3}HDF5: GeoGrid}{21}{subsection.5.4.3}
+\contentsline {section}{\numberline {5.5}Daycares and PreSchools}{22}{section.5.5}

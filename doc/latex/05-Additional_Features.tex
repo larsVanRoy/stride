@@ -163,3 +163,71 @@ A JSON formatted file for a GeoGrid configuration has the following attributes:
 	\item \texttt{householdsName} (string)
 	\item \texttt{householdsList} (list of lists of numbers) : A list with lists containing the ages within households.
 \end{itemize}
+
+\subsection{HDF5: GeoGrid}
+Another supported dataformat is the HDF5 format. Hierachical DataFormat (HDF5) is a file format designed to store and organize a large amount of data. HDF5 files are defined by a .h5 extension.
+
+If a HDF5 file is prefered to be used as configuration for the GeoGrid population then it is necessary to alter some attributes in the XML configuration file:\\
+Change the filename of the tag \texttt{population\_file} to a file written in the HDF5 format.
+
+A Geogrid formatted file written in HDF5 has the following format:
+
+\begin{itemize}
+\item \texttt{Locations} : Group
+	\begin{itemize}
+		\item \texttt{Location\textit{i}} : Group
+			\begin{itemize}
+				\item \texttt{ContactPools} : Group
+					\begin{itemize}
+						\item \texttt{ContactPool\textit{i}} : Dataset of unsigned ints
+						\item \texttt{Commutes} : Dataset of Commute types
+					\end{itemize}						
+			\end{itemize}
+	\end{itemize}
+\item \texttt{Persons} : Dataset or Person types
+\end{itemize}
+
+\texttt{Locations}
+\begin{itemize}
+\item \texttt{size} : unsigned long
+\end{itemize}
+
+\texttt{Location\textit{i}}
+\begin{itemize}
+\item \texttt{id} : unsigned int 
+\item \texttt{name} : variable length c-style string 
+\item \texttt{province} : unsigned int 
+\item \texttt{population} : unsigned int 
+\item \texttt{longitude} : double
+\item \texttt{latitude} : double
+\item \texttt{size} : unsigned long
+\end{itemize}
+
+\texttt{ContactPools}
+\begin{itemize}
+\item \texttt{size} : unsigned long
+\end{itemize}
+
+\texttt{ContactPool\textit{i}}
+\begin{itemize}
+\item \texttt{id} : unsigned int 
+\item \texttt{size} : unsigned long 
+\item \texttt{type} : variable length c-style string
+\end{itemize}
+
+\texttt{Commutes}
+\begin{itemize}
+\item \texttt{size} : unsigned int
+\end{itemize}
+
+\texttt{Persons}
+\begin{itemize}
+\item \texttt{size} : unsigned int
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Daycares and PreSchools
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Daycares and PreSchools}
+\label{section:Dataycares and PreSchools}
+The current implementation in stride generates contact pools for different Contact Types and their associated AgeBrackets. There are two added Contact Types for 0-3 years old and 3-6 years old, Daycare and Preschool. They have fixed participation rates that can't be altered via config. The participation rate for Daycare is 0.45 and the participation rate for Preschool is 0.99.
