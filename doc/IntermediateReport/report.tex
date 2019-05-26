@@ -200,11 +200,8 @@
 	
 \section{Data Visualization}
 \section{Progress}
-The demographic and geographic layers have been split by inheritance. A new class "Region" has been added to represent the geographic layer and "GeoGrid" inherits from it. During the feedback of the beta it was adviced to create a template for the geographical layer. This will be done in the future. Because GeoGrid is used nearly everywhere, the changed files have been omitted. \\
-The model for the gui has been created in "EpiGrid". It will hold all the locations as "EpiLocation". These will hold, for every timestep, a "PoolStatus". This PoolStatus holds for every
-ContactType a "HealthPool". The HealthPool will hold the percentage of people for every HealthStatus. To be able to easily get the HealthStatus of a person, a function is added to "Health.h" which returns m\_status.\\
-To write the epi-output, a viewer was created, the "EpiViewer".\\
-The changes to the controller and the gui still have to be implemented.
+The demographic and geographic layers have been split by inheritance. During the feedback of the beta it was adviced to create a template for the geographical layer. This will be done in the future. Because GeoGrid is used nearly everywhere, the changed files have been omitted. \\
+The changes are discussed in the Latex/UserManual.pdf under section 5.6,5.7 and 5.8.
 \section{Code}
 	\begin{itemize}
 		\item \texttt{main/cpp/geopop/GeoGrid (.h/.cpp)}

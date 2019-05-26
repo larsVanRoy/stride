@@ -231,3 +231,24 @@ A Geogrid formatted file written in HDF5 has the following format:
 \section{Daycares and PreSchools}
 \label{section:Dataycares and PreSchools}
 The current implementation in stride generates contact pools for different Contact Types and their associated AgeBrackets. There are two added Contact Types for 0-3 years old and 3-6 years old, Daycare and Preschool. They have fixed participation rates that can't be altered via config. The participation rate for Daycare is 0.45 and the participation rate for Preschool is 0.99.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Data Visualization
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Seperating Geograpic and Demographic Layer}
+\subsection{Idea}
+In Stride the classes \textit{GeoGrid} and \textit{Location} both held the geographical and demographical information. The idea was to splits these functionalities into seperate layers. A geographical layer which holds the geographical information like coordinates and place names, while the demographic layer holds other information namely the population. This would allow for the reuse of the geographical layer in the gui.\\
+
+\subsection{Implementation}
+The seperation was done via inheritance. The geograpical parts of \textit{GeoGrid} and \textit{Location} were moved to two new classes \textit{Region} and \textit{GeoLocation}. \textit{Location} would inherit from \textit{GeoLocation} and \textit{GeoGrid} from \textit{Region}. This allowed for new classes like \textit{EpiGrid} and \textit{EpiLocation} to inherit from \textit{Region} and \textit{GeoLocation} as well.\\
+
+\section{Epidemiological output}
+As input for the gui, an epidemiological output was proposed. This \textbf{epi\_output} contains for every saved timestep the epidemiological situation. For every location the percentage of people per \textit{HealthStatus} per \textit{ContactType} is saved. To write this file during the simulation an extra viewer was create, the \textit{EpiViewer}. It will write the epi-output to the desired file.\\
+The controller was not yet adapted to fully function with this feature. The \textit{ControlHelper} will be changed so it will check for an \textbf{epi\_output} filename to write to.\\
+
+\section{Data Visualization}
+Currently only the model of the gui has been implemented. An \textit{EpiReader} will read the \textbf{epi\_output} and create an \textit{EpiGrid}. This class will hold \textit{EpiLocations} which will hold the coordinates of the location and for every timestep the a \textit{PoolStatus}. This \textit{PoolStatus} will hold the \textit{HealthPool} for every \textit{ContactType}. The \textit{HealthPool} will in turn have the percentage of people in every \textit{HealthStatus}.\\
+The gui will be called by a commandline which will tell it where the \textbf{epi\_output} is located.
+
+
+ 
