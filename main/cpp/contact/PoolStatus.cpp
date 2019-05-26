@@ -26,6 +26,10 @@
 
 namespace stride {
 
+PoolStatus::PoolStatus() {
+    m_status.resize(stride::ContactType::NumOfTypes());
+}
+
 bool PoolStatus::operator==(const PoolStatus &other) const{
     for (stride::ContactType::Id ID : stride::ContactType::IdList) {
         const auto v1 = m_status[ContactType::ToSizeT(ID)];

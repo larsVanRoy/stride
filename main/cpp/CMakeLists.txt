@@ -145,7 +145,7 @@ set(STRIDE_SRC
     ${PROTO_HEADER}
     ${PROTO_SRC}
     #---
-    geopop/EpiLocation.cpp\
+    geopop/EpiLocation.cpp
     viewers/InfectedFile.cpp
     viewers/PersonsFile.cpp
     viewers/SummaryFile.cpp

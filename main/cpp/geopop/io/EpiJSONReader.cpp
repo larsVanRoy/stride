@@ -32,7 +32,6 @@ void EpiJSONReader::Read() {
     } catch (json::parse_error&) {
         throw stride::util::Exception("Problem parsing JSON file, check whether empty or invalid JSON.");
     }
-//    std::cout << std::setw(4) << json_file << "\n";
     try {
         auto location = json_file["locations"];
         ParseLocations(location);
@@ -88,7 +87,6 @@ void EpiJSONReader::ParseHistory(const nlohmann::json &history) {
         nlohmann::json locations;
         try {
             const nlohmann::json &step = history[i];
-            std::cout << "step:\n" << std::setw(4) << step << std::endl;
             locations = step["locations"];
             const nlohmann::json &day = step["timestep"];
         }
@@ -104,7 +102,9 @@ void EpiJSONReader::ParseLocationPools(const nlohmann::json &pools, std::shared_
     std::shared_ptr<stride::PoolStatus> status = std::make_shared<stride::PoolStatus>();
     try {
         for (stride::ContactType::Id i : stride::ContactType::IdList) {
+            std::cout << loc->GetName() << "\t";
             std::shared_ptr<stride::HealthPool> h = ParsePool(pools[stride::ContactType::ToString(i)]);
+
             status->addStatus(i, h);
         }
     }
@@ -117,14 +117,12 @@ void EpiJSONReader::ParseLocationPools(const nlohmann::json &pools, std::shared_
 }
 
 void EpiJSONReader::ParseHistoryLocation(const nlohmann::json &location) {
-    std::cout << "location: \n" << location.is_array() << "\ndone" << std::endl;
 
     try {
         for(unsigned int i = 0; i < location.size(); ++i){
             const auto& j = location[i];
             unsigned int locationID = j["id"];
             std::shared_ptr<EpiLocation> loc = m_grid->GetById(locationID);
-            std::cout << "id: " << locationID << std::endl;
             ParseLocationPools(j["pools"], loc);
         }
     }
@@ -148,13 +146,29 @@ std::shared_ptr<stride::HealthPool> EpiJSONReader::ParsePool(const nlohmann::jso
         for (unsigned short i = 0; i < pool.size(); ++i) {
             double fraction = pool[i];
             result->setHealth(static_cast<stride::HealthStatus>(i), fraction);
+            std::cout << fraction;
         }
+        std::cout << "\n";
     }
     catch(std::exception& e){
         std::cout << "Error in ParsePool: " << e.what() << std::endl;
         throw e;
     }
     return result;
+}
+
+void EpiJSONReader::Print() {
+    for (unsigned int i = 0; i < m_grid->size(); ++i) {
+        std::cout << "Location: " << i << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetName() << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Susceptible)[0] << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Exposed)[0] << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Infectious)[0] << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Symptomatic)[0] << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::InfectiousAndSymptomatic)[0] << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Recovered)[0] << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Immune)[0] << "\n";
+    }
 }
 
 }

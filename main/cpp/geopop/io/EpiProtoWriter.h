@@ -16,7 +16,7 @@
 #pragma once
 
 #include "EpiWriter.h"
-#include "epigeogrid.pb.h"
+#include "proto_pb/epigeogrid.pb.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/geo/Coordinate.h"
 

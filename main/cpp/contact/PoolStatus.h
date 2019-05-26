@@ -34,7 +34,7 @@ class HealthPool;
 /// Stores the % of people of each health status for every ContactType
 class PoolStatus {
 public:
-    PoolStatus() = default;
+    PoolStatus();
 
     bool operator==(const PoolStatus& other) const;
 
@@ -42,7 +42,7 @@ public:
     void addStatus(stride::ContactType::Id ID, std::shared_ptr<HealthPool> status);
 
     /// Returns the status of a ContactType
-    std::shared_ptr<HealthPool> getStatus(stride::ContactType::Id ID) { return m_status[ContactType::ToSizeT(ID)]; }
+    std::shared_ptr<HealthPool> getStatus(stride::ContactType::Id ID) { return m_status.at(ContactType::ToSizeT(ID)); }
 
     std::shared_ptr<HealthPool> operator[](stride::ContactType::Id ID){ return m_status[ContactType::ToSizeT(ID)]; }
 

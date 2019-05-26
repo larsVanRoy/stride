@@ -122,14 +122,14 @@ json EpiJSONWriter::WritePoolHealthStatus(const std::shared_ptr<geopop::Location
     json health_status = json::array();
 
     vector<unsigned long> status(NumOfHealthStatus(), 0);
-
+    int i;
     for (const auto &pool : location->CRefPools(id)) {
         for (const auto &person : *pool) {
             status[ToSize(person->GetHealth().GetStatus())]++;
         }
     }
     for(unsigned i = 0; i < status.size(); ++i){
-        health_status.push_back(status[i]/location->GetPopCount());
+        health_status.push_back((double)status[i]/location->GetPopCount());
     }
     return health_status;
 }

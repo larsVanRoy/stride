@@ -51,6 +51,7 @@ public:
     /// Actually perform the read and return the Epi.
     void Read() override;
 
+    void Print();
 private:
     /// Create a Coordinate based on the information stored in the provided JSON object.
     Coordinate ParseCoordinate(const nlohmann::json& coordinate);

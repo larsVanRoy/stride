@@ -38,7 +38,7 @@ enum class HealthStatus : unsigned short int
 unsigned short int ToSize(const HealthStatus& h);
 
 /// Number of ContactPool types.
-inline constexpr unsigned int NumOfHealthStatus() { return 6U; }
+inline constexpr unsigned int NumOfHealthStatus() { return 7U; }
 
 /// Holds a person's health data.
 class Health

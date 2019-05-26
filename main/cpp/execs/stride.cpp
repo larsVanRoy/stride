@@ -52,6 +52,7 @@ int main() {
         if (ss->is_open()) {
             geopop::EpiJSONReader reader(std::move(ss));
             reader.Read();
+            reader.Print();
         } else
             std::cout << "Error loading file\n";
     }
