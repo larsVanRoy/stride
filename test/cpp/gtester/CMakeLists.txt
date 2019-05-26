@@ -46,7 +46,7 @@ set(SRC
     UnitSegmentedVector.cpp
     UnitSlice1.cpp
     UnitSlice2.cpp
-        UnitDemographicProfileTest.cpp
+    UnitDemographicProfileTest.cpp
     #---
     #---
     geopop/generators/DaycareGeneratorTest.cpp
@@ -61,9 +61,9 @@ set(SRC
     geopop/io/CitiesCSVReaderTest.cpp
     geopop/io/CommutesCSVReaderTest.cpp
     geopop/io/GeoGridIOUtils.cpp
-    geopop/io/GeoGridJSONReaderTest.cpp
-    geopop/io/GeoGridJSONWriterTest.cpp
-    geopop/io/GeoGridJSONReaderWriterTest.cpp
+    geopop/io/GeoGridJSONReaderUnitTest.cpp
+    geopop/io/GeoGridJSONReaderWriterScenarioTest.cpp
+    geopop/io/GeoGridJSONWriterUnitTest.cpp
     geopop/io/GeoGridProtoReaderTest.cpp
     geopop/io/GeoGridProtoWriterTest.cpp
     geopop/io/GeoGridHDF5ReaderTest.cpp
