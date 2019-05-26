@@ -6,30 +6,94 @@
 \usepackage{float}
 
 \begin{document}
-	%
-	\title{Intermediate Report}
+	\title{Intermediate Report\\\vspace{0.1in}\small{\textit{3 Ba INF \  2018-2019}}}
+	\author{Evelien Daems \\ Benjamin Vandersmissen \\ Frank Jan Fekkes \\ Lars Van Roy}
+	\institute{}
+	\maketitle
 	
-	\author{Benjamin Vandersmissen\inst{1} \and
-		Lars Van Roy\inst{2} \and \\
-		Evelien Daems\inst{3} \and
-		Frank Jan Fekkes\inst{4}}
-
-	\institute{
-		\email{benjamin.vandersmissen@student.uantwerpen.be} \and
-		\email{lars.vanroy@student.uantwerpen.be} \and
-		\email{evelien.daems@student.uantwerpen.be} \and
-		\email{franciscus.fekkes@student.uantwerpen.be}}
-	%
-	\maketitle              % typeset the header of the contribution
-	%
+	\section{Introduction}
+	This report gives a brief overview of the current status of our project. It lists the completed segments, as well as the segments that are not. We will end every segment by a summary of the altered files and or the files that are related to the given segment.
 	
 	\section{Demographic Profile}
+	\subsection{progress}
 	The demographic profile section is completely finished. It currently reads the proper configuration and applies the provided information where needed. The used algorithms are described in section 5.2 of the user manual.\\
 	\\
 	There are unit and scenario test that test the implementation of demographic profile. The scenario tests will test whether the information is properly read and that this information is properly applied in the respective generators. These tests will only test the generator for extreme values, where there are only a few types of ages, since the distribution can not exactly be tested if there are multiple (as randomness would influence this). I did however manually test a couple of scenarios where the results were all reasonable and within the expected bounds. The available tests and the functionality they intend to test are all documented in the test plan under section 5.2
 	
+	\subsection{Affected Files}
+	\texttt{reading input data}: code that handles reading the data
+	\begin{itemize}
+		\item \texttt{main/cpp/pop/GeoPopBuilder.cpp}: \\
+		The readers will be called here
+		\item \texttt{main/cpp/geopop/io/HouseholdReader.h}: \\
+		The super class for all workplace readers
+		\item \texttt{main/cpp/geopop/io/HouseholdCSVReader (.h/.cpp)}: \\
+		The specific reader implementation for CSV
+		\item \texttt{main/cpp/geopop/io/MajorCitiesReader (.h/.cpp)}: \\
+		The reader that reads which cities are major
+	\end{itemize}
+	\texttt{storing input data}: code that handles storing the data
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/GeoGridConfig (.h/.cpp)}: \\
+		This will store all needed data
+	\end{itemize}
+	\texttt{generators}: code that handles generating of pools
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/generators/HouseholdGenerator.cpp}:\\
+		Altered generator that generates household pools
+		\item \texttt{main/cpp/geopop/generators/WorkplaceGenerator.cpp}:\\
+		Altered generator that generates workplaces pools
+		\item \texttt{main/cpp/geopop/generators/K12SchoolGenerator.cpp}:\\
+		Altered generator that generates K12schools pools
+		\item \texttt{main/cpp/geopop/generators/PreSchoolGenerator.cpp}:\\
+		Altered generator that generates preschools pools
+		\item \texttt{main/cpp/geopop/generators/DaycareGenerator.cpp}:\\
+		Altered generator that generates daycare pools
+	\end{itemize}
+	\texttt{generators}: code that handles generating of pools
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/populators/HouseholdPopulator.cpp}:\\
+		Altered populator that populates household pools
+		\item \texttt{main/cpp/geopop/populators/WorkplacePopulator.cpp}:\\
+		Altered populator that populates workplaces pools
+		\item \texttt{main/cpp/geopop/populators/K12SchoolPopulator.cpp}:\\
+		Altered populator that populates K12schools pools
+		\item \texttt{main/cpp/geopop/populators/PreSchoolPopulator.cpp}:\\
+		Altered populator that populates preschools pools
+		\item \texttt{main/cpp/geopop/populators/DaycarePopulator.cpp}:\\
+		Altered populator that populates daycare pools
+	\end{itemize}
+	
 	\section{Workplace Distribution}
+	\subsection{progress}
 	The workplace distribution is completely finished. It currently reads from an input file in case this file is given, or, in case this was not given, it will fall back to the original implementation of the workplace distributions. In case the workplace distribution configuration was given, the algorithm described in the user manual under section 5.3 will be used. \\
 	\\
 	There are also tests, that will test most of the functionality of this section. It is both tested in unit tests, and scenario tests of which the last ones will test if the reader will properly pass the read information to the generator. The tests will only test the generator for the more extreme values where there is only one type of workplace size, with a 100\% chance of occurring. It has been manually tested for multiple kinds of workplaces and this does seem correct, but this is far harder to test as the generated values could be widely spread out due to randomness. The made tests and the functionality they intend to test is all documented in the test plan under section 5.3
+	
+	
+	
+	\subsection{Affected Files}
+		\texttt{reading input data}: code that handles reading the data
+		\begin{itemize}
+			\item \texttt{main/cpp/pop/GeoPopBuilder.cpp}: \\ The reader will be called here
+			\item \texttt{main/cpp/geopop/io/WorkplaceReader.h}: \\
+			The super class for all workplace readers
+			\item \texttt{main/cpp/geopop/io/WorkplaceCSVReader (.h/.cpp)}: \\
+			The specific reader implementation for CSV
+		\end{itemize}
+		\texttt{storing input data}: code that handles storing the data
+		\begin{itemize}
+			\item \texttt{main/cpp/geopop/GeoGridConfig (.h/.cpp)}: \\
+			This will store all needed data
+		\end{itemize}
+		\texttt{workplace generator}: code that handles generator of workplaces
+		\begin{itemize}
+			\item \texttt{main/cpp/geopop/generators/WorkplaceGenerator.cpp}:\\
+			Altered generator that generates workplaces
+		\end{itemize}
+		\texttt{workplace populator}: code that handles population of workplaces
+		\begin{itemize}
+			\item \texttt{main/cpp/geopop/populators/WorkplacePopulator.cpp}:\\
+			Altered populator that populates workplaces
+		\end{itemize}
 \end{document}
