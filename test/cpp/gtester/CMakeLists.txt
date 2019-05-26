@@ -49,8 +49,8 @@ set(SRC
         UnitDemographicProfileTest.cpp
     #---
     #---
-    # geopop/generators/DaycareGeneratorTest.cpp
-    # geopop/generators/PreSchoolGeneratorTest.cpp
+    geopop/generators/DaycareGeneratorTest.cpp
+    geopop/generators/PreSchoolGeneratorTest.cpp
     geopop/generators/CollegeGeneratorTest.cpp
     geopop/generators/HouseholdGeneratorTest.cpp
     geopop/generators/K12SchoolGeneratorTest.cpp
@@ -63,6 +63,7 @@ set(SRC
     geopop/io/GeoGridIOUtils.cpp
     geopop/io/GeoGridJSONReaderTest.cpp
     geopop/io/GeoGridJSONWriterTest.cpp
+    geopop/io/GeoGridJSONReaderWriterTest.cpp
     geopop/io/GeoGridProtoReaderTest.cpp
     geopop/io/GeoGridProtoWriterTest.cpp
     geopop/io/GeoGridHDF5ReaderTest.cpp
@@ -75,8 +76,8 @@ set(SRC
     geopop/kdtree.cpp
 #    ---
     geopop/populators/MakeGeoGrid.cpp
-    # geopop/populators/DaycarePopulatorTest.cpp
-    # geopop/populators/PreSchoolPopulatorTest.cpp
+    geopop/populators/DaycarePopulatorTest.cpp
+    geopop/populators/PreSchoolPopulatorTest.cpp
     geopop/populators/CollegePopulatorTest.cpp
     geopop/populators/HouseholdPopulatorTest.cpp
     geopop/populators/K12SchoolPopulatorTest.cpp
@@ -85,6 +86,7 @@ set(SRC
     geopop/populators/WorkplacePopulatorTest.cpp
 #    ---
     geopop/WorkplaceScenarioTest.cpp
+    geopop/ScenarioDemographicProfile.cpp
 #    ---
     myhayai/DeliveryMan.cpp
     myhayai/MyhayaiTests.cpp

@@ -95,7 +95,7 @@ bool compareJSONs(string given, string expected)
         return oss1.str() == oss2.str();
 }*/
 
-TEST(GeoGridJSONWriterTest, locationTest)
+TEST(GeoGridJSONWriterUnitTest, locationTest)
 {
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
@@ -150,7 +150,7 @@ TEST(GeoGridJSONWriterTest, locationTest)
 }
 
 
-TEST(GeoGridJSONWriterTest, contactPoolTest)
+TEST(GeoGridJSONWriterUnitTest, contactPoolTest)
 {
         auto pop      = Population::Create();
         auto geoGrid  = GeoGrid(pop.get());
@@ -243,7 +243,7 @@ TEST(GeoGridJSONWriterTest, contactPoolTest)
         EXPECT_TRUE(compareJSONs(ss.str(), expectedJSON));
 }
 
-TEST(GeoGridJSONWriterTest, peopleTest)
+TEST(GeoGridJSONWriterUnitTest, peopleTest)
 {
         auto pop = Population::Create();
         auto geoGrid = GetPopulatedGeoGrid(pop.get());
@@ -358,7 +358,7 @@ TEST(GeoGridJSONWriterTest, peopleTest)
         EXPECT_TRUE(compareJSONs(ss.str(), expectedJSON));
 }
 
-TEST(GeoGridJSONWriterTest, commutesTest)
+TEST(GeoGridJSONWriterUnitTest, commutesTest)
 {
 
         string expectedJSON = R"({

@@ -36,8 +36,14 @@ GeoGridHDF5Reader::GeoGridHDF5Reader(const std::string& filename, Population* po
 
 void GeoGridHDF5Reader::Read()
 {
-        H5File file(m_filename, H5F_ACC_RDONLY);
-        auto&  geoGrid = m_population->RefGeoGrid();
+        H5File file;
+        try {
+                file = H5File(m_filename, H5F_ACC_RDONLY);
+
+        } catch (H5::Exception&) {
+                throw stride::util::Exception("Problem parsing HDF5 file, check whether empty.");
+        }
+        auto& geoGrid = m_population->RefGeoGrid();
 
         ReadPeople(file);
 
@@ -50,13 +56,16 @@ void GeoGridHDF5Reader::Read()
 }
 void GeoGridHDF5Reader::ReadPeople(const H5::H5File& file)
 {
-        unsigned int nrPeople;
+        size_t nrPeople;
 
-        ReadAttribute("size", PredType::NATIVE_UINT, &nrPeople, file);
+        ReadAttribute("size", &nrPeople, file);
+
+        if (nrPeople == 0)
+                return;
 
         std::vector<H5Person> people(nrPeople);
         auto                  person_t = GetPersonType();
-        ReadDataset("People", person_t, people.data(), file);
+        ReadDataset("People", people.data(), file);
 
         for (auto person : people) {
                 auto stride_person  = m_population->CreatePerson(person.id, person.age, person.houseHold, 0, 0,
@@ -67,9 +76,11 @@ void GeoGridHDF5Reader::ReadPeople(const H5::H5File& file)
 }
 void GeoGridHDF5Reader::ReadLocations(const H5::H5File& file, GeoGrid& geoGrid)
 {
-        auto         locations_group = file.openGroup("Locations");
-        unsigned int locations_size;
-        ReadAttribute("size", PredType::NATIVE_UINT, &locations_size, locations_group);
+        auto   locations_group = file.openGroup("Locations");
+        size_t locations_size;
+        ReadAttribute("size", &locations_size, locations_group);
+        if (locations_size == 0)
+                return;
         for (auto i = 0; i < locations_size; ++i) {
                 auto group = locations_group.openGroup("Location" + to_string(i + 1));
                 ReadLocation(group, geoGrid);
@@ -78,17 +89,18 @@ void GeoGridHDF5Reader::ReadLocations(const H5::H5File& file, GeoGrid& geoGrid)
 
 void GeoGridHDF5Reader::ReadLocation(const Group& object, GeoGrid& geoGrid)
 {
-        unsigned int id, province, population, size, commutes_size;
+        unsigned int id, province, population, size;
+        size_t       commutes_size;
         double       longitude, latitude;
         string       name;
 
-        ReadAttribute("id", PredType::NATIVE_UINT, &id, object);
-        ReadAttribute("province", PredType::NATIVE_UINT, &province, object);
-        ReadAttribute("population", PredType::NATIVE_UINT, &population, object);
-        ReadAttribute("size", PredType::NATIVE_UINT, &size, object);
-        ReadAttribute("name", GetStringType(), &name, object);
-        ReadAttribute("longitude", PredType::NATIVE_DOUBLE, &longitude, object);
-        ReadAttribute("latitude", PredType::NATIVE_DOUBLE, &latitude, object);
+        ReadAttribute("id", &id, object);
+        ReadAttribute("province", &province, object);
+        ReadAttribute("population", &population, object);
+        ReadAttribute("size", &size, object);
+        ReadAttribute("name", &name, object);
+        ReadAttribute("longitude", &longitude, object);
+        ReadAttribute("latitude", &latitude, object);
 
         auto location_ptr = make_shared<Location>(id, province, Coordinate{longitude, latitude}, name, population);
 
@@ -98,11 +110,11 @@ void GeoGridHDF5Reader::ReadLocation(const Group& object, GeoGrid& geoGrid)
         }
 
         auto commutes_set = object.openDataSet("Commutes");
-        ReadAttribute("size", PredType::NATIVE_UINT, &commutes_size, commutes_set);
+        ReadAttribute("size", &commutes_size, commutes_set);
         std::vector<H5Commute> commutes(commutes_size);
         auto                   commute_t = GetCommuteType();
 
-        ReadDataset("Commutes", commute_t, commutes.data(), object);
+        ReadDataset("Commutes", commutes.data(), object);
 
         for (auto commute : commutes) {
                 m_commutes.emplace_back(id, commute.to, commute.proportion);
@@ -116,8 +128,8 @@ void GeoGridHDF5Reader::ReadContactPool(const DataSet& object, std::shared_ptr<L
         unsigned int size;
         string       type;
 
-        ReadAttribute("size", PredType::NATIVE_UINT, &size, object);
-        ReadAttribute("type", GetStringType(), &type, object);
+        ReadAttribute("size", &size, object);
+        ReadAttribute("type", &type, object);
 
         auto type_id = ToId(type);
 
@@ -135,8 +147,7 @@ void GeoGridHDF5Reader::ReadContactPool(const DataSet& object, std::shared_ptr<L
 }
 
 template <typename T>
-void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataType& type, T* data,
-                                      const H5Object& object)
+void GeoGridHDF5Reader::ReadAttribute(const std::string& name, T* data, const H5::H5Object& object)
 {
         auto attr = object.openAttribute(name);
         switch (attr.getTypeClass()) {
@@ -145,16 +156,13 @@ void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataTyp
         }
 }
 template <>
-void GeoGridHDF5Reader::ReadAttribute(const std::string& name, const H5::DataType& type, std::string* data,
-                                      const H5::H5Object& object)
+void GeoGridHDF5Reader::ReadAttribute(const std::string& name, std::string* data, const H5::H5Object& object)
 {
         auto attr = object.openAttribute(name);
-        switch (attr.getTypeClass()) {
-        case H5T_STRING: attr.read(StrType(H5T_C_S1, H5T_VARIABLE), *data); break;
-        }
+        attr.read(StrType(H5T_C_S1, H5T_VARIABLE), *data);
 }
 template <typename T>
-void GeoGridHDF5Reader::ReadDataset(const std::string& name, const H5::DataType& type, T* data, const H5::H5Object& object)
+void GeoGridHDF5Reader::ReadDataset(const std::string& name, T* data, const H5::H5Object& object)
 {
         auto dataSet = object.openDataSet(name);
         switch (dataSet.getTypeClass()) {

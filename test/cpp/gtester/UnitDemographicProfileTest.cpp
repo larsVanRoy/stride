@@ -8,17 +8,20 @@
  */
 
 #include "geopop/GeoGridConfig.h"
+#include "geopop/GeoGrid.h"
 #include "util/FileSys.h"
+#include "pop/Population.h"
 
 #include <gtest/gtest.h>
 #include <sstream>
 #include <geopop/GeoGridConfig.h>
 
 using namespace std;
+using namespace geopop;
 using namespace stride;
 using namespace stride::util;
 
-TEST(DemographicProfile, onlyDefaultConfiguration){
+TEST(UnitDemographicProfile, onlyDefaultConfiguration){
     string expectedData =
     R"(Input:
 Fraction college commuters:                          0
@@ -40,7 +43,7 @@ for region:                                          Default
 
 )";
 
-    auto ggConfig = geopop::GeoGridConfig();
+    auto ggConfig = GeoGridConfig();
     ggConfig.param.pop_size = 60000;
     ggConfig.param.participation_workplace = 0.7;
     ggConfig.param.participation_college = 0.7;
@@ -51,7 +54,7 @@ for region:                                          Default
     EXPECT_EQ(expectedData, ss.str());
 }
 
-TEST(DemographicProfile, oneAdditionalProvince){
+TEST(UnitDemographicProfile, oneAdditionalProvince){
     string expectedData =
             R"(Input:
 Fraction college commuters:                          0
@@ -72,27 +75,32 @@ for region:                                          Default
     Workplace person count:                          18.440
 
 for region:                                          Antwerp
-    Daycare toddler count:                           815
-    PreSchool student count:                         1.969
-    K12School student count:                         10.348
-    College student count:                           7.563
-    Workplace person count:                          18.279
+    Daycare toddler count:                           407
+    PreSchool student count:                         984
+    K12School student count:                         5.174
+    College student count:                           3.781
+    Workplace person count:                          9.139
 
 )";
+    shared_ptr<Population> m_pop(Population::Create());
+    GeoGrid m_geo_grid(m_pop.get());
 
-    auto ggConfig = geopop::GeoGridConfig();
+    auto loc1 = make_shared<Location>(1, 1, Coordinate(0, 0), "Antwerpen", 30000);
+    m_geo_grid.AddLocation(loc1);
+
+    auto ggConfig = GeoGridConfig();
     ggConfig.param.pop_size = 60000;
     ggConfig.param.participation_workplace = 0.7;
     ggConfig.param.participation_college = 0.7;
     ggConfig.SetData("households_general.csv");
-    ggConfig.SetData(std::map<unsigned int, string>{{1, "households_Antwerp.csv"}});
+    ggConfig.SetData(std::map<unsigned int, string>{{1, "households_Antwerp.csv"}}, m_geo_grid);
     stringstream ss;
     ss << ggConfig;
 
     EXPECT_EQ(expectedData, ss.str());
 }
 
-TEST(DemographicProfile, additionalMajorCities){
+TEST(UnitDemographicProfile, additionalMajorCities){
     string expectedData =
             R"(Input:
 Fraction college commuters:                          0
@@ -113,21 +121,26 @@ for region:                                          Default
     Workplace person count:                          18.440
 
 for region:                                          Major Cities
-    Daycare toddler count:                           795
-    PreSchool student count:                         2.029
-    K12School student count:                         10.212
-    College student count:                           7.676
-    Workplace person count:                          18.453
+    Daycare toddler count:                           397
+    PreSchool student count:                         1.014
+    K12School student count:                         5.106
+    College student count:                           3.838
+    Workplace person count:                          9.226
 
 )";
+    shared_ptr<Population> m_pop(Population::Create());
+    GeoGrid m_geo_grid(m_pop.get());
+
+    auto loc1 = make_shared<Location>(1, 1, Coordinate(0, 0), "ANTWERPEN", 30000);
+    m_geo_grid.AddLocation(loc1);
 
     auto ggConfig = geopop::GeoGridConfig();
     ggConfig.param.pop_size = 60000;
     ggConfig.param.participation_workplace = 0.7;
     ggConfig.param.participation_college = 0.7;
-    ggConfig.SetData("households_general.csv");
-    ggConfig.SetData(std::map<unsigned int, string>{{11, "households_Major_Cities.csv"}});
     ggConfig.SetMajorCitiesData("major_cities.csv");
+    ggConfig.SetData("households_general.csv");
+    ggConfig.SetData(std::map<unsigned int, string>{{11, "households_Major_Cities.csv"}}, m_geo_grid);
     stringstream ss;
     ss << ggConfig;
 

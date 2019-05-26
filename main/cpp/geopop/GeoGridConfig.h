@@ -20,6 +20,7 @@
 #include "util/SegmentedVector.h"
 #include "util/RnMan.h"
 #include "Location.h"
+#include "GeoGrid.h"
 
 #include <boost/property_tree/ptree_fwd.hpp>
 
@@ -49,12 +50,12 @@ public:
         /// People per unit (= Household, K12School, College, etc.) for each of the ContactTypes.
         /// Default initialization. Order in which contacttypes are listed in the
         /// definition of the enumeration must be respected!
-        stride::ContactType::IdSubscriptArray<unsigned int> people {0U, 0U, 0U, 500U, 3000U, 20U, 2000U, 2000U};
+        stride::ContactType::IdSubscriptArray<unsigned int> people {1U, 10U, 250U, 500U, 3000U, 20U, 2000U, 2000U};
 
         /// Pools per unit (= Household, K12School, College, etc.) for each of the ContactTypes.
         /// Default initialization. Order in which contacttypes are listed in the
         /// definition of the enumeration must be respected!
-        stride::ContactType::IdSubscriptArray<unsigned int> pools {1U, 1U, 1U, 25U, 20U, 1U, 1U, 1U};
+        stride::ContactType::IdSubscriptArray<unsigned int> pools {1U, 1U, 5U, 25U, 20U, 1U, 1U, 1U};
 
         // -----------------------------------------------------------------------------------------
         // Parameters set by constructor with configuration property tree.
@@ -142,6 +143,9 @@ public:
 
                 /// The number of households.
                 unsigned int count_households;
+
+                /// The size of the population within the region.
+                unsigned int popcount;
         };
 
         // -----------------------------------------------------------------------------------------
@@ -184,8 +188,7 @@ public:
         // -----------------------------------------------------------------------------------------
         /// Read the househould data files, parse them and set data.
         // -----------------------------------------------------------------------------------------
-        void SetData(const std::map<unsigned int, std::string>& householdFileNames);
-
+        void SetData(const std::map<unsigned int, std::string>& householdFileNames, GeoGrid& geoGrid);
 
         // -----------------------------------------------------------------------------------------
         /// Read the workplace data file, parse it and set data.

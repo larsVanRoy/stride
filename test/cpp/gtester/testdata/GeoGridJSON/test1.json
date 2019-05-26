@@ -39,6 +39,18 @@
                     "pools": [
 						{"id": 4, "people": []}
 					]
+                },
+                {
+                  "class": "Daycare",
+                  "pools": [
+                        {"id": 3, "people": []}
+                  ]
+                },
+                {
+                  "class": "PreSchool",
+                  "pools": [
+                        {"id": 4, "people": []}
+                  ]
                 }
             ]
         }

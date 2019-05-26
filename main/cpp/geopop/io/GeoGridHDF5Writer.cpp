@@ -38,8 +38,10 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, ostream& stream)
 
 void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, const std::string& filename)
 {
+        m_location_counter = 0U;
+        m_pool_counter = 0U;
         H5File file(filename, H5F_ACC_TRUNC);
-        auto locations = file.createGroup("Locations");
+        auto   locations = file.createGroup("Locations");
 
         for (unsigned i = 0; i < geoGrid.size(); ++i) {
                 WriteLocation(file, geoGrid[i]);
@@ -95,16 +97,14 @@ void GeoGridHDF5Writer::WriteCommutes(H5::H5File& file, std::shared_ptr<Location
 {
         auto commutes = location->CRefOutgoingCommutes();
 
-        if (!commutes.empty()) {
-                std::vector<H5Commute> data;
-                for (auto pair : commutes) {
-                        H5Commute commute{pair.first->GetID(), pair.second};
-                        data.push_back(commute);
-                }
-                WriteDataset("Commutes", data, group);
-                auto dataset = group.openDataSet("Commutes");
-                WriteAttribute("size", data.size(), dataset);
+        std::vector<H5Commute> data;
+        for (auto pair : commutes) {
+                H5Commute commute{pair.first->GetID(), pair.second};
+                data.push_back(commute);
         }
+        WriteDataset("Commutes", data, group);
+        auto dataset = group.openDataSet("Commutes");
+        WriteAttribute("size", data.size(), dataset);
 }
 
 void GeoGridHDF5Writer::WritePeople(H5::H5File& file)
@@ -112,7 +112,8 @@ void GeoGridHDF5Writer::WritePeople(H5::H5File& file)
         WriteAttribute("size", m_persons_found.size(), file);
         std::vector<H5Person> people;
         for (auto person : m_persons_found) {
-                people.push_back({person->GetId(), person->GetAge(), person->GetPoolId(Id::Household),
+                people.push_back({person->GetId(), person->GetAge(), person->GetPoolId(Id::Daycare),
+                                  person->GetPoolId(Id::PreSchool), person->GetPoolId(Id::Household),
                                   person->GetPoolId(Id::K12School), person->GetPoolId(Id::College),
                                   person->GetPoolId(Id::Workplace), person->GetPoolId(Id::PrimaryCommunity),
                                   person->GetPoolId(Id::SecondaryCommunity)});
@@ -130,9 +131,10 @@ template <typename T>
 void GeoGridHDF5Writer::WriteDataset(const std::string& name, std::vector<T> values, H5Object& object)
 {
         hsize_t dimensions[1] = {values.size()};
-        auto type = GetH5Type(values[0]);
-        auto    dataSpace     = DataSpace(1, dimensions);
-        auto    dataSet       = object.createDataSet(name, type, dataSpace);
+        T       emptyValue;
+        auto    type      = GetH5Type(emptyValue);
+        auto    dataSpace = DataSpace(1, dimensions);
+        auto    dataSet   = object.createDataSet(name, type, dataSpace);
         dataSet.write(values.data(), type);
 }
 } // namespace geopop

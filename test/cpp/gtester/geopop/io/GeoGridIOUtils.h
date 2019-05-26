@@ -18,6 +18,7 @@
 #include "contact/ContactType.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/Location.h"
+#include "H5Cpp.h"
 
 namespace proto {
 class GeoGrid;
@@ -55,3 +56,29 @@ void CompareGeoGrid(proto::GeoGrid& protoGrid);
 std::shared_ptr<GeoGrid> GetPopulatedGeoGrid(stride::Population*);
 
 std::shared_ptr<GeoGrid> GetCommutesGeoGrid(stride::Population*);
+
+template<typename T>
+void ReadHDF5Attribute(const std::string& name, T* data, const H5::H5Object& object)
+{
+        auto attr = object.openAttribute(name);
+        switch (attr.getTypeClass()) {
+        default: attr.read(attr.getDataType(), data); break;
+        case H5T_COMPOUND: attr.read(attr.getCompType(), data); break;
+        }
+}
+template <>
+inline void ReadHDF5Attribute(const std::string& name, std::string* data, const H5::H5Object& object)
+{
+        auto attr = object.openAttribute(name);
+        attr.read(H5::StrType(H5T_C_S1, H5T_VARIABLE), *data);
+}
+template <typename T>
+void ReadHDF5Dataset(const std::string& name, T* data, const H5::H5Object& object)
+{
+        auto dataSet = object.openDataSet(name);
+        switch (dataSet.getTypeClass()) {
+        default: dataSet.read(data, dataSet.getDataType()); break;
+        case H5T_STRING: dataSet.read(data, dataSet.getStrType()); break;
+        case H5T_COMPOUND: dataSet.read(data, dataSet.getCompType()); break;
+        }
+}

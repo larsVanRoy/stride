@@ -27,7 +27,6 @@ class Person;
 } // namespace stride
 
 namespace geopop {
-class ContactPool;
 
 /**
  * Writes a GeoGrid to a HDF5 file.
