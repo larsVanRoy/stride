@@ -72,6 +72,53 @@ A few decisions had to be made in order to make this work. The basis was simple,
 		These are not affected by household factors, and are therefore left unaltered.
 \end{description}
 
+\subsection{Affected Files}
+\begin{compactitem}
+	\item \texttt{reading input data}: code that handles reading the data
+	\begin{itemize}
+		\item \texttt{main/cpp/pop/GeoPopBuilder.cpp}: \\
+		 The readers will be called here
+		\item \texttt{main/cpp/geopop/io/HouseholdReader.h}: \\
+		The super class for all workplace readers
+		\item \texttt{main/cpp/geopop/io/HouseholdCSVReader (.h/.cpp)}: \\
+		The specific reader implementation for CSV
+		\item \texttt{main/cpp/geopop/io/MajorCitiesReader (.h/.cpp)}: \\
+		The reader that reads which cities are major
+	\end{itemize}
+	\newpage
+	\item \texttt{storing input data}: code that handles storing the data
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/GeoGridConfig (.h/.cpp)}: \\
+		This will store all needed data
+	\end{itemize}
+	\item \texttt{generators}: code that handles generating of pools
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/generators/HouseholdGenerator.cpp}:\\
+		Altered generator that generates household pools
+		\item \texttt{main/cpp/geopop/generators/WorkplaceGenerator.cpp}:\\
+		Altered generator that generates workplaces pools
+		\item \texttt{main/cpp/geopop/generators/K12SchoolGenerator.cpp}:\\
+		Altered generator that generates K12schools pools
+		\item \texttt{main/cpp/geopop/generators/PreSchoolGenerator.cpp}:\\
+		Altered generator that generates preschools pools
+		\item \texttt{main/cpp/geopop/generators/DaycareGenerator.cpp}:\\
+		Altered generator that generates daycare pools
+	\end{itemize}
+	\item \texttt{generators}: code that handles generating of pools
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/populators/HouseholdPopulator.cpp}:\\
+		Altered populator that populates household pools
+		\item \texttt{main/cpp/geopop/populators/WorkplacePopulator.cpp}:\\
+		Altered populator that populates workplaces pools
+		\item \texttt{main/cpp/geopop/populators/K12SchoolPopulator.cpp}:\\
+		Altered populator that populates K12schools pools
+		\item \texttt{main/cpp/geopop/populators/PreSchoolPopulator.cpp}:\\
+		Altered populator that populates preschools pools
+		\item \texttt{main/cpp/geopop/populators/DaycarePopulator.cpp}:\\
+		Altered populator that populates daycare pools
+	\end{itemize}
+\end{compactitem}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Workplace Size Distribution
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -91,12 +138,44 @@ Rather then creating a workplace for every 20 persons, we will now iterate for a
 \subsection{Workplace Populator}
 The Workplace populator will select a random workplace pool for each of the workers. As long as there are places left in the workplaces, these places will get priority over the other workplaces. As soon as all pools are filled to their intended size, we will randomly select pools out of all the pools within a certain range. The pools will not always get perfectly filled to their intended size, even though we intended to create an exact fit, since randomness is used in the populator.
 
+\subsection{Affected Files}
+\begin{compactitem}
+	\item \texttt{reading input data}: code that handles reading the data
+	\begin{itemize}
+		\item \texttt{main/cpp/pop/GeoPopBuilder.cpp}: \\ The reader will be called here
+		\item \texttt{main/cpp/geopop/io/WorkplaceReader.h}: \\
+		The super class for all workplace readers
+		\item \texttt{main/cpp/geopop/io/WorkplaceCSVReader (.h/.cpp)}: \\
+		The specific reader implementation for CSV
+	\end{itemize}
+	\item \texttt{storing input data}: code that handles storing the data
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/GeoGridConfig (.h/.cpp)}: \\
+		This will store all needed data
+	\end{itemize}
+	\item \texttt{workplace generator}: code that handles generator of workplaces
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/generators/WorkplaceGenerator.cpp}:\\
+		Altered generator that generates workplaces
+	\end{itemize}
+	\item \texttt{workplace populator}: code that handles population of workplaces
+	\begin{itemize}
+		\item \texttt{main/cpp/geopop/populators/WorkplacePopulator.cpp}:\\
+		Altered populator that populates workplaces
+	\end{itemize}
+\end{compactitem}
+
+\newpage
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% JSON input file
+% Data Formats
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Data Formats}
 \label{section:DataFormats}
 
-\subsection{JSON}
-\subsubsection{GeoGrid}
+\subsection{JSON: GeoGrid}
+This feature offers the user to create a GeoGrid file in JSOn format. These files are handled by a Reader and a Writer based by the concepts of "JSON for Modern C++".
+
+
+
+

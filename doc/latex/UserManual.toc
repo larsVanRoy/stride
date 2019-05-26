@@ -25,11 +25,12 @@
 \contentsline {subsection}{\numberline {5.2.1}Idea}{16}{subsection.5.2.1}
 \contentsline {subsection}{\numberline {5.2.2}Input}{17}{subsection.5.2.2}
 \contentsline {subsection}{\numberline {5.2.3}New implementations for generators}{17}{subsection.5.2.3}
-\contentsline {section}{\numberline {5.3}Workplace Size Distribtution}{18}{section.5.3}
-\contentsline {subsection}{\numberline {5.3.1}Idea}{18}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.2.4}Affected Files}{18}{subsection.5.2.4}
+\contentsline {section}{\numberline {5.3}Workplace Size Distribtution}{19}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Idea}{19}{subsection.5.3.1}
 \contentsline {subsection}{\numberline {5.3.2}Input}{19}{subsection.5.3.2}
-\contentsline {subsection}{\numberline {5.3.3}Workplace Generator}{19}{subsection.5.3.3}
-\contentsline {subsection}{\numberline {5.3.4}Workplace Populator}{19}{subsection.5.3.4}
-\contentsline {section}{\numberline {5.4}Data Formats}{19}{section.5.4}
-\contentsline {subsection}{\numberline {5.4.1}JSON}{19}{subsection.5.4.1}
-\contentsline {subsubsection}{GeoGrid}{19}{subsubsection*.2}
+\contentsline {subsection}{\numberline {5.3.3}Workplace Generator}{20}{subsection.5.3.3}
+\contentsline {subsection}{\numberline {5.3.4}Workplace Populator}{20}{subsection.5.3.4}
+\contentsline {subsection}{\numberline {5.3.5}Affected Files}{20}{subsection.5.3.5}
+\contentsline {section}{\numberline {5.4}Data Formats}{21}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}JSON: GeoGrid}{21}{subsection.5.4.1}
