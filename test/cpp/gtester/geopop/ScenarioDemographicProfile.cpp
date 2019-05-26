@@ -133,8 +133,8 @@ for region:                                          Limburg
     const auto locationsReader = ReaderFactory::CreateLocationsReader(cities_name);
     locationsReader->FillGeoGrid(m_geo_grid);
 
-    for (const shared_ptr<Location>& loc : m_geo_grid) {
-        loc->SetPopCount(m_gg_config.param.pop_size);
+    for (unsigned int i = 0; i < m_geo_grid.size(); ++i) {
+        m_geo_grid[i]->SetPopCount(m_gg_config.param.pop_size);
     }
     m_geo_grid.Finalize();
 
@@ -165,7 +165,8 @@ for region:                                          Limburg
     unsigned int primaryCount = 0;
     unsigned int secondaryCount = 0;
 
-    for (const auto& loc : m_geo_grid){
+    for (unsigned int i = 0; i < m_geo_grid.size(); ++i){
+        const auto& loc = m_geo_grid[i];
         EXPECT_EQ(loc->CRefPools<Id::PreSchool>().size(), 0);
         EXPECT_EQ(loc->CRefPools<Id::Daycare>().size(), 0);
         EXPECT_EQ(loc->CRefPools<Id::K12School>().size(), 0);
@@ -299,8 +300,8 @@ for region:                                          Major Cities
     const auto locationsReader = ReaderFactory::CreateLocationsReader(cities_name);
     locationsReader->FillGeoGrid(m_geo_grid);
 
-    for (const shared_ptr<Location>& loc : m_geo_grid) {
-        loc->SetPopCount(m_gg_config.param.pop_size);
+    for (unsigned int i = 0; i < m_geo_grid.size(); ++i){
+        m_geo_grid[i]->SetPopCount(m_gg_config.param.pop_size);
     }
     m_geo_grid.Finalize();
 
@@ -343,7 +344,8 @@ for region:                                          Major Cities
     unsigned int secondaryCount = 0;
     unsigned int workplaceCount = 0;
 
-    for (const auto& loc : m_geo_grid){
+    for (unsigned int i = 0; i < m_geo_grid.size(); ++i){
+        const auto& loc = m_geo_grid[i];
         if(loc->GetProvince() != 1){
             EXPECT_EQ(loc->CRefPools<Id::Daycare>().size(), 0);
         }

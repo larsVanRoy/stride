@@ -43,14 +43,6 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                 std::map<unsigned int, vector<unsigned int>> loc_indices;
 
                 auto uniform01Generator = m_rn_man.GetUniform01Generator(0U);
-<<<<<<< HEAD
-                for (unsigned i = 0; i < geoGrid.size(); ++i) {
-                        const auto &loc = geoGrid[i];
-                        int workers =
-                                static_cast<unsigned int>(
-                                        floor(loc->GetPopCount() *
-                                        ggConfig.param.participation_workplace +
-=======
 
                 bool majorCitySpecified = false;
 
@@ -90,7 +82,6 @@ void Generator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                         for (const auto& index : loc_indices[pair.first]){
                                 const auto& loc = geoGrid[index];
                                 int workers = static_cast<unsigned int>(floor(loc->GetPopCount() * ratio)+
->>>>>>> bb9f4ec85f0f66be7a657cec12912a2f23fbde71
                                         loc->GetIncomingCommuteCount(ggConfig.param.fraction_workplace_commuters) -
                                         loc->GetOutgoingCommuteCount(ggConfig.param.fraction_workplace_commuters));
 
