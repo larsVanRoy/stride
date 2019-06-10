@@ -27,7 +27,7 @@
 	\maketitle              % typeset the header of the contribution
 	%
 	\begin{abstract}
-		As described within the following paper, we have analyzed the extend of the randomness factor within Stride, the extinction threshold (aka the point at which no outbreaks occur), we have estimated factors like the immunity level and r0 for a given result, we have analyzed the individual influence of factors like demography, vaccines, commuting to work and finally we have performed a couple of benchmarks to see which aspects of the code where the most demanding. All of these analyses (wherever needed of course) are based upon an average of multiple seeded runs, and all results are obtained by analyses over a range of values, rather then a predetermined range/goal. We have for example been able to prove that commuting to work, contrary to expectations, on its own, does not affect the spreading of diseases in a significant manner. We have also been able to prove that vaccines, on their own, do affect the spreading of diseases. In general, we have found out that the individual parameters have little to no significant effect on their own, but that it is always a combination of parameters that influences the spread of a disease.
+		As described within the following paper, we have analyzed the extend of the randomness factor within Stride, the extinction threshold (aka the point at which no outbreaks occur), we have estimated factors like the immunity level and r0 for a given result, we have analyzed the individual influence of factors like demography, vaccines, commuting to work and finally we have performed a couple of benchmarks to see which aspects of the code where the most demanding. All of these analyses (wherever needed of course) are based upon an average of multiple seeded runs, and all results are obtained by analyses over a range of values, rather than a predetermined range/goal. We have for example been able to prove that commuting to work, contrary to expectations, on its own, does not affect the spreading of diseases in a significant manner. We have also been able to prove that vaccines, on their own, do affect the spreading of diseases. In general, we have found out that the individual parameters have little to no significant effect on their own, but that it is always a combination of parameters that influences the spread of a disease.
 
 		
 		%\keywords{First keyword  \and Second keyword \and Another keyword.}
@@ -90,19 +90,20 @@
 		\caption{New cases observed per day during the outbreak}
 	\end{figure}
 	\newpage
-	As a first approximation we performed 10 simulations with immunity levels ranging from 0 to 90\% as seen in the next graph. As we can clearly see, all immunity levels lower then 50\% are unrealistic, compared to the desired graph. As a next step we decided to drop off the unrealistic immunity levels and generated a zoom of the realistic immunity levels with the same offset.
+	As a first approximation we performed 25 simulations for each immunity level with immunity levels ranging from 0 to 90\% as seen in figure \ref{fig5}. As we can clearly see, all immunity levels lower than 50\% are unrealistic for this scenario. As a next step we decided to drop off these immunity levels and generated a zoom of the realistic immunity levels with the same offset.
 	\begin{figure}
 		\includegraphics[width=\textwidth]{test_immunity_0-100.png}
 		\caption{first estimate of outbreaks}
+		\label{fig5}
 	\end{figure}
 	\newpage
 	
 	\newpage
 	\noindent
-	By dropping all percentages lower than 60 and higher than 90\% we get the following graph, this graph is a lot closer to the desired graph (since the highest number of new cases is now only 110 compared to over 6000), but is still far from accurate. We can now see that the desired immunity rate should lie somewhere between 70 and 80\% as 70 is too high and 80 is too low.
+	By dropping all percentages lower than 60 and higher than 80\% we get the following graph, this graph is a lot closer to the desired graph (since the highest number of new cases is now only 90 compared to over 10000), but is still far from accurate. We can now see that the desired immunity rate should lie somewhere between 70 and 80\%.	
 	\begin{figure}
 		\includegraphics[width=\textwidth]{test_immunity_70-80.png}
-		\caption{narrowed down estimate of outbreaks based on 10 simulations}
+		\caption{narrowed down estimate of outbreaks based on 25 simulations}
 	\end{figure}
 	
 	\newpage
@@ -115,7 +116,7 @@
 	\newpage
 	
 	\subsection{Estimating R\textsubscript{0}}
-	Here, we need to approximate the same graph but now he have to use an extra parameter, R\textsubscript{0}, the basic reproduction number of a disease, indicating how many people a single infected person will infect on average.
+	Here, we need to approximate the same graph but now he have to use an extra parameter, R\textsubscript{0}, the basic reproduction number of a disease, indicating how many people a single infected person will infect.
 	\\
 	\\
 	\noindent
@@ -139,7 +140,7 @@
 		
 	\end{table}
 	
-	Generally speaking, the immunity rate is dependent of the parameter R0, which is to be expected. However, the parameter R0 doesn't seem to matter that much because the immunity rates are still pretty close to eachother.
+	Generally speaking, there is an correlation between the immunity rate and the parameter R0.
 	
 	\begin{figure}
 		\includegraphics[width=\textwidth]{test_R0_final.png}
@@ -151,11 +152,15 @@
 	\section{Population generation}
 	
 	\subsection{Investigating the influence of demography on epidemics}
-	We generate populations for two regions with different age distributions. We need to find which region is more likely to have an outbreak, region A, which has more younger people or region B, which has more elderly people. One might assume that the older region will have more chance because of the lower immunity the elderly might have.
+	We generate populations for two regions with different age distributions. We need to find which region is more likely to have an outbreak, region A, which has more younger people or region B, which has more elderly people.	
+	\\
+	\\	
+	\noindent
+	First we need to calculate the extinction thresholds for population A and population B. We do this in the same way as we did in 2.3. For population A, after 50 runs, we either have less than 10 cases or around 98.000 cases. We determine 1000 as the outbreak threshold, to leave some room for randomness. For population B, after 50 runs, we either have less than 10 cases or around 94.000 cases. We determine 1000 as the outbreak threshold for population B as well.
 	\\
 	\\
 	\noindent
-	In case of population A there is around an 80\% chance for an outbreak to occur, in the simulations with population B there is 73\% chance for an outbreak. Population B is the older population in respect to population A, this means that an older population does not mean an increase in the likelihood of an outbreak, but a decrease. This could be explained by the fact that older people are commuting less.
+	In case of population A there is around an 80\% chance for an outbreak to occur, in the simulations with population B there is 73\% chance for an outbreak. Population B is the older population in respect to population A, this means that an older population does not mean an increase in the likelihood of an outbreak, but a decrease. A reasonable explanation for this could be the fact that in population B there are more working people than in population A. The average working person has a better immune system than a child and also has smaller contact matrices. Population B also has more retired people than population A and those retired people have an even smaller contact pool.
 	
 	\begin{figure}
 		\includegraphics[width=\textwidth]{outbreaks_populationA.png}
