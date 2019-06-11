@@ -40,30 +40,6 @@ using namespace TCLAP;
 using namespace boost::property_tree;
 
 
-#include "geopop/io/EpiJSONReader.h"
-#include <fstream>
-#include <memory>
-
-//int main() {
-//    std::unique_ptr<ifstream> ss = std::make_unique<ifstream>();
-//
-//    ss->open("epi_output.json");
-//    try {
-//        if (ss->is_open()) {
-//            geopop::EpiJSONReader reader(std::move(ss));
-//            reader.Read();
-//            reader.Print();
-//        } else
-//            std::cout << "Error loading file\n";
-//    }
-//    catch(...){
-//        std::cout << "Ow fuck" << endl;
-//    }
-//    std::cout << "done\n";
-////    geopop::EpiJSONReader(ss);
-//
-//}
-
 /// Main program of the stride simulator.
 int main(int argc, char** argv)
 {

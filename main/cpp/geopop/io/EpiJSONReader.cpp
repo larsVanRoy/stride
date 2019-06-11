@@ -22,7 +22,7 @@ namespace geopop {
 using nlohmann::json;
 
 /// Actually perform the read and return the Epi.
-void EpiJSONReader::Read() {
+std::shared_ptr<EpiGrid> EpiJSONReader::Read() {
 
     json json_file;
 
@@ -44,6 +44,8 @@ void EpiJSONReader::Read() {
         throw stride::util::Exception("Problem parsing JSON file, check whether empty or invalid JSON. 2");
     }
     m_stream->close();
+
+    return m_grid;
 }
 
 template <typename T>
@@ -58,7 +60,10 @@ T EpiJSONReader::JSONCast(const json& json_object)
 }
 
 Coordinate EpiJSONReader::ParseCoordinate(const nlohmann::json &coordinate) {
-    return Coordinate(0.0,0.0);
+    double latitude = coordinate["lat"];
+    double longitude = coordinate["long"];
+
+    return Coordinate(longitude, latitude);
 }
 
 void EpiJSONReader::ParseLocations(const nlohmann::json &location_array) {
@@ -132,23 +137,14 @@ void EpiJSONReader::ParseHistoryLocation(const nlohmann::json &location) {
     }
 }
 
-Coordinate ParseCoordinate(const nlohmann::json& coordinate) {
-
-    double latitude = coordinate["lat"];
-    double longitude = coordinate["long"];
-
-    return Coordinate(longitude, longitude);
-}
-
 std::shared_ptr<stride::HealthPool> EpiJSONReader::ParsePool(const nlohmann::json &pool) {
     std::shared_ptr<stride::HealthPool> result = std::make_shared<stride::HealthPool>();
     try {
         for (unsigned short i = 0; i < pool.size(); ++i) {
             double fraction = pool[i];
             result->setHealth(static_cast<stride::HealthStatus>(i), fraction);
-            std::cout << fraction;
+
         }
-        std::cout << "\n";
     }
     catch(std::exception& e){
         std::cout << "Error in ParsePool: " << e.what() << std::endl;
@@ -161,6 +157,8 @@ void EpiJSONReader::Print() {
     for (unsigned int i = 0; i < m_grid->size(); ++i) {
         std::cout << "Location: " << i << "\n";
         std::cout << "\t" << m_grid->operator[](i)->GetName() << "\n";
+        std::cout << "\t" << m_grid->operator[](i)->GetPopCount() << "\n";
+        std::cout << "\t(" << m_grid->operator[](i)->GetCoordinate().get<0>() << ", " << m_grid->operator[](i)->GetCoordinate().get<1>() << ")\n";
         std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Susceptible)[0] << "\n";
         std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Exposed)[0] << "\n";
         std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Infectious)[0] << "\n";
@@ -168,6 +166,7 @@ void EpiJSONReader::Print() {
         std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::InfectiousAndSymptomatic)[0] << "\n";
         std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Recovered)[0] << "\n";
         std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Immune)[0] << "\n";
+        std::cout << std::endl;
     }
 }
 
