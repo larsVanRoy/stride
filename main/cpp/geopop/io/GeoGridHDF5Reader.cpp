@@ -81,7 +81,7 @@ void GeoGridHDF5Reader::ReadLocations(const H5::H5File& file, GeoGrid& geoGrid)
         ReadAttribute("size", &locations_size, locations_group);
         if (locations_size == 0)
                 return;
-        for (auto i = 0; i < locations_size; ++i) {
+        for (size_t i = 0; i < locations_size; ++i) {
                 auto group = locations_group.openGroup("Location" + to_string(i + 1));
                 ReadLocation(group, geoGrid);
         }
@@ -104,7 +104,7 @@ void GeoGridHDF5Reader::ReadLocation(const Group& object, GeoGrid& geoGrid)
 
         auto location_ptr = make_shared<Location>(id, province, Coordinate{longitude, latitude}, name, population);
 
-        for (auto i = 0; i < size; ++i) {
+        for (unsigned int i = 0; i < size; ++i) {
                 auto pool_group = object.openGroup("ContactPools").openDataSet("Pool" + to_string(i + 1));
                 ReadContactPool(pool_group, location_ptr);
         }

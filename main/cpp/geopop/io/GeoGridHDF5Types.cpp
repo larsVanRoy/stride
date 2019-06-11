@@ -46,7 +46,7 @@ const DataType GetH5Type(float) { return PredType::NATIVE_FLOAT; }
 const DataType GetH5Type(unsigned long) { return PredType::NATIVE_ULONG; }
 const DataType GetH5Type(double) { return PredType::NATIVE_DOUBLE; }
 
-const StrType  GetH5Type(const std::string& value) { return StrType(H5T_C_S1, H5T_VARIABLE); }
+const StrType  GetH5Type(const std::string&) { return StrType(H5T_C_S1, H5T_VARIABLE); }
 const CompType GetH5Type(H5Person) { return GetPersonType(); }
 const CompType GetH5Type(H5Commute) { return GetCommuteType(); }
 }
