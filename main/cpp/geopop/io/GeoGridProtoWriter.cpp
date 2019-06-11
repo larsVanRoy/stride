@@ -41,8 +41,8 @@ void GeoGridProtoWriter::Write(GeoGrid& geoGrid, ostream& stream)
         GOOGLE_PROTOBUF_VERIFY_VERSION;
 
         proto::GeoGrid protoGrid;
-        for (const auto& location : geoGrid) {
-                WriteLocation(*location, protoGrid.add_locations());
+        for (unsigned i = 0; i < geoGrid.size(); ++i) {
+                WriteLocation(*geoGrid[i], protoGrid.add_locations());
         }
         for (const auto& person : m_persons_found) {
                 WritePerson(person, protoGrid.add_persons());
@@ -115,6 +115,7 @@ void GeoGridProtoWriter::WriteLocation(Location& location, proto::GeoGrid_Locati
                 commute->set_to(commute_pair.first->GetID());
                 commute->set_proportion(commute_pair.second);
         }
+
 
         for (Id typ : IdList) {
                 WriteContactPools(typ, location.RefPools(typ), protoLocation->add_contactpools());

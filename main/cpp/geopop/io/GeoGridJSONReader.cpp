@@ -141,6 +141,10 @@ void GeoGridJSONReader::ParseContactPools(std::shared_ptr<geopop::Location> loc,
                 typeId = Id::SecondaryCommunity;
         } else if (type == ToString(Id::Workplace)) {
                 typeId = Id::Workplace;
+        } else if (type == ToString(Id::Daycare)) {
+                typeId = Id::Daycare;
+        } else if (type == ToString(Id::PreSchool)) {
+                typeId = Id::PreSchool;
         } else {
                 throw Exception("No such ContactPool type: " + type);
         }
@@ -181,8 +185,10 @@ Person* GeoGridJSONReader::ParsePerson(json& person)
         const auto wpId = JSONCast<unsigned int>(person["workplace"]);
         const auto pcId = JSONCast<unsigned int>(person["primaryCommunity"]);
         const auto scId = JSONCast<unsigned int>(person["secondaryCommunity"]);
+        const auto dcId = JSONCast<unsigned int>(person["daycare"]);
+        const auto psId = JSONCast<unsigned int>(person["preSchool"]);
 
-        return m_population->CreatePerson(id, age, 0, 0, hhId, ksId, coId, wpId, pcId, scId);
+        return m_population->CreatePerson(id, age, hhId, dcId, psId, ksId, coId, wpId, pcId, scId);
 }
 
 } // namespace geopop

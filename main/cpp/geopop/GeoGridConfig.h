@@ -20,6 +20,7 @@
 #include "util/SegmentedVector.h"
 #include "util/RnMan.h"
 #include "Location.h"
+#include "GeoGrid.h"
 
 #include <boost/property_tree/ptree_fwd.hpp>
 
@@ -46,15 +47,26 @@ public:
         /// Constructor that configures input data.
         explicit GeoGridConfig(const boost::property_tree::ptree& configPt);
 
+        // Pool data
+        // the data given in the arrays is using the following order:
+        //        Household
+        //        Daycare
+        //        PreSchool
+        //        K12School,
+        //        College
+        //        Workplace
+        //        PrimaryCommunity
+        //        SecondaryCommunity
+
         /// People per unit (= Household, K12School, College, etc.) for each of the ContactTypes.
         /// Default initialization. Order in which contacttypes are listed in the
         /// definition of the enumeration must be respected!
-        stride::ContactType::IdSubscriptArray<unsigned int> people {0U, 0U, 0U, 500U, 3000U, 20U, 2000U, 2000U};
+        stride::ContactType::IdSubscriptArray<unsigned int> people {0U, 9U, 200U, 500U, 3000U, 20U, 2000U, 2000U};
 
         /// Pools per unit (= Household, K12School, College, etc.) for each of the ContactTypes.
         /// Default initialization. Order in which contacttypes are listed in the
         /// definition of the enumeration must be respected!
-        stride::ContactType::IdSubscriptArray<unsigned int> pools {1U, 1U, 1U, 25U, 20U, 1U, 1U, 1U};
+        stride::ContactType::IdSubscriptArray<unsigned int> pools {1U, 1U, 10U, 25U, 20U, 1U, 1U, 1U};
 
         // -----------------------------------------------------------------------------------------
         // Parameters set by constructor with configuration property tree.
@@ -71,9 +83,7 @@ public:
                 double participation_college;
 
                 /// Participation of workplace (fraction of people of work age and not going to
-                
                 /// college and having employment).
-
                 double participation_workplace;
 
                 /// Fraction of college students that commute.
@@ -108,7 +118,7 @@ public:
         // Whenever a locations province id is not in the map, the default will be chosen.
         // The 0 key will be used to specify the default household reference (which is required).
         // The respective provinces will be represented by their id.
-        // Key 11 will be used to store potential references for central city references.
+        // Key 11 will be used to store potential references for major city references.
         // -----------------------------------------------------------------------------------------
         std::map<unsigned int, refHH> refHHs;
 
@@ -144,13 +154,16 @@ public:
 
                 /// The number of households.
                 unsigned int count_households;
+
+                /// The size of the population within the region.
+                unsigned int popcount;
         };
 
         // -----------------------------------------------------------------------------------------
-        // Diversions in the age reference occurs when different household references are supported,
-        // therefore we need a means to store different info objects, the info object is read within
+        // Diversions in the age reference occurs when considering multiple references for provinces,
+        // therefore we need a means to store differences info objects, the info object is read within
         // the setData function and for each defined household reference (0 is the default and 11 is
-        // a special definition for central cities, which differ from the "general" households/cities
+        // a special definition for major cities, which differ from the "general" households/cities
         // -----------------------------------------------------------------------------------------
         std::map<unsigned int, info> regionInfo;
 
@@ -158,7 +171,7 @@ public:
         // simple helper map, to convert ID's to their respective names
         // Id 0 is a special id, and is the general configuration that will be used in case
         // no specific data was given.
-        // Id 11 is also a special id, and is used to symbolise the central cities, which are in
+        // Id 11 is also a special id, and is used to symbolise the major cities, which are in
         // general more densely populated.
         // All other id's represent the corresponding provinces.
         // -----------------------------------------------------------------------------------------
@@ -169,8 +182,14 @@ public:
                 {3, "West-Flanders"},
                 {4, "East-Flanders"},
                 {7, "Limburg"},
-                {11, "Central Cities"}
+                {11, "Major Cities"}
         };
+
+        // -----------------------------------------------------------------------------------------
+        // simple vector of all known major cities, used in the household populator to check if a
+        // location is a major city
+        // -----------------------------------------------------------------------------------------
+        std::vector<std::string> majorCities;
 
         // -----------------------------------------------------------------------------------------
         /// Read the househould data file, parse it and set data.
@@ -180,13 +199,17 @@ public:
         // -----------------------------------------------------------------------------------------
         /// Read the househould data files, parse them and set data.
         // -----------------------------------------------------------------------------------------
-        void SetData(const std::map<unsigned int, std::string>& householdFileNames);
-
+        void SetData(const std::map<unsigned int, std::string>& householdFileNames, GeoGrid& geoGrid);
 
         // -----------------------------------------------------------------------------------------
         /// Read the workplace data file, parse it and set data.
         // -----------------------------------------------------------------------------------------
         void SetWorkplaceData(const std::string& workplaceFileName);
+
+        // -----------------------------------------------------------------------------------------
+        /// Read the major cities data file, parse it and set data.
+        // -----------------------------------------------------------------------------------------
+        void SetMajorCitiesData(const std::string& majorCitiesFileName);
 
         // -----------------------------------------------------------------------------------------
         /// helper function for << overload

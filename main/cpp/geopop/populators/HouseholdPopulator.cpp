@@ -20,6 +20,8 @@
 #include "geopop/Location.h"
 #include "pop/Population.h"
 
+#include <algorithm>
+
 namespace geopop {
 
 using namespace std;
@@ -35,12 +37,25 @@ void Populator<stride::ContactType::Id::Household>::Apply(GeoGrid& geoGrid, GeoG
 
         GeoGridConfig::refHH HHReference{};
 
-        for (const shared_ptr<Location>& loc : geoGrid) {
-                if(geoGridConfig.refHHs.find(loc->GetProvince()) != geoGridConfig.refHHs.end()){
+        for (unsigned i = 0; i <geoGrid.size(); ++i) {
+                const auto& loc = geoGrid[i];
+                // major city
+                if(std::find(geoGridConfig.majorCities.begin(), geoGridConfig.majorCities.end(), loc->GetName())
+                        != geoGridConfig.majorCities.end() and
+                        geoGridConfig.refHHs.find(11) != geoGridConfig.refHHs.end()){
+                        HHReference = geoGridConfig.refHHs[11];
+                }
+
+                // province which has a given household distribution
+                else if(geoGridConfig.refHHs.find(loc->GetProvince()) != geoGridConfig.refHHs.end()){
                         HHReference = geoGridConfig.refHHs[loc->GetProvince()];
-                } else{
+                }
+
+                // general
+                else{
                         HHReference = geoGridConfig.refHHs[0];
                 }
+
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }

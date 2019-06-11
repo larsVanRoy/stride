@@ -30,7 +30,8 @@ void Populator<stride::ContactType::Id::PrimaryCommunity>::Apply(GeoGrid& geoGri
 {
         m_logger->trace("Starting to populate Primary Communities");
 
-        for (const shared_ptr<Location>& loc : geoGrid) {
+        for (unsigned i = 0; i <geoGrid.size(); ++i) {
+                const auto& loc = geoGrid[i];
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }

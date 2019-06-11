@@ -84,7 +84,7 @@ TEST_F(K12SchoolPopulatorTest, OneLocationTest)
             {111, 1}, {112, 0}, {113, 1}, {114, 0}, {115, 0}, {116, 0}, {117, 0}, {118, 0}, {119, 0}, {120, 1},
             {121, 0}, {122, 1}, {123, 0}, {124, 0}, {125, 0}};
 
-        auto  location = *m_geo_grid.begin();
+        auto  location = m_geo_grid[0];
         auto& k12Pools = location->RefPools(Id::K12School);
 
         ASSERT_EQ(k12Pools.size(), 5 * m_ppk12);
@@ -144,12 +144,12 @@ TEST_F(K12SchoolPopulatorTest, TwoLocationTest)
         // Brasschaat and Schoten are close to each oter and will both have students from both.
         // Kortrijk will only have students going to Kortrijk.
 
-        auto brasschaat = *m_geo_grid.begin();
+        auto brasschaat = m_geo_grid[0];
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = m_geo_grid[1];
 
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = m_geo_grid[2];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
 
         m_geo_grid.Finalize();

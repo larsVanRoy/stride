@@ -33,7 +33,8 @@ void Populator<stride::ContactType::Id::SecondaryCommunity>::Apply(GeoGrid& geoG
 {
         m_logger->trace("Starting to populate Secondary Communities");
 
-        for (const auto& loc : geoGrid) {
+        for (unsigned i = 0; i <geoGrid.size(); ++i) {
+                const auto& loc = geoGrid[i];
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }

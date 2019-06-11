@@ -69,13 +69,13 @@ TEST_F(WorkplacePopulatorTest, NoActive)
         // Nobody works, everybody in the student age bracket goes to college: so workplace is empty.
         // Brasschaat and Schoten are close to each other. There is no commuting, but they are so close
         // they will receive students from each other. Kortrijk will only receive students from Kortrijk.
-        auto brasschaat = *m_geo_grid.begin();
+        auto brasschaat = m_geo_grid[0];
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
 
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = m_geo_grid[1];
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
 
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = m_geo_grid[2];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
 
         m_geo_grid.Finalize();
@@ -101,7 +101,7 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
         // map that keeps track of the pool sizes
         std::map<unsigned int, std::vector<unsigned int>> sizes{};
 
-        auto brasschaat = *m_geo_grid.begin();
+        auto brasschaat = m_geo_grid[0];
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
         m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
@@ -109,7 +109,7 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
         m_gg_config.wpPoolSizes[pool_id] = 20;
         m_gg_config.wpPoolSizes[pool_id] = 80;
 
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = m_geo_grid[1];
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
@@ -117,7 +117,7 @@ TEST_F(WorkplacePopulatorTest, NoCommuting)
         m_gg_config.wpPoolSizes[pool_id] = 2;
         m_gg_config.wpPoolSizes[pool_id] = 98;
 
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = m_geo_grid[2];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
@@ -187,7 +187,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
 
         // only commuting
 
-        auto schoten = *(m_geo_grid.begin());
+        auto schoten = m_geo_grid[0];
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
@@ -195,7 +195,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
         m_gg_config.wpPoolSizes[pool_id] = 20;
         m_gg_config.wpPoolSizes[pool_id] = 80;
 
-        auto kortrijk = *(m_geo_grid.begin() + 1);
+        auto kortrijk = m_geo_grid[1];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
@@ -203,7 +203,7 @@ TEST_F(WorkplacePopulatorTest, OnlyCommuting)
         m_gg_config.wpPoolSizes[pool_id] = 20;
         m_gg_config.wpPoolSizes[pool_id] = 80;
 
-        auto brasschaat = *(m_geo_grid.begin() + 2);
+        auto brasschaat = m_geo_grid[2];
         sizes[brasschaat->GetID()] = {};
 
         schoten->AddOutgoingCommute(kortrijk, 0.5);
@@ -257,7 +257,7 @@ TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
         // map that keeps track of the pool sizes
         std::map<unsigned int, std::vector<unsigned int>> sizes{};
 
-        auto brasschaat = *m_geo_grid.begin();
+        auto brasschaat = m_geo_grid[0];
         brasschaat->SetCoordinate(Coordinate(51.29227, 4.49419));
         m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*brasschaat, m_pop.get(), m_gg_config);
@@ -265,7 +265,7 @@ TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
         m_gg_config.wpPoolSizes[pool_id] = 20;
         m_gg_config.wpPoolSizes[pool_id] = 80;
 
-        auto schoten = *(m_geo_grid.begin() + 1);
+        auto schoten = m_geo_grid[1];
         schoten->SetCoordinate(Coordinate(51.2497532, 4.4977063));
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*schoten, m_pop.get(), m_gg_config);
@@ -273,7 +273,7 @@ TEST_F(WorkplacePopulatorTest, NoCommutingAvailable)
         m_gg_config.wpPoolSizes[pool_id] = 20;
         m_gg_config.wpPoolSizes[pool_id] = 80;
 
-        auto kortrijk = *(m_geo_grid.begin() + 2);
+        auto kortrijk = m_geo_grid[2];
         kortrijk->SetCoordinate(Coordinate(50.82900246, 3.264406009));
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);
         m_workplace_generator.AddPools(*kortrijk, m_pop.get(), m_gg_config);

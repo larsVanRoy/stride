@@ -17,7 +17,7 @@
 
 #include "contact/ContactType.h"
 #include "contact/IdSubscriptArray.h"
-#include "geopop/Coordinate.h"
+#include "geopop/geo/GeoLocation.h"
 #include "util/SegmentedVector.h"
 
 #include <iostream>
@@ -36,9 +36,9 @@ class ContactPool;
 namespace geopop {
 
 /**
- * Location for use within the GeoGrid, contains Coordinate and index to ContactPools.
+ * Location for use within the GeoGrid, contains GeoLocation and index to ContactPools.
  */
-class Location
+class Location : public GeoLocation
 {
 public:
         /// Parametrized constructor with population count.
@@ -56,41 +56,14 @@ public:
         /// I.e. fraction of commuting population at this Location commuting to otherLocation.
         void AddOutgoingCommute(std::shared_ptr<Location> otherLocation, double fraction);
 
-        /// Gets the Coordinate of this Location.
-        const Coordinate GetCoordinate() const { return m_coordinate; }
-
-        /// Gets ID of this Location.
-        unsigned int GetID() const { return m_id; }
-
         /// Calculates number of incomming commuters, given the fraction of the population that commutes.
         int GetIncomingCommuteCount(double fractionCommuters) const;
 
         /// Gets the number of people infected in the contactpools at this location.
         unsigned int GetInfectedCount() const;
 
-        /// Gets the name.
-        std::string GetName() const { return m_name; }
-
         /// Calculates number of outgoing commuters, given the fraction of the population that commutes.
         unsigned int GetOutgoingCommuteCount(double fractionCommuters) const;
-
-        /// Gets the absolute population.
-        unsigned int GetPopCount() const { return m_pop_count; }
-
-        /// Gets the province.
-        unsigned int GetProvince() const { return m_province; }
-
-        /// Get Location's population fraction (of the total populaion count).
-        double GetPopFraction() const;
-
-        /// Sets the Coordinate of this Location.
-        void SetCoordinate(const Coordinate& coordinate) { m_coordinate = coordinate; }
-
-        /// Set Location's population count using its population fraction and the total population count.
-        void SetPopCount(unsigned int totalPopCount);
-
-        /// Set Location's population fraction (of the total populaion count).
-        void SetPopFraction(double relativePopulation);
 
         /// Get the last contactPool ID for a given contactType
         unsigned int GetContactPoolId(stride::ContactType::Id id);
@@ -152,13 +125,6 @@ public:
         const std::vector<std::pair<Location*, double>>& CRefOutgoingCommutes() const { return m_outCommutes; }
 
 private:
-        Coordinate   m_coordinate;   ///< Coordinate of the Location.
-        unsigned int m_id = 0U;      ///< Id.
-        std::string  m_name;         ///< Name.
-        unsigned int m_pop_count;    ///< Population count (number of individuals) at this Location.
-        double       m_pop_fraction; ///< Fraction of whole population at this Location.
-        unsigned int m_province;     ///< Province id.
-
         /// Incomming commutes stored as pair of Location and fraction of population at that Location.
         std::vector<std::pair<Location*, double>> m_inCommutes;
 

@@ -72,8 +72,10 @@ public:
                             ContactType::Id type, unsigned short int sim_day, const double c_rate, const double t_rate)
         {
                 if (p1->IsSurveyParticipant()) {
-                        logger->info("[CONT] {} {} {} {} {} {} {} {} {} {} {} {}", p1->GetId(), p1->GetAge(),
+                        logger->info("[CONT] {} {} {} {} {} {} {} {} {} {} {} {} {} {}", p1->GetId(), p1->GetAge(),
                                      p2->GetAge(), static_cast<unsigned int>(type == ContactType::Id::Household),
+                                     static_cast<unsigned int>(type == ContactType::Id::Daycare),
+                                     static_cast<unsigned int>(type == ContactType::Id::PreSchool),
                                      static_cast<unsigned int>(type == ContactType::Id::K12School),
                                      static_cast<unsigned int>(type == ContactType::Id::College),
                                      static_cast<unsigned int>(type == ContactType::Id::Workplace),

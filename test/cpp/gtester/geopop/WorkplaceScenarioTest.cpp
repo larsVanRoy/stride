@@ -54,13 +54,15 @@ protected:
     unsigned int           m_ppwp = m_gg_config.pools[Id::Workplace];
 };
 
-// Check that generator can handle empty GeoGrid.
 TEST_F(WorkplaceScenarioTest, WorkplaceScenarioWithDistribution)
 {
     m_gg_config.param.pop_size                     = 5 * 1000 * 1000;
     m_gg_config.regionInfo[0].popcount_workplace         = static_cast<unsigned int>(0.20 * 5 * 1000 * 1000);
     m_gg_config.param.participation_workplace       = 0.20;
     m_gg_config.param.fraction_workplace_commuters = 0.10;
+
+    // make it so that the default configuration is general and includes all kinds of ages ranges
+    m_gg_config.SetData("households_workers.csv");
 
     string csvString =
     R"(ratio,size_min,size_max

@@ -40,9 +40,9 @@ void GeoGridJSONWriter::Write(GeoGrid& geoGrid, ostream& stream)
 
         json locations_array = json::array();
 
-        for (const auto& location : geoGrid) {
+        for (unsigned i = 0; i < geoGrid.size(); ++i) {
                 json location_json = json::object();
-                location_json = WriteLocation(*location);
+                location_json = WriteLocation(*geoGrid[i]);
                 locations_array.push_back(location_json);
         }
 
@@ -156,6 +156,8 @@ json GeoGridJSONWriter::WritePerson(stride::Person* person) {
         person_json["workplace"] = person->GetPoolId(Id::Workplace);
         person_json["primaryCommunity"] = person->GetPoolId(Id::PrimaryCommunity);
         person_json["secondaryCommunity"] = person->GetPoolId(Id::SecondaryCommunity);
+        person_json["daycare"] = person->GetPoolId(Id::Daycare);
+        person_json["preSchool"] = person->GetPoolId(Id::PreSchool);
 
         return person_json;
 }

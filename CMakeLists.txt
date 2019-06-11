@@ -80,6 +80,9 @@ add_subdirectory(test)
 if(STRIDE_INCLUDE_DOC)
 	add_subdirectory(doc)
 endif()
+#if(NOT STRIDE_FORCE_NO_QT)
+#    add_subdirectory(gui)
+#endif()
 
 #============================================================================
 # Overview report:

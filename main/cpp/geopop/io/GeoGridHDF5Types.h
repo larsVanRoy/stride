@@ -28,6 +28,8 @@ struct H5Person
 {
         unsigned int id;
         float        age;
+        unsigned int daycare;
+        unsigned int preschool;
         unsigned int k12School;
         unsigned int houseHold;
         unsigned int workplace;
