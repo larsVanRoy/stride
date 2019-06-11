@@ -190,14 +190,16 @@ void GeoGridConfig::SetData(const std::map<unsigned int, string>& householdFileN
 
                 unsigned int popSize = 0;
                 if (provinceID == 11){
-                        for(const auto& loc : geoGrid){
+                        for(unsigned int i = 0; i < geoGrid.size(); ++i){
+                                const auto& loc = geoGrid[i];
                                 if(find(majorCities.begin(), majorCities.end(), loc->GetName()) != majorCities.end()){
                                         popSize += loc->GetPopCount();
                                 }
                         }
                 }
                 else{
-                        for(const auto& loc : geoGrid){
+                        for(unsigned int i = 0; i < geoGrid.size(); ++i){
+                                const auto& loc = geoGrid[i];
                                 if(loc->GetProvince() == provinceID){
                                         popSize += loc->GetPopCount();
                                 }

@@ -16,11 +16,13 @@
 #pragma once
 
 #include "contact/ContactType.h"
-#include "geopop/geo/GeoGridKdTree.h"
+#include "geopop/geo/Region.h"
+#include "Location.h"
 
 #include <set>
 #include <unordered_map>
 #include <vector>
+#include <memory>
 
 namespace stride {
 class ContactPool;
@@ -29,7 +31,7 @@ class Population;
 
 namespace geopop {
 
-class Location;
+//class Location;
 
 template <typename Policy, typename... F>
 class GeoAggregator;
@@ -38,7 +40,7 @@ class GeoAggregator;
  * A Geographic grid of simulation region contains Locations that in turn contain
  * an index to the ContactPools situated at that Location.
  */
-class GeoGrid
+class GeoGrid : private Region
 {
 public:
         /// GeoGrid and associated Population.
@@ -57,7 +59,7 @@ public:
         void Finalize();
 
         /// Gets a Location by Id and check if the Id exists.
-        std::shared_ptr<Location> GetById(unsigned int id) const { return m_locations[m_id_to_index.at(id)]; }
+        std::shared_ptr<Location> GetById(unsigned int id) const { return std::static_pointer_cast<Location>(Region::GetById(id)); }
 
         /// Get the Population associated with this GeoGrid
         stride::Population* GetPopulation() const { return m_population; }
@@ -102,52 +104,21 @@ public:
         using iterator       = std::vector<std::shared_ptr<Location>>::iterator;
         using const_iterator = std::vector<std::shared_ptr<Location>>::const_iterator;
 
-        /// Iterator to first Location.
-        iterator begin() { return m_locations.begin(); }
-
-        /// Iterator to the end of the Location storage.
-        iterator end() { return m_locations.end(); }
-
-        /// Const Iterator to first Location.
-        const_iterator cbegin() const { return m_locations.cbegin(); }
-
-        /// Const iterator to the end of the Location storage.
-        const_iterator cend() const { return m_locations.cend(); }
+        /// Gets a Location by index, doesn't performs a range check.
+        std::shared_ptr<Location> operator[](size_t index) { return std::static_pointer_cast<Location>(Region::operator[](index)); }
 
         /// Gets a Location by index, doesn't performs a range check.
-        std::shared_ptr<Location>& operator[](size_t index) { return m_locations[index]; }
-
-        /// Gets a Location by index, doesn't performs a range check.
-        const std::shared_ptr<Location>& operator[](size_t index) const { return m_locations[index]; }
+        const std::shared_ptr<Location> operator[](size_t index) const { return std::static_pointer_cast<Location>(Region::operator[](index)); }
 
         /// Gets a range of Location indices by province ID
-        const std::vector<unsigned int> get_L_for_P(const unsigned int& province){ return p_id_to_index[province]; }
+        const std::vector<unsigned int> get_L_for_P(const unsigned int& province){ return Region::get_L_for_P(province); }
 
         /// Gets current size of Location storage.
-        size_t size() const { return m_locations.size(); }
+        size_t size() const { return Region::size(); }
 
 private:
-        ///< Checks whether the GeoGrid is finalized i.e. certain operations can(not) be used.
-        void CheckFinalized(const std::string& functionName) const;
-
-private:
-        ///< Container for Locations in GeoGrid.
-        std::vector<std::shared_ptr<Location>> m_locations;
-
-        ///< Associative container maps Location Id to index in m_locations.
-        std::unordered_map<unsigned int, unsigned int> m_id_to_index;
-
-        ///< Associative container maps Province Ids to indices in m_locations.
-        std::unordered_map<unsigned int, std::vector<unsigned int>> p_id_to_index;
-
         ///< Stores pointer to Popluation, but does not take ownership.
         stride::Population* m_population;
-
-        ///< Is the GeoGrid finalized (ready for use) yet?
-        bool m_finalized;
-
-        ///< Internal KdTree for quick spatial lookup.
-        GeoGridKdTree m_tree;
 };
 
 } // namespace geopop

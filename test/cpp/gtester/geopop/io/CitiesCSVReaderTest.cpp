@@ -74,7 +74,8 @@ TEST(CitiesCSVReaderTest, test1)
         LocationsCSVReader reader(move(instream));
         reader.FillGeoGrid(geoGrid);
 
-        for (const auto& loc : geoGrid) {
+        for (unsigned i = 0; i < geoGrid.size(); ++i) {
+                const auto& loc = geoGrid[i];
                 EXPECT_EQ(*loc, *(expected->GetById(loc->GetID())));
                 EXPECT_DOUBLE_EQ(loc->GetPopFraction(), (expected->GetById(loc->GetID()))->GetPopFraction());
         }

@@ -34,6 +34,12 @@ enum class HealthStatus : unsigned short int
         Immune                   = 6U
 };
 
+/// Convert HealthStatus to unsigned short int
+unsigned short int ToSize(const HealthStatus& h);
+
+/// Number of ContactPool types.
+inline constexpr unsigned int NumOfHealthStatus() { return 7U; }
+
 /// Holds a person's health data.
 class Health
 {
@@ -81,6 +87,9 @@ public:
         {
                 return m_status == HealthStatus::Symptomatic || m_status == HealthStatus::InfectiousAndSymptomatic;
         }
+
+        /// Get m_status
+        HealthStatus GetStatus() const { return m_status; }
 
         /// Have the symptoms started today?
         bool SymptomsStartedToday() const { return GetDiseaseCounter() == m_start_symptomatic; }

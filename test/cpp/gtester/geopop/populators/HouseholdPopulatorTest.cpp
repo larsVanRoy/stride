@@ -16,7 +16,7 @@
 #include "geopop/populators/Populator.h"
 #include "geopop/generators/Generator.h"
 
-#include "geopop/Coordinate.h"
+#include "geopop/geo/Coordinate.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/GeoGridConfig.h"
 #include "geopop/Location.h"

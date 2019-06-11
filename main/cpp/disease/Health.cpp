@@ -24,6 +24,10 @@
 
 namespace stride {
 
+unsigned short int ToSize(const HealthStatus& h) {
+        return static_cast<unsigned short int>(h);
+}
+
 Health::Health(unsigned short int start_infectiousness, unsigned short int start_symptomatic,
                unsigned short int time_infectious, unsigned short int time_symptomatic)
     : m_disease_counter(0U), m_status(HealthStatus::Susceptible), m_start_infectiousness(start_infectiousness),

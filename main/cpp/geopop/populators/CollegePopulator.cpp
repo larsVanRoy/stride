@@ -35,7 +35,8 @@ void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, GeoGri
         m_logger->trace("Starting to populate Colleges");
 
         // for every location
-        for (const auto& loc : geoGrid) {
+        for (unsigned i = 0; i <geoGrid.size(); ++i) {
+                const auto& loc = geoGrid[i];
                 if (loc->GetPopCount() == 0) {
                         continue;
                 }

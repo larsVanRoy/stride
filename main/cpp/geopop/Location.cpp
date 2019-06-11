@@ -29,8 +29,7 @@ using namespace std;
 using namespace stride::ContactType;
 
 Location::Location(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount)
-    : m_coordinate(coordinate), m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0),
-      m_province(province), m_inCommutes(), m_outCommutes(),/* m_cc(),*/ m_pool_index()
+    : GeoLocation(id, province, coordinate, name, popCount), m_inCommutes(), m_outCommutes(), m_pool_index()
 {
 }
 
@@ -88,16 +87,8 @@ unsigned int Location::GetOutgoingCommuteCount(double fractionCommuters) const
                 // locProportion.second of the people in this are commuting to locProportion.first
                 totalProportion += locProportion.second;
         }
-        return static_cast<unsigned int>(floor(totalProportion * (fractionCommuters * m_pop_count)));
+        return static_cast<unsigned int>(floor(totalProportion * (fractionCommuters * GetPopCount())));
 }
-
-double Location::GetPopFraction() const { return m_pop_fraction; }
-
-void Location::SetPopCount(unsigned int totalPopCount)
-{
-        m_pop_count = static_cast<unsigned int>(floor(m_pop_fraction * totalPopCount));
-}
-void Location::SetPopFraction(double relativePopulation) { m_pop_fraction = relativePopulation; }
 
 unsigned int Location::GetContactPoolId(stride::ContactType::Id id) {
         return m_pool_index[id].back()->GetId();

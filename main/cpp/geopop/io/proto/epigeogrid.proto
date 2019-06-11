@@ -1,0 +1,54 @@
+/*
+ *  This is free software: you can redistribute it and/or modify it
+ *  under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  any later version.
+ *  The software is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *  You should have received a copy of the GNU General Public License
+ *  along with the software. If not, see <http://www.gnu.org/licenses/>.
+ *
+ *  Copyright 2018, Jan Broeckhove and Bistromatics group.
+ */
+
+syntax = "proto3";
+package proto;
+
+message EpiGeoGrid {
+    message Location {
+        message Coordinates {
+            double latitude = 1;
+            double longitude = 2;
+        }
+        int32 id = 1;
+        string name = 2;
+        int32 population = 3;
+        Coordinates coordinates = 4;
+    }
+    repeated Location Locations = 1;
+    message History {
+        message PoolsForLocation {
+            int32 id = 1;
+            message Pool {
+                repeated double percentage = 1;
+                enum Type {
+                    K12School = 0;
+                    PrimaryCommunity = 1;
+                    SecondaryCommunity = 2;
+                    College = 3;
+                    Household = 4;
+                    Workplace = 5;
+                    Daycare = 6;
+                    PreSchool = 7;
+                }
+                Type type = 2;
+            }
+            repeated Pool pools = 2;
+        }
+        repeated PoolsForLocation PoolsForLocations = 1;
+        int32 timestep = 2;
+    }
+    repeated History history = 2;
+}

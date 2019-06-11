@@ -158,8 +158,8 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
                 commutesReader->FillGeoGrid(geoGrid);
         }
 
-        for (const shared_ptr<Location>& loc : geoGrid) {
-                loc->SetPopCount(geoGridConfig.param.pop_size);
+        for (unsigned i = 0; i <geoGrid.size(); ++i) {
+                geoGrid[i]->SetPopCount(geoGridConfig.param.pop_size);
         }
         geoGrid.Finalize();
 }
