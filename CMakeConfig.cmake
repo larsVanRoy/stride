@@ -59,7 +59,7 @@ set(STRIDE_FORCE_NO_OPENMP	TRUE
 	CACHE BOOL "Do NOT use OpenMP even if available.")
 set(STRIDE_FORCE_NO_PYTHON FALSE
 	CACHE BOOL "Force CMake to act as if Python or SWIG had not been found.")
-set(STRIDE_FORCE_NO_QT FALSE
+set(STRIDE_FORCE_NO_QT TRUE
     CACHE BOOL "Force CMake to act as if QT had not been found.")
 set(STRIDE_FORCE_NO_HDF5 TRUE
     CACHE BOOL "Force CMake to act as if HDF5 was not available.")
