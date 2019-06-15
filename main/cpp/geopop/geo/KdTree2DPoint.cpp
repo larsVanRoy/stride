@@ -27,18 +27,25 @@ namespace geopop {
 
 namespace geogrid_detail {
 
-KdTree2DPoint::KdTree2DPoint(const GeoLocation* loc) : m_pt(loc->GetCoordinate()), m_location(loc) {}
+template <class Data>
+KdTree2DPoint<Data>::KdTree2DPoint(const GeoLocation<Data>* loc) : m_pt(loc->GetCoordinate()), m_location(loc)
+{
+}
 
-bool KdTree2DPoint::operator==(const KdTree2DPoint& other) const { return Distance(other) < 0.001; }
+template <class Data>
+bool KdTree2DPoint<Data>::operator==(const KdTree2DPoint<Data>& other) const { return Distance(other) < 0.001; }
 
-bool KdTree2DPoint::InBox(const AABBox<KdTree2DPoint>& box) const
+template <class Data>
+bool KdTree2DPoint<Data>::InBox(const AABBox<KdTree2DPoint<Data>>& box) const
 {
         return boost::geometry::within(m_pt, boost::geometry::model::box<Coordinate>{box.lower.m_pt, box.upper.m_pt});
 }
 
-bool KdTree2DPoint::InRadius(const KdTree2DPoint& start, double radius) const { return Distance(start) <= radius; }
+template <class Data>
+bool KdTree2DPoint<Data>::InRadius(const KdTree2DPoint<Data>& start, double radius) const { return Distance(start) <= radius; }
 
-double KdTree2DPoint::Distance(const KdTree2DPoint& other) const
+template <class Data>
+double KdTree2DPoint<Data>::Distance(const KdTree2DPoint<Data>& other) const
 {
         return boost::geometry::distance(m_pt, other.m_pt, boost::geometry::strategy::distance::geographic<>{}) /
                1000.0;

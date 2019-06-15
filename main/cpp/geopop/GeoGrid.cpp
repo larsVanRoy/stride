@@ -58,9 +58,9 @@ void GeoGrid::Finalize()
 
 set<const Location*> GeoGrid::LocationsInBox(double long1, double lat1, double long2, double lat2) const
 {
-        set<const GeoLocation*> s = Region::GeoLocationsInBox(long1, lat1, long2, lat2);
+        set<const GeoLocation<Coordinate>*> s = Region::GeoLocationsInBox(long1, lat1, long2, lat2);
         set<const Location*> result;
-        for(const GeoLocation* g : s){
+        for(const GeoLocation<Coordinate>* g : s){
                 result.insert(static_cast<const Location*>(g));
         }
         return result;
@@ -75,10 +75,10 @@ set<const Location*> GeoGrid::LocationsInBox(Location* loc1, Location* loc2) con
 
 vector<const Location*> GeoGrid::LocationsInRadius(const Location& start, double radius) const
 {
-        vector<const GeoLocation*> s = Region::GeoLocationsInRadius(start, radius);
+        vector<const GeoLocation<Coordinate>*> s = Region::GeoLocationsInRadius(start, radius);
         vector<const Location*> result;
         result.reserve(s.size());
-        for(const GeoLocation* g : s){
+        for(const GeoLocation<Coordinate>* g : s){
                 result.push_back(static_cast<const Location*>(g));
         }
         return result;
@@ -104,10 +104,10 @@ vector<ContactPool*> GeoGrid::GetNearbyPools(Id id, const Location& start, doubl
 
 vector<Location*> GeoGrid::TopK(size_t k) const
 {
-        vector<GeoLocation*> s = Region::TopK(k);
+        vector<GeoLocation<Coordinate>*> s = Region::TopK(k);
         vector<Location*> result;
         result.reserve(s.size());
-        for(GeoLocation* g : s){
+        for(GeoLocation<Coordinate>* g : s){
                 result.push_back(static_cast<Location*>(g));
         }
         return result;

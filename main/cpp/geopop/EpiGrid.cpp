@@ -29,23 +29,23 @@ using namespace std;
 using stride::ContactPool;
 using stride::ContactType::Id;
 
-EpiGrid::EpiGrid()
+EpiGrid::EpiGrid() : Region()
 {
 }
 
 void EpiGrid::AddLocation(shared_ptr<EpiLocation> loc)
 {
-    this->AddGeoLocation(std::dynamic_pointer_cast<GeoLocation>(loc));
+    this->AddGeoLocation(std::dynamic_pointer_cast<GeoLocation<Coordinate>>(loc));
 }
 
 template <typename Policy, typename F>
-GeoAggregator<Policy, F> EpiGrid::BuildAggregator(F functor, typename Policy::Args&& args) const
+GeoAggregator<Coordinate, Policy, F> EpiGrid::BuildAggregator(F functor, typename Policy::Args&& args) const
 {
         return Region::BuildAggregator(functor, args);
 }
 
 template <typename Policy>
-GeoAggregator<Policy> EpiGrid::BuildAggregator(typename Policy::Args&& args) const
+GeoAggregator<Coordinate, Policy> EpiGrid::BuildAggregator(typename Policy::Args&& args) const
 {
         return Region::BuildAggregator(args);
 }
@@ -57,9 +57,9 @@ void EpiGrid::Finalize()
 
 set<const EpiLocation*> EpiGrid::LocationsInBox(double long1, double lat1, double long2, double lat2) const
 {
-        set<const GeoLocation*> s = Region::GeoLocationsInBox(long1, lat1, long2, lat2);
+        set<const GeoLocation<Coordinate>*> s = Region::GeoLocationsInBox(long1, lat1, long2, lat2);
         set<const EpiLocation*> result;
-        for(const GeoLocation* g : s){
+        for(const GeoLocation<Coordinate>* g : s){
                 result.insert(static_cast<const EpiLocation*>(g));
         }
         return result;
@@ -74,10 +74,10 @@ set<const EpiLocation*> EpiGrid::LocationsInBox(EpiLocation* loc1, EpiLocation* 
 
 vector<const EpiLocation*> EpiGrid::LocationsInRadius(const EpiLocation& start, double radius) const
 {
-        vector<const GeoLocation*> s = Region::GeoLocationsInRadius(start, radius);
+        vector<const GeoLocation<Coordinate>*> s = Region::GeoLocationsInRadius(start, radius);
         vector<const EpiLocation*> result;
         result.reserve(s.size());
-        for(const GeoLocation* g : s){
+        for(const GeoLocation<Coordinate>* g : s){
                 result.push_back(static_cast<const EpiLocation*>(g));
         }
         return result;
@@ -85,10 +85,10 @@ vector<const EpiLocation*> EpiGrid::LocationsInRadius(const EpiLocation& start, 
 
 vector<EpiLocation*> EpiGrid::TopK(size_t k) const
 {
-        vector<GeoLocation*> s = Region::TopK(k);
+        vector<GeoLocation<Coordinate>*> s = Region::TopK(k);
         vector<EpiLocation*> result;
         result.reserve(s.size());
-        for(GeoLocation* g : s){
+        for(GeoLocation<Coordinate>* g : s){
                 result.push_back(static_cast<EpiLocation*>(g));
         }
         return result;

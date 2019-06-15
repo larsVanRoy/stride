@@ -32,7 +32,7 @@ Region::Region()
 {
 }
 
-void Region::AddGeoLocation(shared_ptr<GeoLocation> location)
+void Region::AddGeoLocation(shared_ptr<GeoLocation<Coordinate>> location)
 {
     if (m_finalized) {
         throw std::runtime_error("Calling addGeoLocation while Region is finalized not supported!");
@@ -48,15 +48,15 @@ void Region::AddGeoLocation(shared_ptr<GeoLocation> location)
 }
 
 template <typename Policy, typename F>
-GeoAggregator<Policy, F> Region::BuildAggregator(F functor, typename Policy::Args&& args) const
+GeoAggregator<Coordinate, Policy, F> Region::BuildAggregator(F functor, typename Policy::Args&& args) const
 {
-    return GeoAggregator<Policy, F>(m_tree, functor, std::forward<typename Policy::Args>(args));
+    return GeoAggregator<Coordinate, Policy, F>(m_tree, functor, std::forward<typename Policy::Args>(args));
 }
 
 template <typename Policy>
-GeoAggregator<Policy> Region::BuildAggregator(typename Policy::Args&& args) const
+GeoAggregator<Coordinate, Policy> Region::BuildAggregator(typename Policy::Args&& args) const
 {
-    return GeoAggregator<Policy>(m_tree, std::forward<typename Policy::Args>(args));
+    return GeoAggregator<Coordinate, Policy>(m_tree, std::forward<typename Policy::Args>(args));
 }
 
 void Region::CheckFinalized(const string& functionName) const
@@ -68,7 +68,7 @@ void Region::CheckFinalized(const string& functionName) const
 
 void Region::Finalize()
 {
-    vector<geogrid_detail::KdTree2DPoint> points;
+    vector<geogrid_detail::KdTree2DPoint<Coordinate>> points;
     for (const auto& loc : m_locations) {
         points.emplace_back(geogrid_detail::KdTree2DPoint(loc.get()));
     }
@@ -76,13 +76,13 @@ void Region::Finalize()
     m_finalized = true;
 }
 
-set<const GeoLocation*> Region::GeoLocationsInBox(double long1, double lat1, double long2, double lat2) const
+set<const GeoLocation<Coordinate>*> Region::GeoLocationsInBox(double long1, double lat1, double long2, double lat2) const
 {
     CheckFinalized(__func__);
 
-    set<const GeoLocation*> result;
+    set<const GeoLocation<Coordinate>*> result;
 
-    auto agg = BuildAggregator<BoxPolicy>(
+    auto agg = BuildAggregator<BoxPolicy<Coordinate>>(
             MakeCollector(inserter(result, result.begin())),
             make_tuple(min(long1, long2), min(lat1, lat2), max(long1, long2), max(lat1, lat2)));
     agg();
@@ -90,18 +90,18 @@ set<const GeoLocation*> Region::GeoLocationsInBox(double long1, double lat1, dou
     return result;
 }
 
-set<const GeoLocation*> Region::GeoLocationsInBox(GeoLocation* loc1, GeoLocation* loc2) const
+set<const GeoLocation<Coordinate>*> Region::GeoLocationsInBox(GeoLocation<Coordinate>* loc1, GeoLocation<Coordinate>* loc2) const
 {
     using boost::geometry::get;
     return GeoLocationsInBox(get<0>(loc1->GetCoordinate()), get<1>(loc1->GetCoordinate()),
                           get<0>(loc2->GetCoordinate()), get<1>(loc2->GetCoordinate()));
 }
 
-vector<GeoLocation*> Region::TopK(size_t k) const
+vector<GeoLocation<Coordinate>*> Region::TopK(size_t k) const
 {
-    auto cmp = [](GeoLocation* rhs, GeoLocation* lhs) { return rhs->GetPopCount() > lhs->GetPopCount(); };
+    auto cmp = [](GeoLocation<Coordinate>* rhs, GeoLocation<Coordinate>* lhs) { return rhs->GetPopCount() > lhs->GetPopCount(); };
 
-    priority_queue<GeoLocation*, vector<GeoLocation*>, decltype(cmp)> queue(cmp);
+    priority_queue<GeoLocation<Coordinate>*, vector<GeoLocation<Coordinate>*>, decltype(cmp)> queue(cmp);
     for (const auto& loc : m_locations) {
         queue.push(loc.get());
         if (queue.size() > k) {
@@ -109,7 +109,7 @@ vector<GeoLocation*> Region::TopK(size_t k) const
         }
     }
 
-    vector<GeoLocation*> topLocations;
+    vector<GeoLocation<Coordinate>*> topLocations;
     while (!queue.empty()) {
         auto loc = queue.top();
         topLocations.push_back(loc);
@@ -119,14 +119,14 @@ vector<GeoLocation*> Region::TopK(size_t k) const
     return topLocations;
 }
 
-vector<const GeoLocation*> Region::GeoLocationsInRadius(const GeoLocation& start, double radius) const
+vector<const GeoLocation<Coordinate>*> Region::GeoLocationsInRadius(const GeoLocation<Coordinate>& start, double radius) const
 {
     CheckFinalized(__func__);
 
     geogrid_detail::KdTree2DPoint startPt(&start);
-    vector<const GeoLocation*>       result;
+    vector<const GeoLocation<Coordinate>*>       result;
 
-    auto agg = BuildAggregator<RadiusPolicy>(MakeCollector(back_inserter(result)), make_tuple(startPt, radius));
+    auto agg = BuildAggregator<RadiusPolicy<Coordinate>>(MakeCollector(back_inserter(result)), make_tuple(startPt, radius));
     agg();
 
     return result;

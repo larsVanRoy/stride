@@ -38,7 +38,7 @@ namespace geopop {
 /**
  * Location for use within the GeoGrid, contains GeoLocation and index to ContactPools.
  */
-class Location : public GeoLocation
+class Location : public GeoLocation<Coordinate>
 {
 public:
         /// Parametrized constructor with population count.

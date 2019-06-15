@@ -81,11 +81,11 @@ public:
 public:
         /// Build a GeoAggregator with a predefined functor and given args for the Policy.
         template <typename Policy, typename F>
-        GeoAggregator<Policy, F> BuildAggregator(F functor, typename Policy::Args&& args) const;
+        GeoAggregator<Coordinate, Policy, F> BuildAggregator(F functor, typename Policy::Args&& args) const;
 
         /// Build a GeoAggregator that gets its functor when calling, with given args for the Policy.
         template <typename Policy>
-        GeoAggregator<Policy> BuildAggregator(typename Policy::Args&& args) const;
+        GeoAggregator<Coordinate, Policy> BuildAggregator(typename Policy::Args&& args) const;
 
 public:
         using iterator       = std::vector<std::shared_ptr<EpiLocation>>::iterator;

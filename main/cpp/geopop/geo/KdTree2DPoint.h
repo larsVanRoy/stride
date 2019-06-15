@@ -16,18 +16,19 @@
 #pragma once
 
 #include "AABBox.h"
-#include "Coordinate.h"
 
 #include <boost/geometry/core/access.hpp>
 #include <memory>
 
 namespace geopop {
 
+template <class Data>
 class GeoLocation;
 
 namespace geogrid_detail {
 
 /// \ref KdTree for some more information on methods.
+template <class Data>
 class KdTree2DPoint
 {
 public:
@@ -46,16 +47,16 @@ public:
         KdTree2DPoint() : m_pt(), m_location(nullptr){};
 
         /// Constructor with GeoLocation.
-        explicit KdTree2DPoint(const GeoLocation* loc);
+        explicit KdTree2DPoint(const GeoLocation<Data>* loc);
 
         /// Constructor with longitude and latitude.
         KdTree2DPoint(double longt, double lat) : m_pt(longt, lat), m_location(nullptr) {}
 
         /// Equal if within one meter of one another.
-        bool operator==(const KdTree2DPoint& other) const;
+        bool operator==(const KdTree2DPoint<Data>& other) const;
 
         /// Distance in kilometers, following great circle distance on a speroid earth.
-        double Distance(const KdTree2DPoint& other) const;
+        double Distance(const KdTree2DPoint<Data>& other) const;
 
         ///
         template <std::size_t D>
@@ -66,20 +67,20 @@ public:
         }
 
         /// Retrieve the location.
-        const GeoLocation* GetLocation() const { return m_location; }
+        const GeoLocation<Data>* GetLocation() const { return m_location; }
 
         /// Get the coordinate for this GeoLocation.
-        Coordinate GetPoint() const { return m_pt; }
+        Data GetPoint() const { return m_pt; }
 
         ///
-        bool InBox(const AABBox<KdTree2DPoint>& box) const;
+        bool InBox(const AABBox<KdTree2DPoint<Data>>& box) const;
 
         /// Does the point lie within `radius` km from `start`?
-        bool InRadius(const KdTree2DPoint& start, double radius) const;
+        bool InRadius(const KdTree2DPoint<Data>& start, double radius) const;
 
 private:
-        Coordinate      m_pt;       ///< Shortcut for access without dereferencing.
-        const GeoLocation* m_location; ///< The underlying location.
+        Data                     m_pt;       ///< Shortcut for access without dereferencing.
+        const GeoLocation<Data>* m_location; ///< The underlying location.
 };
 
 } // namespace geogrid_detail
