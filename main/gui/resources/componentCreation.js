@@ -101,27 +101,18 @@ function removeMapElements() {
 function createSprites(){
     // delete Sprites van vorige keer: 1e 2 moeten we laten zitten
     removeMapElements();
-    console.log("DEBUG_1: ", elements.size());
+    console.log("DEBUG_1: ");
 
-    //backend.getElements();
-    listSprites = elements.getElements();
-    console.log("DEBUG_2");
-    console.log("Opgehaalde elementen-length= ", listSprites.length);
-            // elements.getOneElement();
-    // btn2 kan ook worden getoond
-    console.log("test: ", listSprites[0].latitude);
-
-    // sideBar NIET tonen
-//    sideBar.width = 0;
+    controller.print();
+    console.log("DEBUG_2: ");
+    listSprites = controller.getLocations();
+    console.log("DEBUG_3: ");
 
     // Lijst vullen
-
-
     createSpriteObjects(listSprites);
-
+    console.log("DEBUG_4: ");
     // Change map so all Sprites are shown
     map.fitViewportToMapItems();
-    // Clear text
 }
 
 

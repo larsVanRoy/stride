@@ -79,6 +79,7 @@ set(STRIDE_SRC
     geopop/Location.cpp
     geopop/EpiLocation.cpp
     geopop/EpiGrid.cpp
+    geopop/EpiGrid.h
     #---
     geopop/geo/GeoGridKdTree.cpp
     geopop/geo/KdTree2DPoint.cpp

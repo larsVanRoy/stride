@@ -5,8 +5,10 @@ import Qt.labs.platform 1.0
 import QtLocation 5.12
 import QtPositioning 5.12
 import elements 1.0
+import location 1.0
 
 import "componentCreation.js" as Script
+
 
 ApplicationWindow {
     id: root
@@ -33,6 +35,7 @@ ApplicationWindow {
     Elements {   // to connect with properties
         id:elements
     }
+
 
     MessageDialog {
         id: errorDialog
@@ -66,6 +69,8 @@ ApplicationWindow {
                     text: "Previous Day" // icon-docs
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
+                    onClicked: controller.print();
+
 //                    enabled: textArea.selectedText
 //                    onClicked: textArea.copy()
                 }
@@ -82,8 +87,7 @@ ApplicationWindow {
                     text: "Next Day" // icon-paste
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
-//                    enabled: textArea.canPaste
-//                    onClicked: textArea.paste()
+                    onClicked: { console.log("Clicked"); Script.createSprites();}
                 }
             }
         }

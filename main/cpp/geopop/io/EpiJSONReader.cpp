@@ -76,12 +76,12 @@ void EpiJSONReader::ParseLocations(const nlohmann::json &location_array) {
 
 std::shared_ptr<EpiLocation> EpiJSONReader::ParseLocation(const nlohmann::json& location) {
 
-
     unsigned int id         =   location["id"];
     unsigned int province   =   location["province"];
     Coordinate coordinate   =   ParseCoordinate(location["coordinates"]);
     std::string name        =   location["name"];
     unsigned int population =   location["population"];
+
     std::shared_ptr<EpiLocation> result = std::make_shared<EpiLocation>(id, province, coordinate, name, population);
 
     return result;
@@ -107,9 +107,7 @@ void EpiJSONReader::ParseLocationPools(const nlohmann::json &pools, std::shared_
     std::shared_ptr<stride::PoolStatus> status = std::make_shared<stride::PoolStatus>();
     try {
         for (stride::ContactType::Id i : stride::ContactType::IdList) {
-            std::cout << loc->GetName() << "\t";
             std::shared_ptr<stride::HealthPool> h = ParsePool(pools[stride::ContactType::ToString(i)]);
-
             status->addStatus(i, h);
         }
     }
