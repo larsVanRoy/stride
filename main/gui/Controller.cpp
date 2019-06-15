@@ -13,7 +13,7 @@
 
 namespace gui {
 
-Controller::Controller(QObject *parent) : QObject(parent), m_grid(nullptr), result({}) {}
+Controller::Controller(QObject *parent) : QObject(parent), m_grid(nullptr), result({}), m_day(0) {}
 
 Controller::~Controller(){
     for(QObject* q : result) {
@@ -31,7 +31,6 @@ void Controller::loadFile() {
         return;
     }
     m_grid = reader->Read();
-    std::cout << "Grid size: " << m_grid->size();
 };
 
 QList<QObject*> Controller::getLocations() {
@@ -49,17 +48,76 @@ QList<QObject*> Controller::getLocations() {
     unsigned int smallest = 100000000000;
     for(size_t i = 0; i < m_grid->size(); ++i) {
         std::shared_ptr<geopop::EpiLocation> loc = m_grid->operator[](i);
-        if(largest < loc->GetPopCount()){
+        if (largest < loc->GetPopCount()) {
             largest = loc->GetPopCount();
         }
-        if(smallest > loc->GetPopCount()){
+        if (smallest > loc->GetPopCount()) {
             smallest = loc->GetPopCount();
         }
-        result.push_back(new Location(loc->GetCoordinate().get<0>(), loc->GetCoordinate().get<1>(), loc->GetPopCount(), 0.4));
+        try {
+            result.push_back(
+                    new Location(loc->GetCoordinate().get<0>(), loc->GetCoordinate().get<1>(), loc->GetPopCount(),
+                                 GetIllDouble(loc->GetID()), loc->GetID()));
+        }
+        catch(...){
+            std::cerr << "Whoopsie" << std::endl;
+            throw "nope";
+        }
     }
     std::cout << "\nLargest:  " << largest << std::endl;
     std::cout << "Smallest: " << smallest << std::endl;
     return result;
 }
 
+QString Controller::GetLatitude(unsigned int ID) {
+    return QString::number(m_grid->GetById(ID)->GetCoordinate().get<0>(), 'f', 5);
+}
+
+QString Controller::GetLongitude(unsigned int ID) {
+    return QString::number(m_grid->GetById(ID)->GetCoordinate().get<1>(), 'f', 5);
+}
+
+QString Controller::GetLocationName(unsigned int ID) {
+    return QString::fromStdString(m_grid->GetById(ID)->GetName());
+}
+
+QString Controller::GetPopCount(unsigned int ID) {
+    return QString::number(m_grid->GetById(ID)->GetPopCount());
+}
+
+QString Controller::GetIll(unsigned int ID) {
+    return QString::number(GetIllDouble(ID)*100, 'f', 2);
+}
+
+double Controller::GetIllDouble(unsigned int ID) {
+    double ill = 0.0;
+    try {
+        std::shared_ptr<stride::HealthPool> h = m_grid->GetById(ID)->GetPoolStatus(m_day)->getStatus(
+                stride::ContactType::Id::Household);
+        ill += h->operator[](stride::HealthStatus::Infectious);
+        ill += h->operator[](stride::HealthStatus::InfectiousAndSymptomatic);
+        ill += h->operator[](stride::HealthStatus::Symptomatic);
+    }
+    catch(...){
+        std::cerr << "Whoopsie2 " << ID << std::endl;
+        throw "nope2";
+    }
+    return ill;
+}
+
+void Controller::nextDay() {
+    if(m_day < m_grid->size() - 1){
+        m_day++;
+    }
+}
+
+void Controller::previousDay() {
+    if(m_day > 0){
+        m_day--;
+    }
+}
+
+unsigned int Controller::GetCurrentDay() {
+    return m_day;
+}
 }

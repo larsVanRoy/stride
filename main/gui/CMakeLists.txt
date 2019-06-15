@@ -21,6 +21,7 @@ set(HEADER_FILES
 set(RESOURCE_FILES
         "resources/AppWindow.qml"
         "resources/location.qml"
+        "resources/sidebar.qml"
         "resources/componentCreation.js"
         "resources/fontello.ttf")
     

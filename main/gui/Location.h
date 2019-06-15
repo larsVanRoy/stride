@@ -20,7 +20,7 @@ class Location : public QObject
     Q_PROPERTY(double illness READ getIllness WRITE setIllness NOTIFY dummyChanged)
 public:
     explicit Location(QObject *parent=nullptr);
-    Location(double _long, double _lat, double _pop, double _ill, QObject *parent=nullptr);
+    Location(double _long, double _lat, double _pop, double _ill, unsigned int ID, QObject *parent=nullptr);
 
 //    Element(const Element&);
 
@@ -35,7 +35,7 @@ public:
     void   setPopulation(double &in);
     void   setIllness(double &in);
     signals:
-            void dummyChanged();
+        void dummyChanged();
 private:
     double m_latitude;
     double m_longitude;

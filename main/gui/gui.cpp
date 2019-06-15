@@ -36,7 +36,6 @@ int main(int argc, char *argv[]) {
     std::cout << "Grid size: " << grid->size();
 
     QGuiApplication::setApplicationName("Stride");
-//    QGuiApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QGuiApplication app(argc, argv);
 
     QQuickView view;
