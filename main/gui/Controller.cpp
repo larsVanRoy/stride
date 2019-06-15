@@ -45,10 +45,20 @@ QList<QObject*> Controller::getLocations() {
         return result;
     }
 
+    unsigned int largest = 0;
+    unsigned int smallest = 100000000000;
     for(size_t i = 0; i < m_grid->size(); ++i) {
         std::shared_ptr<geopop::EpiLocation> loc = m_grid->operator[](i);
+        if(largest < loc->GetPopCount()){
+            largest = loc->GetPopCount();
+        }
+        if(smallest > loc->GetPopCount()){
+            smallest = loc->GetPopCount();
+        }
         result.push_back(new Location(loc->GetCoordinate().get<0>(), loc->GetCoordinate().get<1>(), loc->GetPopCount(), 0.4));
     }
+    std::cout << "\nLargest:  " << largest << std::endl;
+    std::cout << "Smallest: " << smallest << std::endl;
     return result;
 }
 

@@ -48,8 +48,6 @@ int main(int argc, char *argv[]) {
 
 
     qmlRegisterType<Elements>("location", 1, 0, "Location");
-    qmlRegisterType<Elements>("elements", 1, 0, "Elements");
-    qmlRegisterType<Element>("elements", 1, 0, "Element");
 
     QStringList selectors;
 

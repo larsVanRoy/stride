@@ -4,7 +4,6 @@ import QtQuick.Window 2.0
 import Qt.labs.platform 1.0
 import QtLocation 5.12
 import QtPositioning 5.12
-import elements 1.0
 import location 1.0
 
 import "componentCreation.js" as Script
@@ -31,10 +30,6 @@ ApplicationWindow {
 //        folder: StandardPaths.writableLocation(StandardPaths.DocumentsLocation)
 //        onAccepted: document.load(file)
 //    }
-
-    Elements {   // to connect with properties
-        id:elements
-    }
 
 
     MessageDialog {

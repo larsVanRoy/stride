@@ -6,6 +6,7 @@ import "componentCreation.js" as Script
 
 MapCircle{
     property int population: 100
+    property int time: 0
     // center: QtPositioning.coordinate(50.41136, 4.44448)
     center {
         latitude: 50
@@ -16,11 +17,11 @@ MapCircle{
     border.width: 2
     border.color: "black"
 
-
     MouseArea {
         anchors.fill: parent
         onClicked: {allText.text =   "Population: " + population + "\n" +
-                                    "ill:        " + "%\n";
+                                     "Radius:     " + radius + "\n" +
+                                     "number:     " + time + "\n";
                     sideRect.open();
         }
 
