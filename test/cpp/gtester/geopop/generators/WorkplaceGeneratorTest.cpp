@@ -81,7 +81,7 @@ TEST_F(WorkplaceGeneratorTest, NoCommutingWithDistribution)
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
 
         for (const auto size : sizes) {
-                m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+                m_geo_grid.AddLocation(make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
         }
         m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -114,7 +114,7 @@ TEST_F(WorkplaceGeneratorTest, NullCommutingWithDistribution)
                                       49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
         for (const auto size : sizes) {
-                m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+                m_geo_grid.AddLocation(make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
         }
 
         // 10% of the pop of loc0 is commuting to loc1 = 12.833 people
@@ -160,7 +160,7 @@ TEST_F(WorkplaceGeneratorTest, TenCommutingWithDistribution)
                                       49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                       134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
         for (const auto size : sizes) {
-                m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+                m_geo_grid.AddLocation(make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
         }
 
         array<tuple<size_t, size_t, double>, 6> commuting {make_tuple(0, 10, 0.23),  make_tuple(25, 3, 0.43),
@@ -233,7 +233,7 @@ TEST_F(WorkplaceGeneratorTest, NoCommutingWithoutDistribution)
                                   49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                   134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
     for (const auto size : sizes) {
-            m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+            m_geo_grid.AddLocation(make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
     }
     m_workplace_generator.Apply(m_geo_grid, m_gg_config);
 
@@ -262,7 +262,7 @@ TEST_F(WorkplaceGeneratorTest, NullCommutingWithoutDistribution)
                                   49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                   134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
     for (const auto size : sizes) {
-            m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+            m_geo_grid.AddLocation(make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
     }
 
     // 10% of the pop of loc0 is commuting to loc1 = 12.833 people
@@ -303,7 +303,7 @@ TEST_F(WorkplaceGeneratorTest, TenCommutingWithoutDistribution)
                                   49823,  181594, 119075, 27700,  116959, 146583, 102531, 58864, 76946,  91951,
                                   134464, 59248,  10003,  125423, 15004,  8656,   13658,  50784, 61749,  165243};
     for (const auto size : sizes) {
-            m_geo_grid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
+            m_geo_grid.AddLocation(make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size));
     }
 
     array<tuple<size_t, size_t, double>, 6> commuting {make_tuple(0, 10, 0.23),  make_tuple(25, 3, 0.43),

@@ -19,30 +19,31 @@
 #include "geopop/geo/GeoLocation.h"
 #include "contact/PoolStatus.h"
 
+#include <geopop/geo/Coordinate.h>
 #include <iostream>
-#include <memory>
 #include <map>
+#include <memory>
 #include <string>
 #include <typeindex>
 #include <typeinfo>
 #include <unordered_map>
 #include <vector>
 
-
 namespace geopop {
 
 /**
  * EpiLocation for use within the GeoGrid, contains GeoLocation and index to ContactPools.
  */
-class EpiLocation : public GeoLocation
+template <class CoordinateLike>
+class EpiLocation : public GeoLocation<CoordinateLike>
 {
 public:
         /// Parametrized constructor with population count.
-        EpiLocation(unsigned int id, unsigned int province, Coordinate coordinate = Coordinate(0.0, 0.0),
+        EpiLocation(unsigned int id, unsigned int province, CoordinateLike coordinate = CoordinateLike(0.0, 0.0),
                  std::string name = "", unsigned int popCount = 0U);
 
         /// Perform a full comparison with the other location.
-        bool operator==(const EpiLocation& other) const;
+        bool operator==(const EpiLocation<CoordinateLike>& other) const;
 
         std::shared_ptr<stride::PoolStatus> GetPoolStatus(unsigned int day) { return m_history.at(day); };
 
@@ -52,6 +53,11 @@ private:
         /// Stores the history of the location for every step
         std::vector<std::shared_ptr<stride::PoolStatus>> m_history;
 
+public:
+        typedef CoordinateLike coordinate_type;
+
 };
+
+extern template class EpiLocation<Coordinate>;
 
 } // namespace geopop

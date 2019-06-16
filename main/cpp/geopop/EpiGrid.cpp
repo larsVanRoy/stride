@@ -29,69 +29,8 @@ using namespace std;
 using stride::ContactPool;
 using stride::ContactType::Id;
 
-EpiGrid::EpiGrid()
+EpiGrid::EpiGrid() : Region<EpiLocation<Coordinate>>()
 {
-}
-
-void EpiGrid::AddLocation(shared_ptr<EpiLocation> loc)
-{
-    this->AddGeoLocation(std::dynamic_pointer_cast<GeoLocation>(loc));
-}
-
-template <typename Policy, typename F>
-GeoAggregator<Policy, F> EpiGrid::BuildAggregator(F functor, typename Policy::Args&& args) const
-{
-        return Region::BuildAggregator(functor, args);
-}
-
-template <typename Policy>
-GeoAggregator<Policy> EpiGrid::BuildAggregator(typename Policy::Args&& args) const
-{
-        return Region::BuildAggregator(args);
-}
-
-void EpiGrid::Finalize()
-{
-        Region::Finalize();
-}
-
-set<const EpiLocation*> EpiGrid::LocationsInBox(double long1, double lat1, double long2, double lat2) const
-{
-        set<const GeoLocation*> s = Region::GeoLocationsInBox(long1, lat1, long2, lat2);
-        set<const EpiLocation*> result;
-        for(const GeoLocation* g : s){
-                result.insert(static_cast<const EpiLocation*>(g));
-        }
-        return result;
-}
-
-set<const EpiLocation*> EpiGrid::LocationsInBox(EpiLocation* loc1, EpiLocation* loc2) const
-{
-        using boost::geometry::get;
-        return LocationsInBox(get<0>(loc1->GetCoordinate()), get<1>(loc1->GetCoordinate()),
-                              get<0>(loc2->GetCoordinate()), get<1>(loc2->GetCoordinate()));
-}
-
-vector<const EpiLocation*> EpiGrid::LocationsInRadius(const EpiLocation& start, double radius) const
-{
-        vector<const GeoLocation*> s = Region::GeoLocationsInRadius(start, radius);
-        vector<const EpiLocation*> result;
-        result.reserve(s.size());
-        for(const GeoLocation* g : s){
-                result.push_back(static_cast<const EpiLocation*>(g));
-        }
-        return result;
-}
-
-vector<EpiLocation*> EpiGrid::TopK(size_t k) const
-{
-        vector<GeoLocation*> s = Region::TopK(k);
-        vector<EpiLocation*> result;
-        result.reserve(s.size());
-        for(GeoLocation* g : s){
-                result.push_back(static_cast<EpiLocation*>(g));
-        }
-        return result;
 }
 
 } // namespace geopop

@@ -52,7 +52,7 @@ public:
         void Apply(GeoGrid&, GeoGridConfig&) {}
 
         /// Create a given number ContactPools in the GeoGrid.
-        void AddPools(Location& loc, stride::Population* pop, GeoGridConfig& ggConfig)
+        void AddPools(Location<Coordinate>& loc, stride::Population* pop, GeoGridConfig& ggConfig)
         {
                 auto& poolSys = pop->RefPoolSys();
                 for (auto i = 0U; i < ggConfig.pools[ID]; ++i) {

@@ -20,20 +20,23 @@
 #include "pop/Person.h"
 #include "util/Exception.h"
 
-#include <cmath>
+#include <boost/geometry/core/access.hpp>
 #include <algorithm>
+#include <cmath>
 
 namespace geopop {
 
 using namespace std;
 using namespace stride::ContactType;
 
-Location::Location(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount)
-    : GeoLocation(id, province, coordinate, name, popCount), m_inCommutes(), m_outCommutes(), m_pool_index()
+template <class CoordinateLike>
+Location<CoordinateLike>::Location(unsigned int id, unsigned int province, CoordinateLike coordinate, string name, unsigned int popCount)
+    : GeoLocation<CoordinateLike>(id, province, coordinate, name, popCount), m_inCommutes(), m_outCommutes(), m_pool_index()
 {
 }
 
-bool Location::operator==(const Location& other) const
+template <class CoordinateLike>
+bool Location<CoordinateLike>::operator==(const Location<CoordinateLike>& other) const
 {
         using boost::geometry::get;
 
@@ -41,24 +44,27 @@ bool Location::operator==(const Location& other) const
         for (Id typ : IdList) {
                 temp = temp && (CRefPools(typ) == other.CRefPools(typ));
         }
-        return temp && GetID() == other.GetID() && get<0>(GetCoordinate()) == get<0>(other.GetCoordinate()) &&
-               get<1>(GetCoordinate()) == get<1>(other.GetCoordinate()) && GetName() == other.GetName() &&
-               GetProvince() == other.GetProvince() && GetPopCount() == other.GetPopCount() &&
+        return temp && this->GetID() == other.GetID() && get<0>(this->GetCoordinate()) == get<0>(other.GetCoordinate()) &&
+               get<1>(this->GetCoordinate()) == get<1>(other.GetCoordinate()) && this->GetName() == other.GetName() &&
+               this->GetProvince() == other.GetProvince() && this->GetPopCount() == other.GetPopCount() &&
                CRefIncomingCommutes() == other.CRefIncomingCommutes() &&
                CRefOutgoingCommutes() == other.CRefOutgoingCommutes();
 }
 
-void Location::AddIncomingCommute(shared_ptr<Location> otherLocation, double fraction)
+template <class CoordinateLike>
+void Location<CoordinateLike>::AddIncomingCommute(shared_ptr<Location<CoordinateLike>> otherLocation, double fraction)
 {
         m_inCommutes.emplace_back(otherLocation.get(), fraction);
 }
 
-void Location::AddOutgoingCommute(shared_ptr<Location> otherLocation, double fraction)
+template <class CoordinateLike>
+void Location<CoordinateLike>::AddOutgoingCommute(shared_ptr<Location<CoordinateLike>> otherLocation, double fraction)
 {
         m_outCommutes.emplace_back(otherLocation.get(), fraction);
 }
 
-int Location::GetIncomingCommuteCount(double fractionCommuters) const
+template <class CoordinateLike>
+int Location<CoordinateLike>::GetIncomingCommuteCount(double fractionCommuters) const
 {
         double value = 0;
         for (const auto& locProportion : m_inCommutes) {
@@ -68,7 +74,8 @@ int Location::GetIncomingCommuteCount(double fractionCommuters) const
         return static_cast<int>(floor(value));
 }
 
-unsigned int Location::GetInfectedCount() const
+template <class CoordinateLike>
+unsigned int Location<CoordinateLike>::GetInfectedCount() const
 {
         unsigned int total{0U};
         for (const auto& pool : CRefPools<Id::Household>()) {
@@ -80,18 +87,21 @@ unsigned int Location::GetInfectedCount() const
         return total;
 }
 
-unsigned int Location::GetOutgoingCommuteCount(double fractionCommuters) const
+template <class CoordinateLike>
+unsigned int Location<CoordinateLike>::GetOutgoingCommuteCount(double fractionCommuters) const
 {
         double totalProportion = 0;
         for (const auto& locProportion : m_outCommutes) {
                 // locProportion.second of the people in this are commuting to locProportion.first
                 totalProportion += locProportion.second;
         }
-        return static_cast<unsigned int>(floor(totalProportion * (fractionCommuters * GetPopCount())));
+        return static_cast<unsigned int>(floor(totalProportion * (fractionCommuters * this->GetPopCount())));
 }
 
-unsigned int Location::GetContactPoolId(stride::ContactType::Id id) {
+template <class CoordinateLike>
+unsigned int Location<CoordinateLike>::GetContactPoolId(stride::ContactType::Id id) {
         return m_pool_index[id].back()->GetId();
 }
 
+template class Location<Coordinate>;
 } // namespace geopop
