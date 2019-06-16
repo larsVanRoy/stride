@@ -51,13 +51,12 @@ public:
 
 //    /// Convert the provided GeoGrid to an the epidemiological status and write the status to the proved file in JSON format.
 //    void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep);
-
-private:
     /// Generate file name and open the file stream.
     void Initialize(const geopop::GeoGrid& geoPopGrid) override;
 
     void Finalize() override;
 
+private:
     /// Create json object for coordinate
     nlohmann::json WriteCoordinate(const geopop::Coordinate& coordinate);
 

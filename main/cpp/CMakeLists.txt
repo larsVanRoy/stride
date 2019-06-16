@@ -128,6 +128,12 @@ set(STRIDE_SRC
     geopop/io/EpiJSONWriter.cpp
     geopop/io/EpiProtoWriter.cpp
     geopop/io/EpiProtoWriter.h
+    geopop/io/EpiHDF5Writer.h
+    geopop/io/EpiHDF5Writer.cpp
+    geopop/io/EpiGridHDF5Types.h
+    geopop/io/EpiGridHDF5Types.cpp
+    geopop/io/EpiHDF5Reader.cpp
+    geopop/io/EpiHDF5Reader.h
     geopop/io/EpiWriter.h
     geopop/io/EpiReader.h
     geopop/io/EpiReaderFactory.cpp
