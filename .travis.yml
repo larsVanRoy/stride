@@ -22,8 +22,8 @@ addons:
       - graphviz
   homebrew:
     packages:
-        - qt5
-    update: false 
+      - qt5
+    update: false
 
 matrix:
   include:
@@ -115,9 +115,9 @@ before_install:
       brew install qt5
       export PATH=/usr/local/opt/qt5/bin:$PATH=
     fi
-    
+
 install:
-    #--------- Linux
+  #--------- Linux
   - |
     if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       SWIGHOME=$HOME/deps/swig_3.0.12
@@ -141,6 +141,7 @@ install:
     fi
     #--------- All platforms
   - |
+    export STRIDE_FORCE_NO_QT=ON
     #           STRIDE_FORCE_NO_BOOST: do not use bjam to build boost (mac+gcc problems)
     #			STRIDE_BOOST_ROOT: specify where the correct version of boost can be found
     #			STRIDE_BOOST_NO_SYSTEM_PATHS: should be ON to prevent mixing different versions of boost
@@ -171,7 +172,7 @@ script:
   - make all && if [[ "$MAKE_TEST" = "true" ]]; then make test; fi
 
 after_success:
-    # Generate the docs only if master, the travis_build_docs is true and we can use secure variables
+  # Generate the docs only if master, the travis_build_docs is true and we can use secure variables
   - |
     if [[ "$TRAVIS_BRANCH" = "master" && "$TRAVIS_BUILD_DOCS" = "true" && "$TRAVIS_PULL_REQUEST" = "false" ]]; then
       cd $TRAVIS_BUILD_DIR
