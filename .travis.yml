@@ -141,6 +141,7 @@ install:
     fi
     #--------- All platforms
   - |
+    export STRIDE_FORCE_NO_QT=ON
     #           STRIDE_FORCE_NO_BOOST: do not use bjam to build boost (mac+gcc problems)
     #			STRIDE_BOOST_ROOT: specify where the correct version of boost can be found
     #			STRIDE_BOOST_NO_SYSTEM_PATHS: should be ON to prevent mixing different versions of boost
