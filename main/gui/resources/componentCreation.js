@@ -69,20 +69,22 @@ function removeMapElements() {
 }
 
 function createSprites(){
-    // delete Sprites van vorige keer: 1e 2 moeten we laten zitten
-    removeMapElements();
-    // console.log("DEBUG_1: ");
-
-    controller.print();
-    // console.log("DEBUG_2: ");
-    listSprites = controller.getLocations();
-    // console.log("DEBUG_3: ");
-
     // Lijst vullen
+    listSprites = controller.getLocations();
+
     createSpriteObjects(listSprites);
-    // console.log("DEBUG_4: ");
-    // Change map so all Sprites are shown
+    // Change map so all Sprites are show
+}
+
+function initializeMap(){
+    removeMapElements();
+    createSprites();
     map.fitViewportToMapItems();
+}
+
+function refreshSprites() {
+    removeMapElements();
+    createSprites();
 }
 
 

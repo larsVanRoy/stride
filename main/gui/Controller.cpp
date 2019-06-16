@@ -106,15 +106,23 @@ double Controller::GetIllDouble(unsigned int ID) {
 }
 
 void Controller::nextDay() {
-    if(m_day < m_grid->size() - 1){
+    std::cout << "old day: " << m_day << "\n";
+    std::cout << "max day: " << m_grid->operator[](0)->maxDays() << std::endl;
+    if(m_day < m_grid->operator[](0)->maxDays() - 1){
         m_day++;
     }
+    std::cout << "new day: " << m_day << std::endl;
+    std::cout << "\n";
 }
 
 void Controller::previousDay() {
+    std::cout << "old day: " << m_day << "\n";
+    std::cout << "min day: " << 0 << std::endl;
     if(m_day > 0){
         m_day--;
     }
+    std::cout << "new day: " << m_day << std::endl;
+    std::cout << "\n";
 }
 
 unsigned int Controller::GetCurrentDay() {
