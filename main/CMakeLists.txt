@@ -30,7 +30,7 @@ endif()
 add_subdirectory(r)
 add_subdirectory(resources)
 
-if(NOT STRIDE_FORCE_NO_QT5)
+if(NOT STRIDE_FORCE_NO_QT)
     add_subdirectory(gui)
 endif()
 
