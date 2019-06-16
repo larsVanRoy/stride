@@ -47,7 +47,7 @@ QList<QObject*> Controller::getLocations() {
     unsigned int largest = 0;
     unsigned int smallest = 100000000000;
     for(size_t i = 0; i < m_grid->size(); ++i) {
-        std::shared_ptr<geopop::EpiLocation> loc = m_grid->operator[](i);
+        auto loc = m_grid->operator[](i);
         if (largest < loc->GetPopCount()) {
             largest = loc->GetPopCount();
         }
