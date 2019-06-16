@@ -49,7 +49,7 @@ public:
     EpiJSONReader operator=(const EpiJSONReader&) = delete;
 
     /// Actually perform the read and return the Epi.
-    void Read() override;
+    std::shared_ptr<EpiGrid> Read() override;
 
     void Print();
 private:

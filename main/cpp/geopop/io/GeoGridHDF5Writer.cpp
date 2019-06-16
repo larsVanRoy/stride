@@ -31,7 +31,7 @@ using namespace H5;
 
 GeoGridHDF5Writer::GeoGridHDF5Writer() : m_persons_found() {}
 
-void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, ostream& stream)
+void GeoGridHDF5Writer::Write(GeoGrid&, ostream&)
 {
         // TODO: throw error, HDF5 doesn't support streams
 }

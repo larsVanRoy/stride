@@ -45,6 +45,8 @@ public:
         /// Perform a full comparison with the other location.
         bool operator==(const EpiLocation<CoordinateLike>& other) const;
 
+        size_t maxDays() { return m_history.size(); }
+
         std::shared_ptr<stride::PoolStatus> GetPoolStatus(unsigned int day) { return m_history.at(day); };
 
         void AddPoolStatus(std::shared_ptr<stride::PoolStatus> status) { m_history.push_back(status); };
