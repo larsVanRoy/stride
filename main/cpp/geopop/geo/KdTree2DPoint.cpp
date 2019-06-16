@@ -27,29 +27,31 @@ namespace geopop {
 
 namespace geogrid_detail {
 
-template <class Data>
-KdTree2DPoint<Data>::KdTree2DPoint(const GeoLocation<Data>* loc) : m_pt(loc->GetCoordinate()), m_location(loc)
+template <class LocationLike>
+KdTree2DPoint<LocationLike>::KdTree2DPoint(const LocationLike* loc) : m_pt(loc->GetCoordinate()), m_location(loc)
 {
 }
 
-template <class Data>
-bool KdTree2DPoint<Data>::operator==(const KdTree2DPoint<Data>& other) const { return Distance(other) < 0.001; }
+template <class LocationLike>
+bool KdTree2DPoint<LocationLike>::operator==(const KdTree2DPoint<LocationLike>& other) const { return Distance(other) < 0.001; }
 
-template <class Data>
-bool KdTree2DPoint<Data>::InBox(const AABBox<KdTree2DPoint<Data>>& box) const
+template <class LocationLike>
+bool KdTree2DPoint<LocationLike>::InBox(const AABBox<KdTree2DPoint<LocationLike>>& box) const
 {
-        return boost::geometry::within(m_pt, boost::geometry::model::box<Coordinate>{box.lower.m_pt, box.upper.m_pt});
+        return boost::geometry::within(m_pt, boost::geometry::model::box<typename LocationLike::coordinate_type>{box.lower.m_pt, box.upper.m_pt});
 }
 
-template <class Data>
-bool KdTree2DPoint<Data>::InRadius(const KdTree2DPoint<Data>& start, double radius) const { return Distance(start) <= radius; }
+template <class LocationLike>
+bool KdTree2DPoint<LocationLike>::InRadius(const KdTree2DPoint<LocationLike>& start, double radius) const { return Distance(start) <= radius; }
 
-template <class Data>
-double KdTree2DPoint<Data>::Distance(const KdTree2DPoint<Data>& other) const
+template <class LocationLike>
+double KdTree2DPoint<LocationLike>::Distance(const KdTree2DPoint<LocationLike>& other) const
 {
         return boost::geometry::distance(m_pt, other.m_pt, boost::geometry::strategy::distance::geographic<>{}) /
                1000.0;
 }
 
+template class KdTree2DPoint<EpiLocation<Coordinate>>;
+template class KdTree2DPoint<Location<Coordinate>>;
 } // namespace geogrid_detail
 } // namespace geopop

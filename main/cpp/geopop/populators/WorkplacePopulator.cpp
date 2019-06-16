@@ -41,7 +41,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
         auto genCommute{function<int()>()};
         auto genNonCommute{function<int()>()};
         vector<ContactPool*> nearbyWp{};
-        vector<Location*> commuteLocations{};
+        vector<Location<Coordinate>*> commuteLocations{};
         vector<unsigned int> commuteLocationSize{};
 
         const auto participCollege      = geoGridConfig.param.participation_college;
@@ -78,7 +78,7 @@ void Populator<stride::ContactType::Id::Workplace>::Apply(GeoGrid& geoGrid, GeoG
                 genCommute = function<int()>();
 
                 vector<double> commutingWeights;
-                for (const pair<Location*, double>& commute : loc->CRefOutgoingCommutes()) {
+                for (const auto& commute : loc->CRefOutgoingCommutes()) {
                         const auto& workplaces = commute.first->RefPools(Id::Workplace);
                         if (!workplaces.empty()) {
                                 commuteLocations.push_back(commute.first);

@@ -19,16 +19,15 @@
 
 #include <boost/geometry/core/access.hpp>
 #include <memory>
+#include "geopop/EpiLocation.h"
+#include "geopop/Location.h"
 
 namespace geopop {
-
-template <class Data>
-class GeoLocation;
 
 namespace geogrid_detail {
 
 /// \ref KdTree for some more information on methods.
-template <class Data>
+template <class LocationLike>
 class KdTree2DPoint
 {
 public:
@@ -47,16 +46,16 @@ public:
         KdTree2DPoint() : m_pt(), m_location(nullptr){};
 
         /// Constructor with GeoLocation.
-        explicit KdTree2DPoint(const GeoLocation<Data>* loc);
+        explicit KdTree2DPoint(const LocationLike* loc);
 
         /// Constructor with longitude and latitude.
         KdTree2DPoint(double longt, double lat) : m_pt(longt, lat), m_location(nullptr) {}
 
         /// Equal if within one meter of one another.
-        bool operator==(const KdTree2DPoint<Data>& other) const;
+        bool operator==(const KdTree2DPoint<LocationLike>& other) const;
 
         /// Distance in kilometers, following great circle distance on a speroid earth.
-        double Distance(const KdTree2DPoint<Data>& other) const;
+        double Distance(const KdTree2DPoint<LocationLike>& other) const;
 
         ///
         template <std::size_t D>
@@ -67,21 +66,24 @@ public:
         }
 
         /// Retrieve the location.
-        const GeoLocation<Data>* GetLocation() const { return m_location; }
+        const LocationLike* GetLocation() const { return m_location; }
 
         /// Get the coordinate for this GeoLocation.
-        Data GetPoint() const { return m_pt; }
+        typename LocationLike::coordinate_type GetPoint() const { return m_pt; }
 
         ///
-        bool InBox(const AABBox<KdTree2DPoint<Data>>& box) const;
+        bool InBox(const AABBox<KdTree2DPoint<LocationLike>>& box) const;
 
         /// Does the point lie within `radius` km from `start`?
-        bool InRadius(const KdTree2DPoint<Data>& start, double radius) const;
+        bool InRadius(const KdTree2DPoint<LocationLike>& start, double radius) const;
 
 private:
-        Data                     m_pt;       ///< Shortcut for access without dereferencing.
-        const GeoLocation<Data>* m_location; ///< The underlying location.
+        typename LocationLike::coordinate_type m_pt;       ///< Shortcut for access without dereferencing.
+        const LocationLike*                    m_location; ///< The underlying location.
 };
+
+extern template class KdTree2DPoint<EpiLocation<Coordinate>>;
+extern template class KdTree2DPoint<Location<Coordinate>>;
 
 } // namespace geogrid_detail
 } // namespace geopop

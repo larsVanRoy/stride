@@ -150,7 +150,7 @@ public:
                 constexpr double EARTH_RADIUS_KM = 6371.0;
                 const double     scaled_radius   = m_radius / EARTH_RADIUS_KM;
 
-                const Data c = m_center.GetPoint();
+                const typename Data::coordinate_type c = m_center.GetPoint();
                 const double startlon = boost::geometry::get<0>(c);
                 const double startlat = boost::geometry::get<1>(c);
                 const double londiff  = RadianToDegree(scaled_radius / std::cos(DegreeToRadian(startlat)));

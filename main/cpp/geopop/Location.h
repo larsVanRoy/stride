@@ -38,11 +38,12 @@ namespace geopop {
 /**
  * Location for use within the GeoGrid, contains GeoLocation and index to ContactPools.
  */
-class Location : public GeoLocation<Coordinate>
+template <class CoordinateLike>
+class Location : public GeoLocation<CoordinateLike>
 {
 public:
         /// Parametrized constructor with population count.
-        Location(unsigned int id, unsigned int province, Coordinate coordinate = Coordinate(0.0, 0.0),
+        Location(unsigned int id, unsigned int province, CoordinateLike coordinate = CoordinateLike(0.0, 0.0),
                  std::string name = "", unsigned int popCount = 0U);
 
         /// Perform a full comparison with the other location.
@@ -119,20 +120,24 @@ public:
 
 public:
         /// References incoming commute Locations + fraction of commutes to that Location.
-        const std::vector<std::pair<Location*, double>>& CRefIncomingCommutes() const { return m_inCommutes; }
+        const std::vector<std::pair<Location<CoordinateLike>*, double>>& CRefIncomingCommutes() const { return m_inCommutes; }
 
         /// References outgoing commute Locations + fraction of commutes to that Location.
-        const std::vector<std::pair<Location*, double>>& CRefOutgoingCommutes() const { return m_outCommutes; }
+        const std::vector<std::pair<Location<CoordinateLike>*, double>>& CRefOutgoingCommutes() const { return m_outCommutes; }
 
 private:
         /// Incomming commutes stored as pair of Location and fraction of population at that Location.
-        std::vector<std::pair<Location*, double>> m_inCommutes;
+        std::vector<std::pair<Location<CoordinateLike>*, double>> m_inCommutes;
 
         ///< Outgoing commutes stored as pair of Location and fraction of population to this this Location.
-        std::vector<std::pair<Location*, double>> m_outCommutes;
+        std::vector<std::pair<Location<CoordinateLike>*, double>> m_outCommutes;
 
         ///< The system holding pointers to the contactpools (for each type id) at this Location.
         stride::ContactType::IdSubscriptArray<stride::util::SegmentedVector<stride::ContactPool*>> m_pool_index;
+
+public:
+        typedef CoordinateLike coordinate_type;
 };
+extern template class Location<Coordinate>;
 
 } // namespace geopop

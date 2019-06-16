@@ -102,7 +102,7 @@ void GeoGridHDF5Reader::ReadLocation(const Group& object, GeoGrid& geoGrid)
         ReadAttribute("longitude", &longitude, object);
         ReadAttribute("latitude", &latitude, object);
 
-        auto location_ptr = make_shared<Location>(id, province, Coordinate{longitude, latitude}, name, population);
+        auto location_ptr = make_shared<Location<Coordinate>>(id, province, Coordinate{longitude, latitude}, name, population);
 
         for (auto i = 0; i < size; ++i) {
                 auto pool_group = object.openGroup("ContactPools").openDataSet("Pool" + to_string(i + 1));
@@ -123,7 +123,7 @@ void GeoGridHDF5Reader::ReadLocation(const Group& object, GeoGrid& geoGrid)
         geoGrid.AddLocation(move(location_ptr));
 }
 
-void GeoGridHDF5Reader::ReadContactPool(const DataSet& object, std::shared_ptr<Location> location_ptr)
+void GeoGridHDF5Reader::ReadContactPool(const DataSet& object, std::shared_ptr<Location<Coordinate>> location_ptr)
 {
         unsigned int size;
         string       type;

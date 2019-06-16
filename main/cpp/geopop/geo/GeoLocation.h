@@ -16,7 +16,6 @@
 #pragma once
 
 #include "Coordinate.h"
-
 #include <iostream>
 #include <memory>
 #include <set>
@@ -33,21 +32,21 @@ class ContactPool;
 namespace geopop {
 
 /**
- * GeoLocation for use within the GeoGrid, contains Coordinate and index to ContactPools.
+ * GeoLocation for use within the GeoGrid, contains CoordinateLike and index to ContactPools.
  */
-template <class Data>
+template <class CoordinateLike>
 class GeoLocation
 {
 public:
         /// Parametrized constructor with population count.
-        GeoLocation(unsigned int id, unsigned int province, Data coordinate = Coordinate(0.0, 0.0),
+        GeoLocation(unsigned int id, unsigned int province, CoordinateLike coordinate = CoordinateLike(0.0, 0.0),
                  std::string name = "", unsigned int popCount = 0U);
 
         /// Perform a full comparison with the other location.
         bool operator==(const GeoLocation& other) const;
 
-        /// Gets the Coordinate of this GeoLocation.
-        const Data GetCoordinate() const { return m_coordinate; }
+        /// Gets the CoordinateLike of this GeoLocation.
+        const CoordinateLike GetCoordinate() const { return m_coordinate; }
 
         /// Gets ID of this GeoLocation.
         unsigned int GetID() const { return m_id; }
@@ -64,8 +63,8 @@ public:
         /// Get GeoLocation's population fraction (of the total population count).
         double GetPopFraction() const;
 
-        /// Sets the Coordinate of this GeoLocation.
-        void SetCoordinate(const Data& coordinate) { m_coordinate = coordinate; }
+        /// Sets the CoordinateLike of this GeoLocation.
+        void SetCoordinate(const CoordinateLike& coordinate) { m_coordinate = coordinate; }
 
         /// Set GeoLocation's population count using its population fraction and the total population count.
         void SetPopCount(unsigned int totalPopCount);
@@ -74,12 +73,14 @@ public:
         void SetPopFraction(double relativePopulation);
 
 private:
-        Data   m_coordinate;   ///< Coordinate of the GeoLocation.
+        CoordinateLike   m_coordinate;   ///< CoordinateLike of the GeoLocation.
         unsigned int m_id = 0U;      ///< Id.
         std::string  m_name;         ///< Name.
         unsigned int m_pop_count;    ///< Population count (number of individuals) at this GeoLocation.
         double       m_pop_fraction; ///< Fraction of whole population at this GeoLocation.
         unsigned int m_province;     ///< Province id.
 };
+
+extern template class GeoLocation<Coordinate>;
 
 } // namespace geopop

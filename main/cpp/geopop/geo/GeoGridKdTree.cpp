@@ -18,6 +18,7 @@
 
 namespace geopop {
 
-template class KdTree<geogrid_detail::KdTree2DPoint<Coordinate>>;
+template class KdTree<geogrid_detail::KdTree2DPoint<Location<Coordinate>>>;
+template class KdTree<geogrid_detail::KdTree2DPoint<EpiLocation<Coordinate>>>;
 
 } // namespace geopop

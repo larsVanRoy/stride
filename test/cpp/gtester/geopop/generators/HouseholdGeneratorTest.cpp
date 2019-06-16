@@ -55,7 +55,7 @@ TEST_F(HouseholdGeneratorTest, OneLocationTest)
 {
         m_gg_config.regionInfo[0].count_households = 4;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
+        auto loc1 = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Antwerpen", 2500);
         m_geo_grid.AddLocation(loc1);
 
         m_household_generator.Apply(m_geo_grid, m_gg_config);
@@ -79,11 +79,11 @@ TEST_F(HouseholdGeneratorTest, FiveLocationsTest)
         m_gg_config.regionInfo[0].count_households = 4000;
         m_gg_config.param.pop_size           = 37542 * 100;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
-        auto loc2 = make_shared<Location>(2, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
-        auto loc3 = make_shared<Location>(3, 4, Coordinate(0, 0), "Henegouwen", 7460 * 100);
-        auto loc4 = make_shared<Location>(4, 4, Coordinate(0, 0), "Limburg", 3269 * 100);
-        auto loc5 = make_shared<Location>(5, 4, Coordinate(0, 0), "Luxemburg", 4123 * 100);
+        auto loc1 = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Antwerpen", 10150 * 100);
+        auto loc2 = make_shared<Location<Coordinate>>(2, 4, Coordinate(0, 0), "Vlaams-Brabant", 10040 * 100);
+        auto loc3 = make_shared<Location<Coordinate>>(3, 4, Coordinate(0, 0), "Henegouwen", 7460 * 100);
+        auto loc4 = make_shared<Location<Coordinate>>(4, 4, Coordinate(0, 0), "Limburg", 3269 * 100);
+        auto loc5 = make_shared<Location<Coordinate>>(5, 4, Coordinate(0, 0), "Luxemburg", 4123 * 100);
 
         m_geo_grid.AddLocation(loc1);
         m_geo_grid.AddLocation(loc2);

@@ -27,12 +27,14 @@ namespace geopop {
 
 using namespace std;
 
-Region::Region()
+template <class LocationLike>
+Region<LocationLike>::Region()
         : m_locations(), m_id_to_index(), p_id_to_index(), m_finalized(false), m_tree()
 {
 }
 
-void Region::AddGeoLocation(shared_ptr<GeoLocation<Coordinate>> location)
+template <class LocationLike>
+void Region<LocationLike>::AddLocation(shared_ptr<LocationLike> location)
 {
     if (m_finalized) {
         throw std::runtime_error("Calling addGeoLocation while Region is finalized not supported!");
@@ -47,42 +49,49 @@ void Region::AddGeoLocation(shared_ptr<GeoLocation<Coordinate>> location)
     }
 }
 
+template <class LocationLike>
 template <typename Policy, typename F>
-GeoAggregator<Coordinate, Policy, F> Region::BuildAggregator(F functor, typename Policy::Args&& args) const
+GeoAggregator<LocationLike, Policy, F> Region<LocationLike>::BuildAggregator(F functor, typename Policy::Args&& args) const
 {
-    return GeoAggregator<Coordinate, Policy, F>(m_tree, functor, std::forward<typename Policy::Args>(args));
+    return GeoAggregator<LocationLike, Policy, F>(m_tree, functor, std::forward<typename Policy::Args>(args));
 }
 
+template <class LocationLike>
 template <typename Policy>
-GeoAggregator<Coordinate, Policy> Region::BuildAggregator(typename Policy::Args&& args) const
+GeoAggregator<LocationLike, Policy> Region<LocationLike>::BuildAggregator(typename Policy::Args&& args) const
 {
-    return GeoAggregator<Coordinate, Policy>(m_tree, std::forward<typename Policy::Args>(args));
+    return GeoAggregator<LocationLike, Policy>(m_tree, std::forward<typename Policy::Args>(args));
 }
 
-void Region::CheckFinalized(const string& functionName) const
+template <class LocationLike>
+void Region<LocationLike>::CheckFinalized(const string& functionName) const
 {
     if (!m_finalized) {
         throw std::runtime_error("Calling \"" + functionName + "\" with Region not finalized not supported!");
     }
 }
 
-void Region::Finalize()
+template <class LocationLike>
+void Region<LocationLike>::Finalize()
 {
-    vector<geogrid_detail::KdTree2DPoint<Coordinate>> points;
+    using namespace geogrid_detail;
+    vector<KdTree2DPoint<LocationLike>> points;
     for (const auto& loc : m_locations) {
-        points.emplace_back(geogrid_detail::KdTree2DPoint(loc.get()));
+        points.emplace_back(KdTree2DPoint(loc.get()));
     }
-    m_tree      = GeoGridKdTree::Build(points);
+
+    m_tree      = KdTree<KdTree2DPoint<LocationLike>>::Build(points);
     m_finalized = true;
 }
 
-set<const GeoLocation<Coordinate>*> Region::GeoLocationsInBox(double long1, double lat1, double long2, double lat2) const
+template <class LocationLike>
+set<const LocationLike*> Region<LocationLike>::LocationsInBox(double long1, double lat1, double long2, double lat2) const
 {
     CheckFinalized(__func__);
 
-    set<const GeoLocation<Coordinate>*> result;
+    set<const LocationLike*> result;
 
-    auto agg = BuildAggregator<BoxPolicy<Coordinate>>(
+    auto agg = BuildAggregator<BoxPolicy<LocationLike>>(
             MakeCollector(inserter(result, result.begin())),
             make_tuple(min(long1, long2), min(lat1, lat2), max(long1, long2), max(lat1, lat2)));
     agg();
@@ -90,18 +99,20 @@ set<const GeoLocation<Coordinate>*> Region::GeoLocationsInBox(double long1, doub
     return result;
 }
 
-set<const GeoLocation<Coordinate>*> Region::GeoLocationsInBox(GeoLocation<Coordinate>* loc1, GeoLocation<Coordinate>* loc2) const
+template <class LocationLike>
+set<const LocationLike*> Region<LocationLike>::LocationsInBox(LocationLike* loc1, LocationLike* loc2) const
 {
     using boost::geometry::get;
-    return GeoLocationsInBox(get<0>(loc1->GetCoordinate()), get<1>(loc1->GetCoordinate()),
+    return LocationsInBox(get<0>(loc1->GetCoordinate()), get<1>(loc1->GetCoordinate()),
                           get<0>(loc2->GetCoordinate()), get<1>(loc2->GetCoordinate()));
 }
 
-vector<GeoLocation<Coordinate>*> Region::TopK(size_t k) const
+template <class LocationLike>
+vector<LocationLike*> Region<LocationLike>::TopK(size_t k) const
 {
-    auto cmp = [](GeoLocation<Coordinate>* rhs, GeoLocation<Coordinate>* lhs) { return rhs->GetPopCount() > lhs->GetPopCount(); };
+    auto cmp = [](LocationLike* rhs, LocationLike* lhs) { return rhs->GetPopCount() > lhs->GetPopCount(); };
 
-    priority_queue<GeoLocation<Coordinate>*, vector<GeoLocation<Coordinate>*>, decltype(cmp)> queue(cmp);
+    priority_queue<LocationLike*, vector<LocationLike*>, decltype(cmp)> queue(cmp);
     for (const auto& loc : m_locations) {
         queue.push(loc.get());
         if (queue.size() > k) {
@@ -109,7 +120,7 @@ vector<GeoLocation<Coordinate>*> Region::TopK(size_t k) const
         }
     }
 
-    vector<GeoLocation<Coordinate>*> topLocations;
+    vector<LocationLike*> topLocations;
     while (!queue.empty()) {
         auto loc = queue.top();
         topLocations.push_back(loc);
@@ -119,16 +130,20 @@ vector<GeoLocation<Coordinate>*> Region::TopK(size_t k) const
     return topLocations;
 }
 
-vector<const GeoLocation<Coordinate>*> Region::GeoLocationsInRadius(const GeoLocation<Coordinate>& start, double radius) const
+template <class LocationLike>
+vector<const LocationLike*> Region<LocationLike>::LocationsInRadius(const LocationLike& start, double radius) const
 {
     CheckFinalized(__func__);
 
     geogrid_detail::KdTree2DPoint startPt(&start);
-    vector<const GeoLocation<Coordinate>*>       result;
+    vector<const LocationLike*>       result;
 
-    auto agg = BuildAggregator<RadiusPolicy<Coordinate>>(MakeCollector(back_inserter(result)), make_tuple(startPt, radius));
+    auto agg = BuildAggregator<RadiusPolicy<LocationLike>>(MakeCollector(back_inserter(result)), make_tuple(startPt, radius));
     agg();
 
     return result;
 }
+
+template class Region<EpiLocation<Coordinate>>;
+template class Region<Location<Coordinate>>;
 } // namespace geopop

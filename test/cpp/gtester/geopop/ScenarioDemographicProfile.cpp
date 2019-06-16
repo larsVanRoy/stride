@@ -192,19 +192,19 @@ TEST_F(ScenarioDemographicProfileTest, correctUseInGenerator)
     m_gg_config.param.participation_college = 0.8;
     m_gg_config.param.participation_workplace = 0.5;
 
-    auto loc1 = make_shared<Location>(1, 1, Coordinate(0, 0), "D", 30000);
+    auto loc1 = make_shared<Location<Coordinate>>(1, 1, Coordinate(0, 0), "D", 30000);
     m_geo_grid.AddLocation(loc1);
 
-    auto loc2 = make_shared<Location>(2, 2, Coordinate(0, 0), "A", 30000);
+    auto loc2 = make_shared<Location<Coordinate>>(2, 2, Coordinate(0, 0), "A", 30000);
     m_geo_grid.AddLocation(loc2);
 
-    auto loc3 = make_shared<Location>(3, 3, Coordinate(0, 0), "B", 30000);
+    auto loc3 = make_shared<Location<Coordinate>>(3, 3, Coordinate(0, 0), "B", 30000);
     m_geo_grid.AddLocation(loc3);
 
-    auto loc4 = make_shared<Location>(4, 4, Coordinate(0, 0), "C", 30000);
+    auto loc4 = make_shared<Location<Coordinate>>(4, 4, Coordinate(0, 0), "C", 30000);
     m_geo_grid.AddLocation(loc4);
 
-    auto loc5 = make_shared<Location>(5, 5, Coordinate(0, 0), "ANTWERPEN", 30000);
+    auto loc5 = make_shared<Location<Coordinate>>(5, 5, Coordinate(0, 0), "ANTWERPEN", 30000);
     m_geo_grid.AddLocation(loc5);
 
     // make it so that the default configuration is general and includes all kinds of ages ranges

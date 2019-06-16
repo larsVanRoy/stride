@@ -57,15 +57,15 @@ private:
     void WriteCoordinates(const Coordinate& coordinate, proto::EpiGeoGrid_Location_Coordinates* protoCoordinates);
 
     /// Create a ProtoBuf Location containing all the info needed to reconstruct a Location.
-    void WriteLocation(Location& location, proto::EpiGeoGrid_Location* protoLocation);
+    void WriteLocation(Location<Coordinate>& location, proto::EpiGeoGrid_Location* protoLocation);
 
     /// Create a ProtoBuf history containing all the info about the health status
     /// in the different pools for a given location
-    void WriteHealthStatus(Location& location, proto::EpiGeoGrid_History* protoHistory);
+    void WriteHealthStatus(Location<Coordinate>& location, proto::EpiGeoGrid_History* protoHistory);
 
     /// Create a protoBuf pool status containing all the info about the health status
     /// within a given pool
-    void WritePoolHealthStatus(Location*                                            location,
+    void WritePoolHealthStatus(Location<Coordinate>*                                location,
                                stride::ContactType::Id                              id,
                                proto::EpiGeoGrid_History_PoolsForLocation_Pool*     protoPool);
 

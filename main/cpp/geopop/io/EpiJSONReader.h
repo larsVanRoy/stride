@@ -60,7 +60,7 @@ private:
     void ParseLocations(const nlohmann::json& location);
 
     /// Create an EpiLocation based on the information stored in the provided JSON object.
-    std::shared_ptr<EpiLocation> ParseLocation(const nlohmann::json& location);
+    std::shared_ptr<EpiLocation<Coordinate>> ParseLocation(const nlohmann::json& location);
 
 
     void ParseHistory(const nlohmann::json& history);
@@ -68,7 +68,7 @@ private:
     void ParseHistoryLocation(const nlohmann::json &location);
 
     /// Adds HealthPool to EpiLocation based on the information stored in the provided JSON object.
-    void ParseLocationPools(const nlohmann::json& pools, std::shared_ptr<EpiLocation> loc);
+    void ParseLocationPools(const nlohmann::json& pools, std::shared_ptr<EpiLocation<Coordinate>> loc);
 
     /// Adds to HealthPool based on the information stored in the provided JSON object.
     std::shared_ptr<stride::HealthPool> ParsePool(const nlohmann::json& pool);

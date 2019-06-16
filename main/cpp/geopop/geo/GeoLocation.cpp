@@ -15,8 +15,9 @@
 
 #include "GeoLocation.h"
 
-#include <cmath>
+#include <boost/geometry/core/access.hpp>
 #include <algorithm>
+#include <cmath>
 
 namespace geopop {
 
@@ -50,4 +51,6 @@ void GeoLocation<Data>::SetPopCount(unsigned int totalPopCount)
 template <class Data>
 void GeoLocation<Data>::SetPopFraction(double relativePopulation) { m_pop_fraction = relativePopulation; }
 
+
+template class GeoLocation<Coordinate>;
 } // namespace geopop
