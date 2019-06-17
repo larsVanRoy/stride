@@ -64,9 +64,13 @@ public:
 
     Q_INVOKABLE void SetInfo();
 
+    Q_INVOKABLE double GetColor(unsigned int ID);
+
     unsigned int GetCurrentDay();
 
 //    Q_INVOKABLE void UpdateInfo(unsigned int ID);
+
+    std::string show;
 
     QList<QObject*> result;
 

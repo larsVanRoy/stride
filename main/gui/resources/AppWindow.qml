@@ -276,6 +276,7 @@ ApplicationWindow {
 
              Component.onCompleted: {
                  Script.initializeMap();
+                 map.fitViewportToVisibleMapItems();
              }
          }
     }

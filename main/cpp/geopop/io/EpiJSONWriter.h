@@ -29,6 +29,9 @@
 namespace stride {
     class ContactPool;
     class Person;
+//namespace AgeBrackets {
+//    enum class AgeBracket : unsigned short;
+//}
 } // namespace stride
 
 namespace geopop {
@@ -70,7 +73,8 @@ private:
     /// Create json object for percentage of the population per health category for the proved location
     nlohmann::json WriteHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location);
 
-    nlohmann::json WritePoolHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location, stride::ContactType::Id id);
+//    nlohmann::json WriteHealthStatusBracket(const std::shared_ptr<geopop::Location<Coordinate>> location,
+//            stride::AgeBrackets::AgeBracket bracket);
 
 private:
     nlohmann::json m_json;      ///< object to store data to write

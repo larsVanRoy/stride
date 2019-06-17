@@ -57,6 +57,8 @@ set(STRIDE_SRC
     contact/ContactType.cpp
     contact/Infector.cpp
     contact/TransmissionProfile.cpp
+    contact/AgeBrackets.cpp
+    contact/AgeBrackets.h
     contact/PoolStatus.cpp
     #---
     disease/DiseaseSeeder.cpp
@@ -181,8 +183,7 @@ set(STRIDE_SRC
     viewers/InfectedFileViewer.cpp
     viewers/InfectedViewer.cpp
     viewers/PersonsFileViewer.cpp
-    viewers/SummaryFileViewer.cpp
-)
+    viewers/SummaryFileViewer.cpp)
 
 #============================================================================
 # Build the Stride library.

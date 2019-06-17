@@ -17,6 +17,7 @@
 #include <iomanip>
 #include <boost/lexical_cast.hpp>
 #include <string>
+#include <exception>
 
 namespace geopop {
 using nlohmann::json;
@@ -29,8 +30,14 @@ std::shared_ptr<EpiGrid> EpiJSONReader::Read() {
     try {
         json_file = json::parse(*m_stream);
 
-    } catch (json::parse_error&) {
+    }
+    catch (json::parse_error& e) {
+        std::cerr << e.what() << std::endl;
         throw stride::util::Exception("Problem parsing JSON file, check whether empty or invalid JSON.");
+    }
+    catch(const std::exception& e){
+        std::cerr << e.what() << std::endl;
+        throw stride::util::Exception("Problem parsing JSON file: unknown error.");
     }
     try {
         auto location = json_file["locations"];
@@ -79,11 +86,11 @@ void EpiJSONReader::ParseLocations(const nlohmann::json &location_array) {
 std::shared_ptr<EpiLocation<Coordinate>> EpiJSONReader::ParseLocation(const nlohmann::json& location) {
 
     unsigned int id         =   location["id"];
-    unsigned int province   =   location["province"];
+//    unsigned int province   =   location["province"];
     Coordinate coordinate   =   ParseCoordinate(location["coordinates"]);
     std::string name        =   location["name"];
     unsigned int population =   location["population"];
-    auto result = std::make_shared<EpiLocation<Coordinate>>(id, province, coordinate, name, population);
+    auto result = std::make_shared<EpiLocation<Coordinate>>(id, 0, coordinate, name, population);
 
     return result;
 }
@@ -104,18 +111,19 @@ void EpiJSONReader::ParseHistory(const nlohmann::json &history) {
     }
 }
 
-void EpiJSONReader::ParseLocationPools(const nlohmann::json &pools, std::shared_ptr<EpiLocation<Coordinate>> loc) {
+void EpiJSONReader::ParseLocationAgeBrackets(const nlohmann::json &pools, std::shared_ptr<EpiLocation<Coordinate>> loc) {
     std::shared_ptr<stride::PoolStatus> status = std::make_shared<stride::PoolStatus>();
     try {
-        for (stride::ContactType::Id i : stride::ContactType::IdList) {
-            std::shared_ptr<stride::HealthPool> h = ParsePool(pools[stride::ContactType::ToString(i)]);
-            status->addStatus(i, h);
+        for (stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
+            std::shared_ptr<stride::HealthPool> h = ParseAgeBracket(pools[stride::AgeBrackets::ToString(ageBracket)]);
+            status->addStatus(ageBracket, h);
         }
     }
     catch(std::exception& e){
         std::cout << "Error in ParseLocationPools: " << e.what() << std::endl;
         throw e;
     }
+//    LocationPools
 
     loc->AddPoolStatus(status);
 }
@@ -127,7 +135,7 @@ void EpiJSONReader::ParseHistoryLocation(const nlohmann::json &location) {
             const auto& j = location[i];
             unsigned int locationID = j["id"];
             std::shared_ptr<EpiLocation<Coordinate>> loc = m_grid->GetById(locationID);
-            ParseLocationPools(j["pools"], loc);
+            ParseLocationAgeBrackets(j["agebrackets"], loc);
         }
     }
     catch(std::exception& e){
@@ -136,14 +144,16 @@ void EpiJSONReader::ParseHistoryLocation(const nlohmann::json &location) {
     }
 }
 
-std::shared_ptr<stride::HealthPool> EpiJSONReader::ParsePool(const nlohmann::json &pool) {
+std::shared_ptr<stride::HealthPool> EpiJSONReader::ParseAgeBracket(const nlohmann::json &pool) {
     std::shared_ptr<stride::HealthPool> result = std::make_shared<stride::HealthPool>();
     try {
-        for (unsigned short i = 0; i < pool.size(); ++i) {
-            double fraction = pool[i];
-            result->setHealth(static_cast<stride::HealthStatus>(i), fraction);
-
-        }
+        result->setHealth(stride::HealthStatus::Immune, pool[stride::HealthToString(stride::HealthStatus::Immune)]);
+        result->setHealth(stride::HealthStatus::Susceptible, pool[stride::HealthToString(stride::HealthStatus::Susceptible)]);
+        result->setHealth(stride::HealthStatus::Infectious, pool[stride::HealthToString(stride::HealthStatus::Infectious)]);
+        result->setHealth(stride::HealthStatus::InfectiousAndSymptomatic, pool[stride::HealthToString(stride::HealthStatus::InfectiousAndSymptomatic)]);
+        result->setHealth(stride::HealthStatus::Recovered, pool[stride::HealthToString(stride::HealthStatus::Recovered)]);
+        result->setHealth(stride::HealthStatus::Exposed, pool[stride::HealthToString(stride::HealthStatus::Exposed)]);
+        result->setHealth(stride::HealthStatus::Symptomatic, pool[stride::HealthToString(stride::HealthStatus::Symptomatic)]);
     }
     catch(std::exception& e){
         std::cout << "Error in ParsePool: " << e.what() << std::endl;

@@ -38,9 +38,12 @@ namespace viewers {
 
 using namespace stride::util;
 
-EpiViewer::EpiViewer(std::shared_ptr <SimRunner> runner, const std::string &output_prefix) : m_runner(std::move(runner)), m_timestep(0), m_step_size(1) {
+EpiViewer::EpiViewer(std::shared_ptr <SimRunner> runner, const std::string &output_prefix, int step) : m_runner(std::move(runner)), m_timestep(0), m_step_size(step) {
     const auto p = FileSys::BuildPath(output_prefix, "epi_output.json");
     m_epi_output = geopop::EpiWriterFactory::CreateEpiWriter(p.c_str());
+    if(m_step_size <= 0) {
+        m_step_size = 1;
+    }
 }
 
 void EpiViewer::Update(const sim_event::Id id)

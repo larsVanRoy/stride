@@ -35,7 +35,7 @@ class EpiViewer
 {
 public:
     /// Instantiate cases viewer.
-    EpiViewer(std::shared_ptr<SimRunner> runner, const std::string& output_prefix);
+    EpiViewer(std::shared_ptr<SimRunner> runner, const std::string& output_prefix, int step);
 
     ~EpiViewer() {m_file.close();};
 

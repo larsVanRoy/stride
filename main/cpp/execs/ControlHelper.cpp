@@ -167,8 +167,14 @@ void ControlHelper::RegisterViewers(shared_ptr<SimRunner> runner)
 
         // Epi viewer
         if (m_config.get<bool>("run.output_epi", false)) {
+                const auto conf = m_config.get_child("run.output_epi");
+
+                int step = conf.get<int>("step", 1);
                 m_stride_logger->info("Registering EpiViewer");
-                const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix);
+                if(step <= 0){
+                        step = 1;
+                }
+                const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix, step);
                 runner->Register(v, bind(&viewers::EpiViewer::Update, v, placeholders::_1));
         }
 }

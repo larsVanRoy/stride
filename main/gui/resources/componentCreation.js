@@ -29,9 +29,7 @@ function createSpriteObjects()
             sprite.population = listSprites[i].population;
             var scale = 12/(10000-50)*(sprite.population-50)-6;
             sprite.radius = 3000/(1+Math.exp(-scale)) + 1000;
-            sprite.time = time;
             sprite.id = listSprites[i].ID;
-            time = time + 1;
             // sprite.radius = sprite.population
             map.addMapItem(sprite);
         }
@@ -83,7 +81,7 @@ function createSprites(){
 function initializeMap(){
     removeMapElements();
     createSprites();
-    map.fitViewportToMapItems();
+    map.fitViewportToVisibleMapItems();
 }
 
 function refreshSprites() {
@@ -96,8 +94,6 @@ function refreshSprites() {
             map.mapItems[i].color = Qt.hsla(0.35, 1, ill,0.75);
         }
     }
-//    removeMapElements();
-//    createSprites();
 }
 
 

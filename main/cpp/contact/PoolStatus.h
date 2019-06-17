@@ -20,7 +20,8 @@
 
 #pragma once
 
-#include "ContactType.h"
+//#include "ContactType.h"
+#include "AgeBrackets.h"
 #include "disease/Health.h"
 
 #include <vector>
@@ -31,6 +32,10 @@ namespace stride {
 
 class HealthPool;
 
+namespace AgeBrackets {
+enum class AgeBracket : unsigned int;
+}
+
 /// Stores the % of people of each health status for every ContactType
 class PoolStatus {
 public:
@@ -38,13 +43,13 @@ public:
 
     bool operator==(const PoolStatus& other) const;
 
-    /// Adds a status (vector of percentages) for a ContactType
-    void addStatus(stride::ContactType::Id ID, std::shared_ptr<HealthPool> status);
+    /// Adds a status (vector of percentages) for an agebracket
+    void addStatus(const AgeBrackets::AgeBracket&, std::shared_ptr<HealthPool> status);
 
     /// Returns the status of a ContactType
-    std::shared_ptr<HealthPool> getStatus(stride::ContactType::Id ID) { return m_status.at(ContactType::ToSizeT(ID)); }
+    std::shared_ptr<HealthPool> getStatus(const AgeBrackets::AgeBracket& ageBracket);
 
-    std::shared_ptr<HealthPool> operator[](stride::ContactType::Id ID){ return m_status[ContactType::ToSizeT(ID)]; }
+    std::shared_ptr<HealthPool> operator[](const AgeBrackets::AgeBracket& ageBracket);
 
     std::vector<double> operator[](HealthStatus h) const;
 

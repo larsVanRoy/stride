@@ -6,6 +6,9 @@
 #include "Location.h"
 #include <cmath>
 
+
+#include "../cpp/contact/AgeBrackets.h"
+#include "../cpp/contact/ContactType.h"
 #include "../cpp/geopop/EpiGrid.h"
 #include "../cpp/geopop/io/EpiReader.h"
 #include "../cpp/geopop/io/EpiReaderFactory.h"
@@ -13,7 +16,7 @@
 
 namespace gui {
 
-Controller::Controller(QObject *parent) : QObject(parent), m_app(nullptr), m_grid(nullptr), result({}), m_day(0), m_multiSelect({0,0}) {}
+Controller::Controller(QObject *parent) : QObject(parent), m_app(nullptr), m_grid(nullptr), result({}), m_day(0), m_multiSelect({0,0}), show("all") {}
 
 Controller::~Controller(){
     for(QObject* q : result) {
@@ -45,7 +48,7 @@ QList<QObject*> Controller::getLocations() {
     }
 
     unsigned int largest = 0;
-    unsigned int smallest = 100000000000;
+    unsigned int smallest = -1;
     for(size_t i = 0; i < m_grid->size(); ++i) {
         auto loc = m_grid->operator[](i);
         if (largest < loc->GetPopCount()) {
@@ -91,18 +94,34 @@ QString Controller::GetIll(unsigned int ID) {
 
 double Controller::GetIllDouble(unsigned int ID) {
     double ill = 0.0;
-    try {
-        std::shared_ptr<stride::HealthPool> h = m_grid->GetById(ID)->GetPoolStatus(m_day)->getStatus(
-                stride::ContactType::Id::Household);
+    std::shared_ptr<stride::PoolStatus> p = m_grid->GetById(ID)->GetPoolStatus(m_day);
+
+    for(stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
+        std::shared_ptr<stride::HealthPool> h = p->getStatus(ageBracket);
         ill += h->operator[](stride::HealthStatus::Infectious);
         ill += h->operator[](stride::HealthStatus::InfectiousAndSymptomatic);
         ill += h->operator[](stride::HealthStatus::Symptomatic);
     }
-    catch(...){
-        std::cerr << "Whoopsie2 " << ID << std::endl;
-        throw "nope2";
-    }
+
     return ill;
+}
+
+double Controller::GetColor(unsigned int ID) {
+    double color = 0;
+    std::shared_ptr<stride::PoolStatus> p = m_grid->GetById(ID)->GetPoolStatus(m_day);
+    if(show == "all") {
+        for(stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
+            std::shared_ptr<stride::HealthPool> h = p->getStatus(ageBracket);
+            color += h->operator[](stride::HealthStatus::Infectious);
+            color += h->operator[](stride::HealthStatus::InfectiousAndSymptomatic);
+            color += h->operator[](stride::HealthStatus::Symptomatic);
+            color += h->operator[](stride::HealthStatus::Recovered);
+        }
+    }
+    else{
+        std::cout << "show: " << show << std::endl;
+    }
+    return color;
 }
 
 void Controller::nextDay() {
@@ -137,8 +156,8 @@ void Controller::InitializeMultiSelect(double longitude, double latitude) {
 
 void Controller::BoxSelect(double longitude, double latitude) {
     std::cout << "Box: {" << m_multiSelect.get<0>() << ", " <<m_multiSelect.get<1>() << "} and {" << longitude << ", " << latitude << "}" << std::endl;
-    std::set<const geopop::EpiLocation*> selectedLoc = m_grid->LocationsInBox(m_multiSelect.get<0>(), m_multiSelect.get<1>(), longitude, latitude);
-    for(const geopop::EpiLocation* epi : selectedLoc){
+    std::set<const geopop::EpiLocation<geopop::Coordinate>*> selectedLoc = m_grid->LocationsInBox(m_multiSelect.get<0>(), m_multiSelect.get<1>(), longitude, latitude);
+    for(const geopop::EpiLocation<geopop::Coordinate>* epi : selectedLoc){
         std::cout << "name: " << epi->GetName() << "\n";
     }
 }
@@ -149,8 +168,8 @@ void Controller::RadiusSelect(double distance) {
             distance << "}" << std::endl;
 
     const geopop::EpiLocation center(-1, -1, m_multiSelect);
-    std::vector<const geopop::EpiLocation*> selectedLoc = m_grid->LocationsInRadius(center, distance);
-    for(const geopop::EpiLocation* epi : selectedLoc){
+    std::vector<const geopop::EpiLocation<geopop::Coordinate>*> selectedLoc = m_grid->LocationsInRadius(center, distance);
+    for(const geopop::EpiLocation<geopop::Coordinate>* epi : selectedLoc){
         std::cout << "name: " << epi->GetName() << "\n";
     }
 }

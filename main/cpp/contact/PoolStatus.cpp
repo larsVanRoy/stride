@@ -19,6 +19,7 @@
  */
 
 #include "PoolStatus.h"
+#include "AgeBrackets.h"
 
 #include <vector>
 #include <map>
@@ -26,18 +27,25 @@
 
 namespace stride {
 
-PoolStatus::PoolStatus() {
-    m_status.resize(stride::ContactType::NumOfTypes());
+PoolStatus::PoolStatus() : m_status({}){
+    m_status.resize(AgeBrackets::NumOfAgeBrackets());
 }
 
 bool PoolStatus::operator==(const PoolStatus &other) const{
-    for (stride::ContactType::Id ID : stride::ContactType::IdList) {
-        const auto v1 = m_status[ContactType::ToSizeT(ID)];
-        const auto v2 = other.m_status[ContactType::ToSizeT(ID)];
+    for (const AgeBrackets::AgeBracket& ageBracket : AgeBrackets::AgeBracketList) {
+        const auto v1 = m_status[AgeBrackets::ToSize(ageBracket)];
+        const auto v2 = other.m_status[AgeBrackets::ToSize(ageBracket)];
         if(v1 != v2)
             return false;
     }
     return true;
+}
+
+std::shared_ptr<HealthPool> PoolStatus::getStatus(const AgeBrackets::AgeBracket& ageBracket){
+    return m_status[AgeBrackets::ToSize(ageBracket)];
+}
+std::shared_ptr<HealthPool> PoolStatus::operator[](const AgeBrackets::AgeBracket& ageBracket){
+    return m_status[AgeBrackets::ToSize(ageBracket)];
 }
 
 std::vector<double> PoolStatus::operator[](HealthStatus h) const {
@@ -48,8 +56,8 @@ std::vector<double> PoolStatus::operator[](HealthStatus h) const {
     return result;
 }
 
-void PoolStatus::addStatus(stride::ContactType::Id ID, std::shared_ptr<HealthPool> status) {
-    m_status[ContactType::ToSizeT(ID)] = status;
+void PoolStatus::addStatus(const AgeBrackets::AgeBracket& ageBracket, std::shared_ptr<HealthPool> status) {
+    m_status[AgeBrackets::ToSize(ageBracket)] = status;
 }
 
 void HealthPool::setHealth(HealthStatus ID, double fraction) {
