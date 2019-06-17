@@ -72,6 +72,10 @@ public:
 
     unsigned int GetCurrentDay();
 
+    Q_INVOKABLE void DisplayInfo();
+
+    Q_INVOKABLE void SetSelectedLocation(unsigned int ID);
+
 //    Q_INVOKABLE void UpdateInfo(unsigned int ID);
 
     std::string show;
@@ -82,7 +86,13 @@ public:
 
     QObject* m_app;
 private:
+    bool SetObjectText(const std::string& objectName, const std::string& text);
+
+    bool SetObjectPercentage(const std::string& objectName, double percentage, unsigned int precision);
+
     unsigned int m_selectedLocationId;
+
+    bool m_selectedLocationIdSet;
 
     unsigned int m_day; ///current day
 

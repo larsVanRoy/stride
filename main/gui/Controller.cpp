@@ -16,7 +16,9 @@
 
 namespace gui {
 
-Controller::Controller(QObject *parent) : QObject(parent), m_app(nullptr), m_grid(nullptr), result({}), m_day(0), m_multiSelect({0,0}), show("all") {}
+Controller::Controller(QObject *parent) : QObject(parent), m_app(nullptr),
+m_grid(nullptr), result({}), m_day(0), m_multiSelect({0,0}), show("all"),
+m_selectedLocationIdSet(false) {}
 
 Controller::~Controller(){
     for(QObject* q : result) {
@@ -132,6 +134,7 @@ void Controller::nextDay() {
     if(m_day < m_grid->operator[](0)->maxDays() - 1){
         m_day++;
         QMetaObject::invokeMethod(m_app, "refreshMap");
+        DisplayInfo();
     }
 }
 
@@ -139,14 +142,84 @@ void Controller::previousDay() {
     if(m_day > 0){
         m_day--;
         QMetaObject::invokeMethod(m_app, "refreshMap");
+        DisplayInfo();
     }
 }
 
 void Controller::SetInfo() {
+    QObject* locName = m_app->findChild<QObject*>(QStringLiteral("locName"));
+    if(locName) {
+        std::cout << "Setting locName" << std::endl;
+        locName->setProperty("text", QStringLiteral("woop"));
+    }
+    else{
+        std::cerr << "locname not found" << std::endl;
+    }
+}
 
-    QMetaObject::invokeMethod(m_app, "setName", Q_ARG(QString, "wooooop"));
-    QMetaObject::invokeMethod(m_app, "test");
-    QMetaObject::invokeMethod(m_app, "test");
+bool Controller::SetObjectText(const std::string& objectName, const std::string& text) {
+    QObject* obj = m_app->findChild<QObject*>(QString::fromStdString(objectName));
+    if(obj) {
+        obj->setProperty("text", QString::fromStdString(text));
+        return true;
+    }
+    std::cout << "Could not find child: " << objectName << std::endl;
+    return false;   //failed
+}
+
+bool Controller::SetObjectPercentage(const std::string& objectName, double percentage, unsigned int precision) {
+    double rounding = pow(10, precision);
+    percentage = lround(percentage*rounding*100)/rounding;
+    // get numbers before point:
+    double tmp = percentage;
+    unsigned int size = 0;
+    while(tmp > 1){
+        size++;
+        tmp /= 10;
+    }
+    std::string str = std::to_string(percentage);
+
+    if(precision > 0) {
+        precision += 1;     //add comma
+    }
+
+    str = str.substr(0,size+precision);
+    return SetObjectText(objectName, str + "%");
+}
+
+void Controller::DisplayInfo() {
+    if(! m_selectedLocationIdSet){
+        return;
+    }
+
+    const auto& loc = m_grid->GetById(m_selectedLocationId);
+    double daycare = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Daycare);
+    double preschool = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::PreSchool);
+    double k12school = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::K12School);
+    double college = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::College);
+    double workplace = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Workplace);
+    double retired = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Retired);
+    double total = daycare + preschool + k12school + college + workplace + retired;
+
+    unsigned int precision = 2;
+    SetObjectText("locName", loc->GetName());
+    SetObjectText("populationValue", std::to_string(loc->GetPopCount()));
+    SetObjectPercentage("totalValue", total,precision);
+    SetObjectPercentage("daycareValue", daycare,precision);
+    SetObjectPercentage("preschoolValue", preschool,precision);
+    SetObjectPercentage("k12schoolValue", k12school,precision);
+    SetObjectPercentage("collegeValue", college,precision);
+    SetObjectPercentage("workplaceValue", workplace, precision);
+    SetObjectPercentage("retiredValue", retired, precision);
+}
+
+void Controller::SetSelectedLocation(unsigned int ID) {
+    const auto& loc = m_grid->GetById(ID);
+    if(m_selectedLocationId != loc->GetID()){
+        m_selectedLocationId = loc->GetID();
+        m_selectedLocationIdSet = true;
+        DisplayInfo();
+    }
 }
 
 unsigned int Controller::GetCurrentDay() {

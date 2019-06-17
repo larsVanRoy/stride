@@ -63,6 +63,7 @@ Rectangle {
                 height: 30
                 Label {
                     id: locName
+                    objectName: "locName"
                     width: parent.width
                     height: parent.height
                     text: qsTr("Location name...")

@@ -22,7 +22,7 @@ MapCircle{
         anchors.fill: parent
         onClicked: {
             map.setInvisible();
-            controller->SetInfo(id);
+            controller.SetSelectedLocation(id);
             sideRect.open();
         }
     }

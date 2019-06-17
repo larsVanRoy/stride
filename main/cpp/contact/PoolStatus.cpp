@@ -60,6 +60,15 @@ void PoolStatus::addStatus(const AgeBrackets::AgeBracket& ageBracket, std::share
     m_status[AgeBrackets::ToSize(ageBracket)] = status;
 }
 
+double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket) {
+    return this->getStatus(ageBracket)->sum(stride::HealthStatusList);
+}
+
+double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::vector<HealthStatus>& ID) {
+    return (this->getStatus(ageBracket)->sum(ID)/getPercentage(ageBracket));
+}
+
+
 void HealthPool::setHealth(HealthStatus ID, double fraction) {
 
     switch (ID) {

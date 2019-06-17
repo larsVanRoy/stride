@@ -64,6 +64,10 @@ public:
 
     const_iterator cend() const { return m_status.cend(); }
 
+    double getPercentage(const AgeBrackets::AgeBracket& ageBracket);
+
+    double getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::vector<HealthStatus>& ID);
+
 private:
     std::vector<std::shared_ptr<HealthPool>> m_status;   ///< matrix of the health status of a ContactType m_status[ContactType::Id][HealthStatus]
 };

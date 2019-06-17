@@ -302,7 +302,7 @@ ApplicationWindow {
 //            anchors.top: parent.top
 //        }
 
-        function SetLocationInfo(val){
+        function setLocationInfo(val){
             setName(controller.GetName(val));
             setPopulation(controller.GetPopCount(val));
             setTotal(controller.GetTotal(val));
@@ -369,6 +369,7 @@ ApplicationWindow {
                         height: 30
                         Label {
                             id: locName
+                            objectName: "locName"
                             width: parent.width
                             height: parent.height
                             text: qsTr("Location name...")
@@ -378,6 +379,7 @@ ApplicationWindow {
                             font.pointSize: 100
                             minimumPointSize: 5
                             fontSizeMode: Text.Fit
+                            onTextChanged: fontSizeMode = Text.Fit;
                         }
                     }
                     Row{
@@ -398,6 +400,7 @@ ApplicationWindow {
                         }
                         Label{
                             id: populationValue
+                            objectName: "populationValue"
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("0")
@@ -425,7 +428,8 @@ ApplicationWindow {
                             minimumPointSize: 5
                         }
                         Label{
-                            id: illValue
+                            id: totalValue
+                            objectName: "totalValue"
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("0%")
@@ -454,6 +458,7 @@ ApplicationWindow {
                         }
                         Label{
                             id: daycareValue
+                            objectName: "daycareValue"
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("0%")
@@ -481,6 +486,7 @@ ApplicationWindow {
                         }
                         Label{
                             id: preSchoolValue
+                            objectName: "preschoolValue"
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("0%")
@@ -507,7 +513,8 @@ ApplicationWindow {
                             minimumPointSize: 5
                         }
                         Label{
-                            id: k12SchoolValue
+                            id: k12schoolValue
+                            objectName: "k12schoolValue"
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("0%")
@@ -535,6 +542,7 @@ ApplicationWindow {
                         }
                         Label{
                             id: collegeValue
+                            objectName: "collegeValue"
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("0%")
@@ -562,6 +570,7 @@ ApplicationWindow {
                         }
                         Label{
                             id: workplaceValue
+                            objectName: "workplaceValue"
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("0%")
@@ -589,6 +598,7 @@ ApplicationWindow {
                         }
                         Label{
                             id: retiredValue
+                            objectName: "retiredValue"
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("0%")
