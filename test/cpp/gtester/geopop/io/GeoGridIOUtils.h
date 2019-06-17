@@ -45,7 +45,7 @@ void CompareContactPools(stride::ContactType::Id                                
 
 void CompareCoordinate(const Coordinate& coordinate, const proto::GeoGrid_Location_Coordinate& protoCoordinate);
 
-void CompareLocation(const Location& location, const proto::GeoGrid_Location& protoLocation);
+void CompareLocation(const Location<Coordinate>& location, const proto::GeoGrid_Location& protoLocation);
 
 void ComparePerson(const proto::GeoGrid_Person& protoPerson);
 

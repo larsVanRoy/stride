@@ -15,20 +15,23 @@
 
 #include "GeoLocation.h"
 
-#include <cmath>
+#include <boost/geometry/core/access.hpp>
 #include <algorithm>
+#include <cmath>
 
 namespace geopop {
 
 using namespace std;
 
-GeoLocation::GeoLocation(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount)
+template <class Data>
+GeoLocation<Data>::GeoLocation(unsigned int id, unsigned int province, Data coordinate, string name, unsigned int popCount)
     : m_coordinate(coordinate), m_id(id), m_name(move(name)), m_pop_count(popCount), m_pop_fraction(0.0),
       m_province(province)
 {
 }
 
-bool GeoLocation::operator==(const GeoLocation& other) const
+template <class Data>
+bool GeoLocation<Data>::operator==(const GeoLocation<Data>& other) const
 {
         using boost::geometry::get;
 
@@ -37,12 +40,17 @@ bool GeoLocation::operator==(const GeoLocation& other) const
                GetProvince() == other.GetProvince() && GetPopCount() == other.GetPopCount();
 }
 
-double GeoLocation::GetPopFraction() const { return m_pop_fraction; }
+template <class Data>
+double GeoLocation<Data>::GetPopFraction() const { return m_pop_fraction; }
 
-void GeoLocation::SetPopCount(unsigned int totalPopCount)
+template <class Data>
+void GeoLocation<Data>::SetPopCount(unsigned int totalPopCount)
 {
         m_pop_count = static_cast<unsigned int>(floor(m_pop_fraction * totalPopCount));
 }
-void GeoLocation::SetPopFraction(double relativePopulation) { m_pop_fraction = relativePopulation; }
+template <class Data>
+void GeoLocation<Data>::SetPopFraction(double relativePopulation) { m_pop_fraction = relativePopulation; }
 
+
+template class GeoLocation<Coordinate>;
 } // namespace geopop

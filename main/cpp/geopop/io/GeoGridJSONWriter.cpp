@@ -108,7 +108,7 @@ json GeoGridJSONWriter::WriteCoordinate(const Coordinate& coordinate)
         return coordinate_object;
 }
 
-json GeoGridJSONWriter::WriteLocation(const Location& location)
+json GeoGridJSONWriter::WriteLocation(const Location<Coordinate>& location)
 {
         json location_object = json::object();
 

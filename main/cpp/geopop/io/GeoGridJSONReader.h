@@ -16,6 +16,7 @@
 #pragma once
 
 #include "GeoGridReader.h"
+#include "geopop/geo/Coordinate.h"
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
@@ -49,17 +50,17 @@ public:
 
 private:
         /// Create a ContactPools based on the information stored in the provided JSON object.
-        void ParseContactPools(std::shared_ptr<Location> loc, nlohmann::json& contactCenter);
+        void ParseContactPools(std::shared_ptr<Location<Coordinate>> loc, nlohmann::json& contactCenter);
 
         /// Create a ContactCenter based on the information stored in the provided JSON object.
-        void ParseContactPool(std::shared_ptr<Location> loc,
+        void ParseContactPool(std::shared_ptr<Location<Coordinate>> loc,
                 nlohmann::json& contactPool, stride::ContactType::Id typeId);
 
         /// Create a Coordinate based on the information stored in the provided JSON object.
         Coordinate ParseCoordinate(nlohmann::json& coordinate);
 
         /// Create a Location based on the information stored in the provided JSON object.
-        std::shared_ptr<Location> ParseLocation(nlohmann::json& location);
+        std::shared_ptr<Location<Coordinate>> ParseLocation(nlohmann::json& location);
 
         /// Create a Person based on the information stored in the provided JSON object.
         stride::Person* ParsePerson(nlohmann::json& person);

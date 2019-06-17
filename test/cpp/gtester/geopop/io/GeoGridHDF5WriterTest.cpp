@@ -36,7 +36,7 @@ using namespace stride::util;
 using namespace H5;
 namespace {
 
-bool compareLocations(const shared_ptr<Location>& loc, const Group& group)
+bool compareLocations(const shared_ptr<Location<Coordinate>>& loc, const Group& group)
 {
         unsigned int id, province, popCount;
         double       longitude, latitude;
@@ -58,9 +58,9 @@ TEST(GeoGridHDF5WriterTest, locationTest)
 {
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
-        geoGrid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500));
-        geoGrid.AddLocation(make_shared<Location>(2, 3, Coordinate(0, 0), "Gent", 5000));
-        geoGrid.AddLocation(make_shared<Location>(3, 2, Coordinate(0, 0), "Mons", 2500));
+        geoGrid.AddLocation(make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Bavikhove", 2500));
+        geoGrid.AddLocation(make_shared<Location<Coordinate>>(2, 3, Coordinate(0, 0), "Gent", 5000));
+        geoGrid.AddLocation(make_shared<Location<Coordinate>>(3, 2, Coordinate(0, 0), "Mons", 2500));
 
         GeoGridHDF5Writer writer;
         string            filename = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/test.h5";
@@ -80,7 +80,7 @@ TEST(GeoGridHDF5WriterTest, contactCentersTest)
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
 
-        auto location = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+        auto location = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
 
         auto pool0 = pop->RefPoolSys().CreateContactPool(Id::Household);
         location->RegisterPool(pool0, Id::Household);

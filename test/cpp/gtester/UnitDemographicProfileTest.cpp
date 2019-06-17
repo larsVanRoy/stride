@@ -85,7 +85,7 @@ for region:                                          Antwerp
     shared_ptr<Population> m_pop(Population::Create());
     GeoGrid m_geo_grid(m_pop.get());
 
-    auto loc1 = make_shared<Location>(1, 1, Coordinate(0, 0), "Antwerpen", 30000);
+    auto loc1 = make_shared<Location<Coordinate>>(1, 1, Coordinate(0, 0), "Antwerpen", 30000);
     m_geo_grid.AddLocation(loc1);
 
     auto ggConfig = GeoGridConfig();
@@ -131,7 +131,7 @@ for region:                                          Major Cities
     shared_ptr<Population> m_pop(Population::Create());
     GeoGrid m_geo_grid(m_pop.get());
 
-    auto loc1 = make_shared<Location>(1, 1, Coordinate(0, 0), "ANTWERPEN", 30000);
+    auto loc1 = make_shared<Location<Coordinate>>(1, 1, Coordinate(0, 0), "ANTWERPEN", 30000);
     m_geo_grid.AddLocation(loc1);
 
     auto ggConfig = geopop::GeoGridConfig();

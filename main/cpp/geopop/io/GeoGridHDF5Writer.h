@@ -19,6 +19,7 @@
 #include "geopop/Location.h"
 
 #include <H5Location.h>
+#include <geopop/geo/Coordinate.h>
 #include <set>
 
 namespace stride {
@@ -49,12 +50,12 @@ private:
         void WriteContactPool(H5::Group& group, stride::ContactPool* contactPool);
 
         /// Create a Boost Property Tree containing all info needed to reconstruct a Location.
-        void WriteLocation(H5::H5File& file, std::shared_ptr<Location> location);
+        void WriteLocation(H5::H5File& file, std::shared_ptr<Location<Coordinate>> location);
 
         /// Create a Boost Property Tree containing all info needed to reconstruct a Person.
         void WritePeople(H5::H5File& file);
 
-        void WriteCommutes(H5::H5File& file, std::shared_ptr<Location> location, H5::Group& group);
+        void WriteCommutes(H5::H5File& file, std::shared_ptr<Location<Coordinate>> location, H5::Group& group);
 
         template<typename T>
         void WriteAttribute(const std::string& name, const T& value, H5::H5Object& object);

@@ -85,7 +85,7 @@ void EpiProtoWriter::WriteCoordinates(const Coordinate&                         
     protoCoordinates->set_latitude(boost::geometry::get<1>(coordinate));
 }
 
-void EpiProtoWriter::WriteLocation(Location& location, proto::EpiGeoGrid_Location *protoLocation)
+void EpiProtoWriter::WriteLocation(Location<Coordinate>& location, proto::EpiGeoGrid_Location *protoLocation)
 {
     protoLocation->set_id(location.GetID());
     protoLocation->set_name(location.GetName());
@@ -95,7 +95,7 @@ void EpiProtoWriter::WriteLocation(Location& location, proto::EpiGeoGrid_Locatio
     protoLocation->set_allocated_coordinates(coordinates);
 }
 
-void EpiProtoWriter::WriteHealthStatus(geopop::Location &location, proto::EpiGeoGrid_History* protoHistory)
+void EpiProtoWriter::WriteHealthStatus(geopop::Location<Coordinate> &location, proto::EpiGeoGrid_History* protoHistory)
 {
     static const map<Id, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type > types = {\
             {Id::Daycare, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_Daycare},
@@ -118,7 +118,7 @@ void EpiProtoWriter::WriteHealthStatus(geopop::Location &location, proto::EpiGeo
     }
 }
 
-void EpiProtoWriter::WritePoolHealthStatus(geopop::Location*                                    location,
+void EpiProtoWriter::WritePoolHealthStatus(geopop::Location<Coordinate>*                        location,
                                            stride::ContactType::Id                              id,
                                            proto::EpiGeoGrid_History_PoolsForLocation_Pool*     protoPool)
 {

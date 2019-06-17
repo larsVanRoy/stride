@@ -13,24 +13,20 @@
  *  Copyright 2018, 2019, Jan Broeckhove and Bistromatics group.
  */
 
-#include "EpiGrid.h"
+#pragma once
 
-#include "contact/ContactPool.h"
-#include "geopop/EpiLocation.h"
-#include "pop/Population.h"
+#include "H5Cpp.h"
+namespace H5 {
+    struct H5GeoLocation{
+        unsigned int id;
+        unsigned int population;
+        std::string name;
+        unsigned int province;
+        double longitude;
+        double latitude;
+    };
 
-#include <queue>
-#include <stdexcept>
-#include <utility>
+    CompType getLocationType();
 
-namespace geopop {
-
-using namespace std;
-using stride::ContactPool;
-using stride::ContactType::Id;
-
-EpiGrid::EpiGrid() : Region<EpiLocation<Coordinate>>()
-{
+    const CompType GetH5Type(H5GeoLocation);
 }
-
-} // namespace geopop

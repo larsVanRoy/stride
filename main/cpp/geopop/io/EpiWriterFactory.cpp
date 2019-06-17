@@ -15,6 +15,7 @@
 
 #include "EpiJSONWriter.h"
 #include "EpiProtoWriter.h"
+#include "EpiHDF5Writer.h"
 #include "EpiWriterFactory.h"
 #include "util/Exception.h"
 
@@ -41,9 +42,9 @@ namespace geopop {
         else if (path.extension().string() == ".proto") {
             return std::make_shared<EpiProtoWriter>(filename);
         }
-//        else if (path.extension().string() == ".h5") {
-//            return std::make_shared<EpiJSONWriter>();
-//        }
+        else if (path.extension().string() == ".h5") {
+            return std::make_shared<EpiHDF5Writer>(filename);
+        }
         else {
             throw stride::util::Exception("EpiWriterFactory::CreateWriter> Unsupported file extension: " +
                                           path.extension().string());

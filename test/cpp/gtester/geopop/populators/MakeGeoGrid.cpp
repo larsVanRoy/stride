@@ -64,7 +64,7 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCoun
         size_t sampleId = 0;
         auto   personId = 0U;
         for (int locI = 0; locI < locCount; locI++) {
-                auto loc = make_shared<Location>(locI, 1, Coordinate(0.0, 0.0), "", locPop);
+                auto loc = make_shared<Location<Coordinate>>(locI, 1, Coordinate(0.0, 0.0), "", locPop);
 
                 for (int schI = 0; schI < schoolCount; schI++) {
                         k12Gen.AddPools(*loc, pop, config);

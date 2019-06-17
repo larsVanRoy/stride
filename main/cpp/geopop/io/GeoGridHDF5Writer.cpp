@@ -66,7 +66,7 @@ void GeoGridHDF5Writer::WriteContactPool(H5::Group& group, stride::ContactPool* 
         auto type = ToString(contactPool->GetType());
         WriteAttribute("type", type, dataset);
 }
-void GeoGridHDF5Writer::WriteLocation(H5::H5File& file, std::shared_ptr<Location> location)
+void GeoGridHDF5Writer::WriteLocation(H5::H5File& file, std::shared_ptr<Location<Coordinate>> location)
 {
         auto group = file.openGroup("Locations");
         group      = group.createGroup("Location" + to_string(++m_location_counter));
@@ -93,7 +93,7 @@ void GeoGridHDF5Writer::WriteLocation(H5::H5File& file, std::shared_ptr<Location
         WriteAttribute("size", m_pool_counter, group);
         m_pool_counter = 0U;
 }
-void GeoGridHDF5Writer::WriteCommutes(H5::H5File& file, std::shared_ptr<Location> location, H5::Group& group)
+void GeoGridHDF5Writer::WriteCommutes(H5::H5File& file, std::shared_ptr<Location<Coordinate>> location, H5::Group& group)
 {
         auto commutes = location->CRefOutgoingCommutes();
 

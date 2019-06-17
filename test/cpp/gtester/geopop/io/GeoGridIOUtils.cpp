@@ -100,7 +100,7 @@ void CompareCoordinate(const Coordinate& coordinate, const proto::GeoGrid_Locati
         EXPECT_EQ(get<1>(coordinate), protoCoordinate.latitude());
 }
 
-void CompareLocation(const Location& location, const proto::GeoGrid_Location& protoLocation)
+void CompareLocation(const Location<Coordinate>& location, const proto::GeoGrid_Location& protoLocation)
 {
         EXPECT_EQ(location.GetName(), protoLocation.name());
         EXPECT_EQ(location.GetProvince(), protoLocation.province());
@@ -172,7 +172,7 @@ void CompareGeoGrid(proto::GeoGrid& protoGrid)
 shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
 {
         const auto geoGrid = make_shared<GeoGrid>(pop);
-        const auto loc     = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+        const auto loc     = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
 
         auto dayPool = pop->RefPoolSys().CreateContactPool(Id::Daycare);
         loc->RefPools(Id::Daycare).emplace_back(dayPool);
@@ -209,9 +209,9 @@ shared_ptr<GeoGrid> GetPopulatedGeoGrid(Population* pop)
 shared_ptr<GeoGrid> GetCommutesGeoGrid(Population* pop)
 {
         const auto geoGrid   = make_shared<GeoGrid>(pop);
-        const auto bavikhove = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
-        const auto gent      = make_shared<Location>(2, 4, Coordinate(0, 0), "Gent", 2500);
-        const auto mons      = make_shared<Location>(3, 4, Coordinate(0, 0), "Mons", 2500);
+        const auto bavikhove = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+        const auto gent      = make_shared<Location<Coordinate>>(2, 4, Coordinate(0, 0), "Gent", 2500);
+        const auto mons      = make_shared<Location<Coordinate>>(3, 4, Coordinate(0, 0), "Mons", 2500);
 
         bavikhove->AddOutgoingCommute(gent, 0.5);
         gent->AddIncomingCommute(bavikhove, 0.5);
