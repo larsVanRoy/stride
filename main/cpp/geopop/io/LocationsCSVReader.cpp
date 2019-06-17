@@ -27,7 +27,6 @@ LocationsCSVReader::LocationsCSVReader(unique_ptr<istream> inputStream) : Locati
 
 void LocationsCSVReader::FillGeoGrid(GeoGrid& geoGrid) const
 {
-
         vector<pair<shared_ptr<Location>, int>> locations;
 
         CSV  reader(*(m_inputStream.get()));
@@ -40,6 +39,7 @@ void LocationsCSVReader::FillGeoGrid(GeoGrid& geoGrid) const
                 const auto loc = make_shared<Location>(row.GetValue<int>(0), row.GetValue<int>(1),
                                                        Coordinate(row.GetValue<double>(6), row.GetValue<double>(5)),
                                                        row.GetValue(7));
+
                 geoGrid.AddLocation(loc);
                 locations.emplace_back(loc, row.GetValue<int>(2));
                 totalPopulation += row.GetValue<int>(2);
