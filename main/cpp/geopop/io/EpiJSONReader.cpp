@@ -45,6 +45,8 @@ std::shared_ptr<EpiGrid> EpiJSONReader::Read() {
     }
     m_stream->close();
 
+    m_grid->Finalize();
+
     return m_grid;
 }
 
