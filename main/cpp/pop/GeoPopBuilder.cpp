@@ -154,6 +154,7 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
         const auto locationsReader = ReaderFactory::CreateLocationsReader(citiesFileName);
         locationsReader->FillGeoGrid(geoGrid);
 
+
         if (!commutingFileName.empty()) {
                 const auto commutesReader = ReaderFactory::CreateCommutesReader(commutingFileName);
                 commutesReader->FillGeoGrid(geoGrid);
