@@ -30,7 +30,7 @@ void EpiHDF5Reader::ReadLocations()
                 auto h5location  = locations[i];
                 auto epilocation = std::make_shared<EpiLocation<Coordinate>>(
                     h5location.id, h5location.province, Coordinate{h5location.longitude, h5location.latitude},
-                    h5location.name, h5location.population);
+                    string(h5location.name), h5location.population);
                 m_grid->AddLocation(epilocation);
         }
 }

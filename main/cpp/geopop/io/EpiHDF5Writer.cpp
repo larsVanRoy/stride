@@ -23,11 +23,12 @@
 #include "pop/Person.h"
 #include "disease/Health.h"
 
-#include <string>
-#include <iostream>
+#include <cstring>
 #include <fstream>
+#include <iostream>
 #include <memory>
 #include <omp.h>
+#include <string>
 
 namespace geopop {
 using namespace H5;
@@ -71,8 +72,9 @@ void EpiHDF5Writer::WriteLocations(const geopop::GeoGrid& geoGrid)
         using namespace boost::geometry;
         for (size_t i = 0; i < geoGrid.size(); ++i) {
                 auto loc = geoGrid[i];
-                locations.push_back(H5GeoLocation{loc->GetID(), loc->GetPopCount(), loc->GetName(), loc->GetProvince(),
+                locations.push_back(H5GeoLocation{loc->GetID(), loc->GetPopCount(), {}, loc->GetProvince(),
                                        get<0>(loc->GetCoordinate()), get<1>(loc->GetCoordinate())});
+                strcpy(locations.back().name, loc->GetName().c_str());
         }
         this->WriteDataset("Locations", locations, m_file);
         auto dataset = m_file.openDataSet("Locations");
