@@ -85,7 +85,7 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
                         {3,  "run.geopop_gen.west_flanders_household_file"},
                         {4,  "run.geopop_gen.east_flanders_household_file"},
                         {7,  "run.geopop_gen.limburg_household_file"},
-                        {11, "run.geopop_gen.major_cities_file"}
+                        {11, "run.geopop_gen.major_cities_household_file"}
                 };
 
         std::map<unsigned int, string> files;
