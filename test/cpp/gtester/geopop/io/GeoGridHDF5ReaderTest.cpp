@@ -159,6 +159,7 @@ TEST(GeoGridHDF5ReaderTest, peopleTest)
 TEST(GeoGridHDF5ReaderTest, emptyFileTest)
 {
         auto pop = Population::Create();
+        H5::Exception::dontPrint();
         EXPECT_THROW(getGeoGridFromFile("empty.h5", pop.get()), Exception);
 }
 } // namespace
