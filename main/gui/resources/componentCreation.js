@@ -37,7 +37,7 @@ function createSpriteObjects()
         }
     }
 
-    for (var i=0; i<listSprites.length; i++) {
+    for (var i = 0; i<listSprites.length; i++) {
         // console.log("Create sprite objects: ", listSprites[i].latitude)
         component = Qt.createComponent("location.qml");
 
@@ -65,7 +65,11 @@ function createSpriteObjects()
 
 function removeMapElements() {
     //remove entire map
-    map.clearMapItems()
+    for(var i = map.mapItems.length - 1; i >= 0; i--) {
+        if(map.mapItems[i].objectName === "location"){
+            map.removeMapItem(map.mapItems[i]);
+        }
+    }
 }
 
 function createSprites(){
@@ -83,8 +87,17 @@ function initializeMap(){
 }
 
 function refreshSprites() {
-    removeMapElements();
-    createSprites();
+    for(var i = 0; i < map.mapItems.length; i++) {
+        if(map.mapItems[i].objectName === "location"){
+            var ill = 0.5-controller.GetIllDouble(map.mapItems[i].id)*2/3
+            if (ill < 0.0){
+                ill = 0.0
+            }
+            map.mapItems[i].color = Qt.hsla(0.35, 1, ill,0.75);
+        }
+    }
+//    removeMapElements();
+//    createSprites();
 }
 
 
@@ -104,7 +117,5 @@ function showText() {
                    "\n";
        }
        allText.text = tekst;
-
     }
-
 }

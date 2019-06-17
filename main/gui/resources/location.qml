@@ -8,6 +8,8 @@ MapCircle{
     property int id: 0
     property int population: 100
     property int time: 0
+    objectName: "location"
+
     center {
         latitude: 50
         longitude: 4
@@ -19,10 +21,12 @@ MapCircle{
     MouseArea {
         anchors.fill: parent
         onClicked: {
+            map.setInvisible();
             sideBar.setName(controller.GetLocationName(id));
             sideBar.setLatitude(controller.GetLatitude(id));
             sideBar.setLongitude(controller.GetLongitude(id));
             sideBar.setIll(controller.GetIll(id));
+            sideBar.setPopulation(controller.GetPopCount(id));
             sideRect.open()
         }
     }

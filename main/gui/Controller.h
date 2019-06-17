@@ -10,6 +10,9 @@
 #include <iostream>
 #include <memory>
 #include <QString>
+#include <QList>
+
+#include "../cpp/geopop/geo/Coordinate.h"
 //#include "../cpp/geopop/EpiGrid.h"
 
 namespace geopop {
@@ -47,9 +50,19 @@ public:
 
     Q_INVOKABLE double GetIllDouble(unsigned int ID);
 
+    Q_INVOKABLE void InitializeMultiSelect(double longitude, double latitude);
+
+    Q_INVOKABLE void BoxSelect(double longitude, double latitude);
+
+    Q_INVOKABLE void RadiusSelect(double distance);
+
+    Q_INVOKABLE QList<double> GetMultiSelectCoordinate() { return {m_multiSelect.get<0>(), m_multiSelect.get<1>()};}
+
     Q_INVOKABLE void nextDay();
 
     Q_INVOKABLE void previousDay();
+
+    Q_INVOKABLE void SetInfo();
 
     unsigned int GetCurrentDay();
 
@@ -59,8 +72,12 @@ public:
 
     std::shared_ptr<geopop::EpiGrid> m_grid;
 
+    QObject* m_app;
 private:
     unsigned int m_day; ///current day
+
+    geopop::Coordinate m_multiSelect;
+
 };
 
 }

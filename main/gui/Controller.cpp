@@ -4,7 +4,7 @@
 
 #include "Controller.h"
 #include "Location.h"
-
+#include <cmath>
 
 #include "../cpp/geopop/EpiGrid.h"
 #include "../cpp/geopop/io/EpiReader.h"
@@ -13,7 +13,7 @@
 
 namespace gui {
 
-Controller::Controller(QObject *parent) : QObject(parent), m_grid(nullptr), result({}), m_day(0) {}
+Controller::Controller(QObject *parent) : QObject(parent), m_app(nullptr), m_grid(nullptr), result({}), m_day(0), m_multiSelect({0,0}) {}
 
 Controller::~Controller(){
     for(QObject* q : result) {
@@ -106,26 +106,52 @@ double Controller::GetIllDouble(unsigned int ID) {
 }
 
 void Controller::nextDay() {
-    std::cout << "old day: " << m_day << "\n";
-    std::cout << "max day: " << m_grid->operator[](0)->maxDays() << std::endl;
     if(m_day < m_grid->operator[](0)->maxDays() - 1){
         m_day++;
+        QMetaObject::invokeMethod(m_app, "refreshMap");
     }
-    std::cout << "new day: " << m_day << std::endl;
-    std::cout << "\n";
 }
 
 void Controller::previousDay() {
-    std::cout << "old day: " << m_day << "\n";
-    std::cout << "min day: " << 0 << std::endl;
     if(m_day > 0){
         m_day--;
+        QMetaObject::invokeMethod(m_app, "refreshMap");
     }
-    std::cout << "new day: " << m_day << std::endl;
-    std::cout << "\n";
+}
+
+void Controller::SetInfo() {
+    std::cout << "Is nullptr: " << (m_app == nullptr) << std::endl;
+    std::cout << "Object window type: " << m_app->isWindowType() << std::endl;
+    std::cout << "Object name: " << m_app->objectName().toStdString() << std::endl;
+
+    QMetaObject::invokeMethod(m_app, "test");
 }
 
 unsigned int Controller::GetCurrentDay() {
     return m_day;
+}
+
+void Controller::InitializeMultiSelect(double longitude, double latitude) {
+    m_multiSelect = {longitude, latitude};
+}
+
+void Controller::BoxSelect(double longitude, double latitude) {
+    std::cout << "Box: {" << m_multiSelect.get<0>() << ", " <<m_multiSelect.get<1>() << "} and {" << longitude << ", " << latitude << "}" << std::endl;
+    std::set<const geopop::EpiLocation*> selectedLoc = m_grid->LocationsInBox(m_multiSelect.get<0>(), m_multiSelect.get<1>(), longitude, latitude);
+    for(const geopop::EpiLocation* epi : selectedLoc){
+        std::cout << "name: " << epi->GetName() << "\n";
+    }
+}
+
+void Controller::RadiusSelect(double distance) {
+
+    std::cout << "Rad: {" << m_multiSelect.get<0>() << ", " <<m_multiSelect.get<1>() << "} and {" <<
+            distance << "}" << std::endl;
+
+    const geopop::EpiLocation center(-1, -1, m_multiSelect);
+    std::vector<const geopop::EpiLocation*> selectedLoc = m_grid->LocationsInRadius(center, distance);
+    for(const geopop::EpiLocation* epi : selectedLoc){
+        std::cout << "name: " << epi->GetName() << "\n";
+    }
 }
 }

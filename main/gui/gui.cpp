@@ -42,6 +42,8 @@ int main(int argc, char *argv[]) {
 
     Controller cont;
 
+    cont.m_grid = grid;
+
     if (QFontDatabase::addApplicationFont("resources/fontello.ttf") == -1)
         qWarning() << "Failed to load resources/fontello.ttf";
 
@@ -55,11 +57,11 @@ int main(int argc, char *argv[]) {
 
     engine.rootContext()->setContextProperty("controller", &cont);
 
-    cont.m_grid = grid;
-
     engine.load(QUrl::fromLocalFile("resources/AppWindow.qml"));
     if (engine.rootObjects().isEmpty())
         return -1;
+
+    cont.m_app = engine.rootObjects()[0];
 
     return app.exec();
 }

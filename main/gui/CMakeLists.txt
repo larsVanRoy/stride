@@ -13,11 +13,13 @@ set(SOURCE_FILES
         "gui.cpp"
         "elements.cpp"
         "Controller.cpp"
-        "Location.cpp")
+        "Location.cpp"
+        MapController.cpp)
 set(HEADER_FILES
         "elements.h"
         "Controller.h"
-        "Location.h")
+        "Location.h"
+        MapController.h)
 set(RESOURCE_FILES
         "resources/AppWindow.qml"
         "resources/location.qml"
