@@ -39,41 +39,60 @@ void CommutesCSVReader::FillGeoGrid(GeoGrid& geoGrid) const
         // represents the location id for column x
         vector<unsigned int> header;
 
-        for (const string& label : reader.GetLabels()) {
-                header.push_back(static_cast<unsigned int>(stoi(label.substr(3))));
-        }
+        if(reader.GetLabels().size() == 3){
+            for (const CSVRow& row : reader) {
+                const auto& locFrom = geoGrid.GetById(row.GetValue<unsigned int>(0));
+                const auto& locTo = geoGrid.GetById(row.GetValue<unsigned int>(1));
+                double proportion = row.GetValue<double>(2);
 
-        const auto                      columnCount = static_cast<unsigned int>(reader.GetColumnCount());
-        map<unsigned int, unsigned int> sizes; // indexed by header/row id
-
-        // Since columns represent the "from city" and the proportion is calculated using the from city,
-        // the total population of a city is calculated using the values found in the columns.
-        for (const CSVRow& row : reader) {
-                for (unsigned int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
-                        sizes[columnIndex] += row.GetValue<int>(columnIndex);
+                if (proportion < 0 || proportion > 1) {
+                    throw Exception("Proportion of commutes from " + to_string(locFrom->GetID()) +
+                                    " to " + to_string(locTo->GetID()) +
+                                    " is invalid (0 <= proportion <= 1)");
                 }
+
+                locFrom->AddOutgoingCommute(locTo, proportion);
+                locTo->AddIncomingCommute(locFrom, proportion);
+            }
         }
 
-        auto rowIndex = 0U;
-        for (const CSVRow& row : reader) {
-                for (auto columnIndex = 0U; columnIndex < columnCount; columnIndex++) {
-                        auto abs = row.GetValue<double>(columnIndex);
-                        if (abs != 0 && columnIndex != rowIndex) {
-                                const auto& locFrom    = geoGrid.GetById(header[columnIndex]);
-                                const auto& locTo      = geoGrid.GetById(header[rowIndex]);
-                                const auto& total      = sizes[columnIndex];
-                                double      proportion = abs / total;
+        else {
+            for (const string &label : reader.GetLabels()) {
+                header.push_back(static_cast<unsigned int>(stoi(label.substr(3))));
+            }
 
-                                if (proportion < 0 || proportion > 1) {
-                                        throw Exception("Proportion of commutes from " + to_string(locFrom->GetID()) +
-                                                        " to " + to_string(locTo->GetID()) +
-                                                        " is invalid (0 <= proportion <= 1)");
-                                }
-                                locFrom->AddOutgoingCommute(locTo, proportion);
-                                locTo->AddIncomingCommute(locFrom, proportion);
+            const auto columnCount = static_cast<unsigned int>(reader.GetColumnCount());
+            map<unsigned int, unsigned int> sizes; // indexed by header/row id
+
+            // Since columns represent the "from city" and the proportion is calculated using the from city,
+            // the total population of a city is calculated using the values found in the columns.
+            for (const CSVRow &row : reader) {
+                for (unsigned int columnIndex = 0; columnIndex < columnCount; columnIndex++) {
+                    sizes[columnIndex] += row.GetValue<int>(columnIndex);
+                }
+            }
+
+            auto rowIndex = 0U;
+            for (const CSVRow &row : reader) {
+                for (auto columnIndex = 0U; columnIndex < columnCount; columnIndex++) {
+                    auto abs = row.GetValue<double>(columnIndex);
+                    if (abs != 0 && columnIndex != rowIndex) {
+                        const auto &locFrom = geoGrid.GetById(header[columnIndex]);
+                        const auto &locTo = geoGrid.GetById(header[rowIndex]);
+                        const auto &total = sizes[columnIndex];
+                        double proportion = abs / total;
+
+                        if (proportion < 0 || proportion > 1) {
+                            throw Exception("Proportion of commutes from " + to_string(locFrom->GetID()) +
+                                            " to " + to_string(locTo->GetID()) +
+                                            " is invalid (0 <= proportion <= 1)");
                         }
+                        locFrom->AddOutgoingCommute(locTo, proportion);
+                        locTo->AddIncomingCommute(locFrom, proportion);
+                    }
                 }
                 rowIndex++;
+            }
         }
 }
 
