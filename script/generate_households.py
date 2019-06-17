@@ -38,7 +38,7 @@ def get_age(rand, ratio):
         return random.randint(90, 94)
     elif rand < 0.754937476:
         return random.randint(95, 99)
-    elif rand < 754937476 + young_percentage:
+    elif rand < 0.754937476 + young_percentage:
         return random.randint(15, 24)
     else:
         return random.randint(55, 64)

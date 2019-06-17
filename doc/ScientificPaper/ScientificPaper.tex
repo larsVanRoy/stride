@@ -48,14 +48,31 @@
 	\subsection{Introduction}
 	The original stride project made use of a set workplace size distribution, being an average size of 20, that would be randomly populated. So it might be that there would be smaller and larger workplaces, but the average would be around 20, where this is not accurate. The majority of the workplaces is smaller than 20 and there are workplaces that are way larger than 20. It would therefore be more accurate to add an input file that would give a distribution of which workplace size occurs with which chance.
 	\subsection{Implementation}
-	The input is given in a CSV file. The data itself consists of the chance for a workplace size being within the given range, along with the bounds for that range. \\
+	The input is given in a CSV file. The data itself consists of the chance for a workplace size being within the given range, along with the bounds for that range. The tag is given within the configuration under the tag workplace\_file. \\
 	\\
 	The generation will consist of a major loop that will iterate over the different locations. For each location we will calculate the maximal number of workers that is presumed to be working at this location, this will not be the exact value however, as many of the people who could be working, might not be, due to studies, or just general unemployment. After the number of workers is calculated there will be another loop, where workplaces will be randomly generated (using the provided distribution when available) until every possible worker is capable of working. \\
 	\\
 	The population of the generated workplaces will start with a loop, iterating over the possible locations. For each location we will loop over the population of that location in a secondary loop. For each person we will check if the person is of age, and that the person is not a student. If this is ok, we will perform a coin flip, to determine whether or not the person is employed. If the person turns out to be employed, we will do one final coin flip, to determine whether or not the person commutes. When this is all done, we will select a random workplace that still has free space (if there are any workplaces left with free space), or a random workplace in case there were no spaces left. 
-	\subsection{Expected Impact}
-	
+	\subsection{Impact}
+	To proof whether or not this addition had a major impact, and to show the size of its impact, we ran two kinds of simulations.\\
+	\\
+	The first one is a simulation where either extinction of the disease occurred or the entire part of the population that was not immune would get infected. This proofs whether or not this addition has an impact on the likeliness of a disease spreading.\\
+	\\
+	The second one is a simulation where there were very few people who were immune, to proof whether or not this addition has an impact on the speed with which a disease spreads.
 	\section{Household Composition Distribution}
+	\subsection{Introduction}
+	One more flaw of the original stride project, is that it had no regard for the differences in household size within smaller regions. It normally uses one big input file, that would give the general household configuration over the entire simulation area (in this case Flanders) but there are significant differences between households over the different provinces. We therefore wanted to be able to specify household information for each province.
+	\subsection{Implementation}
+	The input is given in multiple CSV files, each called after the referred province. Each file is given separately within the config file, and there are no requirements on how many configuration files have to be given. In case there would only be a need to get specific data for Antwerp, only the Antwerp household file needs to be given. There will also be an option to specify which cities are considered major cities along with a separate household file for their configuration. If there is no need or one prefers not to use the new addition for the Households, it is always possible to just fill in the old Household tag (which was required, and still is). This will use the old implementation. This is all done using the tags:
+	\begin{itemize}
+		\item antwerp\_household\_file
+		\item flemisch\_brababant\_household\_file
+		\item gen.west\_flanders\_household\_file
+		\item east\_flanders\_household\_file
+		\item limburg\_household\_file
+		\item major\_cities
+		\item major\_cities\_household\_file
+	\end{itemize}
 	\section{Belgian Simulations}
 	
 
