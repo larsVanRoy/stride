@@ -58,22 +58,35 @@ TEST(GeoGridHDF5WriterTest, locationTest)
 {
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
+        std::cout << "reached 1" << std::endl;
         geoGrid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500));
+        std::cout << "reached 2" << std::endl;
         geoGrid.AddLocation(make_shared<Location>(2, 3, Coordinate(0, 0), "Gent", 5000));
+        std::cout << "reached 3" << std::endl;
         geoGrid.AddLocation(make_shared<Location>(3, 2, Coordinate(0, 0), "Mons", 2500));
+        std::cout << "reached 4" << std::endl;
 
         GeoGridHDF5Writer writer;
         string            filename = FileSys::GetTestsDir().string() + "/testdata/GeoGridHDF5/test.h5";
+        std::cout << "reached 5" << std::endl;
         writer.Write(geoGrid, filename);
+        std::cout << "reached 6" << std::endl;
         H5File file(filename, H5F_ACC_RDONLY);
+        std::cout << "reached 7" << std::endl;
 
         auto loc1 = file.openGroup("/Locations/Location1");
+        std::cout << "reached 8" << std::endl;
         auto loc2 = file.openGroup("/Locations/Location2");
+        std::cout << "reached 9" << std::endl;
         auto loc3 = file.openGroup("/Locations/Location3");
+        std::cout << "reached 10" << std::endl;
 
         EXPECT_TRUE(compareLocations(geoGrid[0], loc1));
+        std::cout << "reached 11" << std::endl;
         EXPECT_TRUE(compareLocations(geoGrid[1], loc2));
+        std::cout << "reached 12" << std::endl;
         EXPECT_TRUE(compareLocations(geoGrid[2], loc3));
+        std::cout << "reached 13" << std::endl;
 }
 TEST(GeoGridHDF5WriterTest, contactCentersTest)
 {
