@@ -40,14 +40,20 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, const std::string& filename)
 {
         m_location_counter = 0U;
         m_pool_counter = 0U;
+        std::cout << "reached 5.0" << std::endl;
         H5File file(filename, H5F_ACC_TRUNC);
+        std::cout << "reached 5.1" << std::endl;
         auto   locations = file.createGroup("Locations");
+        std::cout << "reached 5.2" << std::endl;
 
         for (unsigned i = 0; i < geoGrid.size(); ++i) {
                 WriteLocation(file, geoGrid[i]);
         }
+        std::cout << "reached 5.3" << std::endl;
         WriteAttribute("size", geoGrid.size(), locations);
+        std::cout << "reached 5.4" << std::endl;
         WritePeople(file);
+        std::cout << "reached 5.5" << std::endl;
         file.close();
 }
 void GeoGridHDF5Writer::WriteContactPool(H5::Group& group, stride::ContactPool* contactPool)
