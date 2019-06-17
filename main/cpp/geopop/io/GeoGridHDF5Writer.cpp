@@ -47,7 +47,9 @@ void GeoGridHDF5Writer::Write(GeoGrid& geoGrid, const std::string& filename)
         std::cout << "reached 5.2" << std::endl;
 
         for (unsigned i = 0; i < geoGrid.size(); ++i) {
+                std::cout << "reached 5.2.3" << std::endl;
                 WriteLocation(file, geoGrid[i]);
+                std::cout << "reached 5.2.6" << std::endl;
         }
         std::cout << "reached 5.3" << std::endl;
         WriteAttribute("size", geoGrid.size(), locations);
@@ -74,28 +76,46 @@ void GeoGridHDF5Writer::WriteContactPool(H5::Group& group, stride::ContactPool* 
 }
 void GeoGridHDF5Writer::WriteLocation(H5::H5File& file, std::shared_ptr<Location> location)
 {
+        std::cout << "reached 1" << std::endl;
         auto group = file.openGroup("Locations");
+    std::cout << "reached 1" << std::endl;
         group      = group.createGroup("Location" + to_string(++m_location_counter));
+    std::cout << "reached 1" << std::endl;
 
         WriteAttribute("id", location->GetID(), group);
+    std::cout << "reached 1" << std::endl;
         WriteAttribute("name", location->GetName(), group);
+    std::cout << "reached 1" << std::endl;
         WriteAttribute("province", location->GetProvince(), group);
+    std::cout << "reached 1" << std::endl;
         WriteAttribute("population", location->GetPopCount(), group);
+    std::cout << "reached 1" << std::endl;
 
         auto coordinate = location->GetCoordinate();
+    std::cout << "reached 1" << std::endl;
         auto longitude  = boost::geometry::get<0>(coordinate);
+    std::cout << "reached 1" << std::endl;
         auto latitude   = boost::geometry::get<1>(coordinate);
+    std::cout << "reached 1" << std::endl;
 
         WriteAttribute("longitude", longitude, group);
+    std::cout << "reached 1" << std::endl;
         WriteAttribute("latitude", latitude, group);
+    std::cout << "reached 1" << std::endl;
 
         WriteCommutes(file, location, group);
+    std::cout << "reached 1" << std::endl;
         auto contactPools = group.createGroup("ContactPools");
+    std::cout << "reached 2" << std::endl;
         for (auto id : IdList) {
+            std::cout << "reached 1" << std::endl;
                 for (auto pool : location->RefPools(id)) {
+                    std::cout << "reached 1" << std::endl;
                         WriteContactPool(contactPools, pool);
+                    std::cout << "reached 1" << std::endl;
                 }
         }
+    std::cout << "reached 3" << std::endl;
         WriteAttribute("size", m_pool_counter, group);
         m_pool_counter = 0U;
 }
