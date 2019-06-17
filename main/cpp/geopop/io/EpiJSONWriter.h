@@ -62,15 +62,15 @@ private:
     nlohmann::json WriteCoordinate(const geopop::Coordinate& coordinate);
 
     /// Create json object for location
-    nlohmann::json WriteLocation(const std::shared_ptr<geopop::Location> location);
+    nlohmann::json WriteLocation(const std::shared_ptr<geopop::Location<Coordinate>> location);
 
     /// Create json object for every location with id, coordinates and name
     nlohmann::json WriteLocations(const geopop::GeoGrid &geoGrid);
 
     /// Create json object for percentage of the population per health category for the proved location
-    nlohmann::json WriteHealthStatus(const std::shared_ptr<geopop::Location> location);
+    nlohmann::json WriteHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location);
 
-    nlohmann::json WritePoolHealthStatus(const std::shared_ptr<geopop::Location> location, stride::ContactType::Id id);
+    nlohmann::json WritePoolHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location, stride::ContactType::Id id);
 
 private:
     nlohmann::json m_json;      ///< object to store data to write

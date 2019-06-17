@@ -40,7 +40,7 @@ class GeoAggregator;
  * A Geographic grid of simulation region contains Locations that in turn contain
  * an index to the ContactPools situated at that Location.
  */
-class GeoGrid : private Region
+class GeoGrid : public Region<Location<Coordinate>>
 {
 public:
         /// GeoGrid and associated Population.
@@ -52,69 +52,15 @@ public:
         /// No copy assignment.
         GeoGrid operator=(const GeoGrid&) = delete;
 
-        /// Adds a location to this GeoGrid.
-        void AddLocation(std::shared_ptr<Location> location);
-
-        /// Disables the addLocation method and builds the kdtree.
-        void Finalize();
-
-        /// Gets a Location by Id and check if the Id exists.
-        std::shared_ptr<Location> GetById(unsigned int id) const { return std::static_pointer_cast<Location>(Region::GetById(id)); }
-
         /// Get the Population associated with this GeoGrid
         stride::Population* GetPopulation() const { return m_population; }
 
-        /// Search for locations in \p radius (in km) around \p start.
-        std::vector<const Location*> LocationsInRadius(const Location& start, double radius) const;
 
         /// Find contactpools in startRadius (in km) around start and, if none are found, double
         /// the radius and search again until the radius gets infinite. May return an empty vector
         /// when there are really no pools to be found (empty grid).
-        std::vector<stride::ContactPool*> GetNearbyPools(stride::ContactType::Id id, const Location& start,
+        std::vector<stride::ContactPool*> GetNearbyPools(stride::ContactType::Id id, const Location<Coordinate>& start,
                                                          double startRadius = 10.0) const;
-
-        /**
-         * Gets the locations in a rectangle determined by the two coordinates (long1, lat1) and (long2, lat2).
-         * The coordinates must be positioned on the diagonal, i.e:
-         *
-         *  p1 -----+     +-------p1
-         *  |       |     |       |
-         *  |       |  or |       |
-         *  |       |     |       |
-         *  +-------p2    p2------+
-         */
-        std::set<const Location*> LocationsInBox(double long1, double lat1, double long2, double lat2) const;
-
-        /// Gets the location in a rectangle defined by the two Locations.
-        std::set<const Location*> LocationsInBox(Location* loc1, Location* loc2) const;
-
-        /// Gets the K biggest (in population count) locations of this GeoGrid
-        std::vector<Location*> TopK(size_t k) const;
-
-public:
-        /// Build a GeoAggregator with a predefined functor and given args for the Policy.
-        template <typename Policy, typename F>
-        GeoAggregator<Policy, F> BuildAggregator(F functor, typename Policy::Args&& args) const;
-
-        /// Build a GeoAggregator that gets its functor when calling, with given args for the Policy.
-        template <typename Policy>
-        GeoAggregator<Policy> BuildAggregator(typename Policy::Args&& args) const;
-
-public:
-        using iterator       = std::vector<std::shared_ptr<Location>>::iterator;
-        using const_iterator = std::vector<std::shared_ptr<Location>>::const_iterator;
-
-        /// Gets a Location by index, doesn't performs a range check.
-        std::shared_ptr<Location> operator[](size_t index) { return std::static_pointer_cast<Location>(Region::operator[](index)); }
-
-        /// Gets a Location by index, doesn't performs a range check.
-        const std::shared_ptr<Location> operator[](size_t index) const { return std::static_pointer_cast<Location>(Region::operator[](index)); }
-
-        /// Gets a range of Location indices by province ID
-        const std::vector<unsigned int> get_L_for_P(const unsigned int& province){ return Region::get_L_for_P(province); }
-
-        /// Gets current size of Location storage.
-        size_t size() const { return Region::size(); }
 
 private:
         ///< Stores pointer to Popluation, but does not take ownership.

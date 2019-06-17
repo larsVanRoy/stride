@@ -60,7 +60,7 @@ namespace {
     shared_ptr<GeoGrid> CreateGeoGrid(Population* pop)
     {
         const auto geoGrid = make_shared<GeoGrid>(pop);
-        const auto loc     = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+        const auto loc     = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
 
         auto dayPool = pop->RefPoolSys().CreateContactPool(Id::Daycare);
         loc->RefPools(Id::Daycare).emplace_back(dayPool);

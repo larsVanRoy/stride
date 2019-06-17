@@ -20,6 +20,7 @@
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
+#include <geopop/geo/Coordinate.h>
 
 namespace geopop {
 
@@ -55,7 +56,7 @@ protected:
 
         void ReadLocation(const H5::Group& object, GeoGrid& geoGrid);
 
-        void ReadContactPool(const H5::DataSet& object, std::shared_ptr<Location> location_ptr);
+        void ReadContactPool(const H5::DataSet& object, std::shared_ptr<Location<Coordinate>> location_ptr);
 
         template <typename T>
         void ReadAttribute(const std::string& name, T* data, const H5::H5Object& object);
