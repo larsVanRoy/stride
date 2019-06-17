@@ -35,11 +35,11 @@ Target population size                               60.000
 
 Calculated:
 for region:                                          Default
-    Daycare toddler count:                           857
-    PreSchool student count:                         1.782
-    K12School student count:                         10.176
-    College student count:                           7.744
-    Workplace person count:                          18.440
+    Daycare toddler count:                           846
+    PreSchool student count:                         1.871
+    K12School student count:                         7.721
+    College student count:                           3.314
+    Workplace person count:                          23.065
 
 )";
 
@@ -68,18 +68,18 @@ Target population size                               60.000
 
 Calculated:
 for region:                                          Default
-    Daycare toddler count:                           857
-    PreSchool student count:                         1.782
-    K12School student count:                         10.176
-    College student count:                           7.744
-    Workplace person count:                          18.440
+    Daycare toddler count:                           846
+    PreSchool student count:                         1.871
+    K12School student count:                         7.721
+    College student count:                           3.314
+    Workplace person count:                          23.065
 
 for region:                                          Antwerp
-    Daycare toddler count:                           407
-    PreSchool student count:                         984
-    K12School student count:                         5.174
-    College student count:                           3.781
-    Workplace person count:                          9.139
+    Daycare toddler count:                           416
+    PreSchool student count:                         895
+    K12School student count:                         3.849
+    College student count:                           1.728
+    Workplace person count:                          11.611
 
 )";
     shared_ptr<Population> m_pop(Population::Create());
@@ -114,18 +114,18 @@ Target population size                               60.000
 
 Calculated:
 for region:                                          Default
-    Daycare toddler count:                           857
-    PreSchool student count:                         1.782
-    K12School student count:                         10.176
-    College student count:                           7.744
-    Workplace person count:                          18.440
+    Daycare toddler count:                           846
+    PreSchool student count:                         1.871
+    K12School student count:                         7.721
+    College student count:                           3.314
+    Workplace person count:                          23.065
 
 for region:                                          Major Cities
-    Daycare toddler count:                           397
-    PreSchool student count:                         1.014
-    K12School student count:                         5.106
-    College student count:                           3.838
-    Workplace person count:                          9.226
+    Daycare toddler count:                           407
+    PreSchool student count:                         990
+    K12School student count:                         3.914
+    College student count:                           2.125
+    Workplace person count:                          11.223
 
 )";
     shared_ptr<Population> m_pop(Population::Create());

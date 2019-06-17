@@ -72,6 +72,10 @@ QList<QObject*> Controller::getLocations() {
     return result;
 }
 
+QString Controller::GetName(unsigned int ID) {
+    return QString("test GetName");
+}
+
 QString Controller::GetLatitude(unsigned int ID) {
     return QString::number(m_grid->GetById(ID)->GetCoordinate().get<0>(), 'f', 5);
 }
@@ -139,10 +143,9 @@ void Controller::previousDay() {
 }
 
 void Controller::SetInfo() {
-    std::cout << "Is nullptr: " << (m_app == nullptr) << std::endl;
-    std::cout << "Object window type: " << m_app->isWindowType() << std::endl;
-    std::cout << "Object name: " << m_app->objectName().toStdString() << std::endl;
 
+    QMetaObject::invokeMethod(m_app, "setName", Q_ARG(QString, "wooooop"));
+    QMetaObject::invokeMethod(m_app, "test");
     QMetaObject::invokeMethod(m_app, "test");
 }
 

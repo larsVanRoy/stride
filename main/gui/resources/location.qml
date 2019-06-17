@@ -22,12 +22,8 @@ MapCircle{
         anchors.fill: parent
         onClicked: {
             map.setInvisible();
-            sideBar.setName(controller.GetLocationName(id));
-            sideBar.setLatitude(controller.GetLatitude(id));
-            sideBar.setLongitude(controller.GetLongitude(id));
-            sideBar.setIll(controller.GetIll(id));
-            sideBar.setPopulation(controller.GetPopCount(id));
-            sideRect.open()
+            controller->SetInfo(id);
+            sideRect.open();
         }
     }
 }

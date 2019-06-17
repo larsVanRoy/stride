@@ -6,7 +6,6 @@ function createSpriteObjects()
 {
     var time = 0;
     for (var i=0; i<listSprites.length; i++) {
-        // console.log("Create sprite objects: ", listSprites[i].latitude)
         component = Qt.createComponent("location.qml");
 
         sprite = component.createObject( root, {});
@@ -18,7 +17,6 @@ function createSpriteObjects()
         else
         {
             var c = "#" + (listSprites[i].ill * 100) + "FF0000"   // Rood toevoegen Let op 100% klopt nog niet
-            // console.log("c= ", c);
             var ill = 0.5-controller.GetIllDouble(listSprites[i].ID)*2/3
             if (ill < 0.0){
                 ill = 0.0
@@ -55,7 +53,6 @@ function createSpriteObjects()
             sprite.time = time;
             sprite.id = listSprites[i].ID;
             time = time + 1;
-            // sprite.radius = sprite.population
             map.addMapItem(sprite);
         }
     }
@@ -73,9 +70,7 @@ function removeMapElements() {
 function createSprites(){
     // Lijst vullen
     listSprites = controller.getLocations();
-
     createSpriteObjects(listSprites);
-    // Change map so all Sprites are show
 }
 
 function initializeMap(){
@@ -101,7 +96,7 @@ function showText() {
     //property alias tekst: sideBar.allText.tekst
     var tekst = "";
     if (listSprites.length !== 0) {
-        // window rechts tonen
+        // open sidebar
         sideRect.open()
 
        for (var i=0; i<listSprites.length; i++) {

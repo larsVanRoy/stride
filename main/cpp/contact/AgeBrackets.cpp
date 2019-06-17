@@ -29,14 +29,14 @@ std::string ToString(const AgeBracket& ageBracket)
 AgeBracket ToAgeBracket(double age){
     if(Daycare::HasAge(age))
         return AgeBracket::Daycare;
-    if(Workplace::HasAge(age))
-        return AgeBracket::Daycare;
+    if(PreSchool::HasAge(age))
+        return AgeBracket::PreSchool;
     if(K12School::HasAge(age))
-        return AgeBracket::Daycare;
+        return AgeBracket::K12School;
     if(College::HasAge(age))
-        return AgeBracket::Daycare;
+        return AgeBracket::College;
     if(Workplace::HasAge(age))
-        return AgeBracket::Workplace;
+        return AgeBracket ::Workplace;
     return AgeBracket::Retired;
 }
 

@@ -36,6 +36,8 @@ public:
 
     Q_INVOKABLE void loadFile();
 
+    Q_INVOKABLE QString GetName(unsigned int ID);
+
     Q_INVOKABLE QList<QObject*> getLocations();
 
     Q_INVOKABLE QString GetLocationName(unsigned int ID);
@@ -64,6 +66,8 @@ public:
 
     Q_INVOKABLE void SetInfo();
 
+    Q_INVOKABLE void SetSelectedLocation(int ID) { m_selectedLocationId = ID; }
+
     Q_INVOKABLE double GetColor(unsigned int ID);
 
     unsigned int GetCurrentDay();
@@ -78,6 +82,8 @@ public:
 
     QObject* m_app;
 private:
+    unsigned int m_selectedLocationId;
+
     unsigned int m_day; ///current day
 
     geopop::Coordinate m_multiSelect;

@@ -4,6 +4,7 @@ import QtQuick.Window 2.0
 import Qt.labs.platform 1.0
 import QtLocation 5.12
 import QtPositioning 5.12
+//import "sidebar.qml" as Sidebar
 //import location 1.0
 
 import "componentCreation.js" as Script
@@ -17,7 +18,6 @@ ApplicationWindow {
     title: "Stride"
 
     function test() {
-        console.log("test ma man")
     }
 
     function refreshMap() {
@@ -40,7 +40,10 @@ ApplicationWindow {
                     id: openButton
                     text: "\uF115" // icon-folder-open-empty
                     font.family: "fontello"
-                    onClicked: controller.SetInfo();
+                    onClicked: {
+                        console.log("Set info?")
+                        controller.SetInfo();
+                    }
                 }
                 ToolSeparator {
                     contentItem.visible: openButton.y === previousDay.y
@@ -127,9 +130,8 @@ ApplicationWindow {
                  property int typeId: 0
 
                  onPressed: {
-                     console.log("hold");
                     if(map.selectType !== "default")  {
-                        controller.InitializeMultiSelect(map.toCoordinate(Qt.point(mouse.x, mouse.y)).longitude, map.toCoordinate(Qt.point(mouse.x, mouse.y)).latitude);
+//                        controller.InitializeMultiSelect(map.toCoordinate(Qt.point(mouse.x, mouse.y)).longitude, map.toCoordinate(Qt.point(mouse.x, mouse.y)).latitude);
                         map.disable_panning = true;
                         if(map.selectType === "box"){
                             selectionBox.topLeft = map.toCoordinate(Qt.point(mouse.x, mouse.y));
@@ -182,7 +184,6 @@ ApplicationWindow {
                  }
 
                  onReleased: {
-                     console.log("release");
                      if(map.selectType === "box")  {
                          var co1 = selectionBox.topLeft;
                          var co2 = map.toCoordinate(Qt.point(mouse.x, mouse.y));
@@ -208,22 +209,17 @@ ApplicationWindow {
 
                          selectionBox.topLeft = topLeft;
                          selectionBox.bottomRight = bottomRight;
-                         controller.BoxSelect(co2.longitude, co2.latitude);
+//                         controller.BoxSelect(co2.longitude, co2.latitude);
 
-//                         console.log("box2");
-//                         console.log(co2);
                          selectionBox.visible = true;
                          selectionBox.state = "created"
-//                         console.log("bottomright: ", selectionBox.bottomRight);
-//                         console.log("topLeft: ", selectionBox.topLeft);
                      }
                      else if(map.selectType === "circle") {
                          var radius = selectionRadius.center.distanceTo(map.toCoordinate(Qt.point(mouse.x, mouse.y)));
                          selectionRadius.radius = radius
                          selectionRadius.visible = true;
                          selectionRadius.state = "created";
-                         console.log("selectionRadius visible?", selectionRadius.visible, " ", selectionRadius.center);
-                         controller.RadiusSelect(radius/1000);
+//                         controller.RadiusSelect(radius/1000);
                      }
                     map.selectType = "default"
                     map.disable_panning = false;
@@ -302,6 +298,16 @@ ApplicationWindow {
             return;
         }
 
+//        Sidebar.Rectangle{
+//            anchors.top: parent.top
+//        }
+
+        function SetLocationInfo(val){
+            setName(controller.GetName(val));
+            setPopulation(controller.GetPopCount(val));
+            setTotal(controller.GetTotal(val));
+        }
+
         Rectangle {
             id: sideBar
             height: parent.height
@@ -321,11 +327,34 @@ ApplicationWindow {
             function setPopulation(pop){
                 populationValue.text = pop;
             }
-            function setIll(ill){
-                illValue.text = ill + "%";
-                illValue.fontSizeMode = Text.Fit;
+            function setTotal(val){
+                totalValue.text = val + "%";
+                totalValue.fontSizeMode = Text.Fit;
             }
-
+            function setDaycare(val){
+                daycareValue.text = val + "%";
+                daycareValue.fontSizeMode = Text.Fit;
+            }
+            function setPreschool(val){
+                preschoolValue.text = val + "%";
+                preschoolValue.fontSizeMode = Text.Fit;
+            }
+            function setK12School(val){
+                k12SchoolValue.text = val + "%";
+                k12SchoolValue.fontSizeMode = Text.Fit;
+            }
+            function setCollege(val){
+                collegeValue.text = val + "%";
+                collegeValue.fontSizeMode = Text.Fit;
+            }
+            function setWorkplace(val){
+                workplaceValue.text = val + "%";
+                workplaceValue.fontSizeMode = Text.Fit;
+            }
+            function setRetired(val){
+                retiredValue.text = val + "%";
+                retiredValue.fontSizeMode = Text.Fit;
+            }
             StackView{
                 anchors {left: parent.left}
 
@@ -336,7 +365,7 @@ ApplicationWindow {
 //                    y: 0
                     spacing: 2
                     Row{
-                        width: 140
+                        width: 200
                         height: 30
                         Label {
                             id: locName
@@ -353,7 +382,7 @@ ApplicationWindow {
                     }
                     Row{
                         spacing: 8
-                        width: 140
+                        width: 200
                         height: 30
                         Label{
                             id: population
@@ -382,19 +411,18 @@ ApplicationWindow {
                     }
                     Row{
                         spacing: 8
-                        width: 140
+                        width: 200
                         height: 30
                         Label{
-                            id: ill
+                            id: total
                             width: parent.width/2
                             height: parent.height
-                            text: qsTr("ill:")
+                            text: qsTr("Total:")
                             font.family: "fontello"
                             verticalAlignment: Text.AlignVCenter
                             horizontalAlignment: Text.AlignRight
                             font.pointSize: parent.height/3
                             minimumPointSize: 5
-//                            fontSizeMode: Text.Fit
                         }
                         Label{
                             id: illValue
@@ -406,7 +434,169 @@ ApplicationWindow {
                             horizontalAlignment: Text.AlignHCenter
                             font.pointSize: parent.height/3
                             minimumPointSize: 5
+                        }
+                    }
+                    Row{
+                        spacing: 8
+                        width: 200
+                        height: 30
+                        Label{
+                            id: daycare
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("Daycare:")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
 //                            fontSizeMode: Text.Fit
+                        }
+                        Label{
+                            id: daycareValue
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("0%")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                    }
+                    Row{
+                        spacing: 8
+                        width: 200
+                        height: 30
+                        Label{
+                            id: preSchool
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("PreSchool:")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                        Label{
+                            id: preSchoolValue
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("0%")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                    }
+                    Row{
+                        spacing: 8
+                        width: 200
+                        height: 30
+                        Label{
+                            id: k12School
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("K12School:")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                        Label{
+                            id: k12SchoolValue
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("0%")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                    }
+                    Row{
+                        spacing: 8
+                        width: 200
+                        height: 30
+                        Label{
+                            id: college
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("College:")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                        Label{
+                            id: collegeValue
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("0%")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                    }
+                    Row{
+                        spacing: 8
+                        width: 200
+                        height: 30
+                        Label{
+                            id: workplace
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("Workplace:")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                        Label{
+                            id: workplaceValue
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("0%")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                    }
+                    Row{
+                        spacing: 8
+                        width: 200
+                        height: 30
+                        Label{
+                            id: retired
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("Retired:")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
+                        }
+                        Label{
+                            id: retiredValue
+                            width: parent.width/2
+                            height: parent.height
+                            text: qsTr("0%")
+                            font.family: "fontello"
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignHCenter
+                            font.pointSize: parent.height/3
+                            minimumPointSize: 5
                         }
                     }
                 }
