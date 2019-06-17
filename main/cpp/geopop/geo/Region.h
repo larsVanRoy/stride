@@ -16,6 +16,8 @@
 #pragma once
 
 #include "geopop/geo/GeoGridKdTree.h"
+#include "geopop/EpiLocation.h"
+#include "geopop/Location.h"
 
 #include <set>
 #include <unordered_map>
@@ -23,7 +25,7 @@
 
 namespace geopop {
 
-class GeoLocation;
+template<class Data> class GeoLocation;
 
 template <typename Policy, typename... F>
 class GeoAggregator;
@@ -32,6 +34,7 @@ class GeoAggregator;
  * A Geographic grid of simulation region contains GeoLocations that in turn contain
  * an index to the ContactPools situated at that GeoLocation.
  */
+template< class LocationLike>
 class Region
 {
 public:
@@ -45,16 +48,16 @@ public:
     Region operator=(const Region&) = delete;
 
     /// Adds a location to this Region.
-    void AddGeoLocation(std::shared_ptr<GeoLocation> location);
+    void AddLocation(std::shared_ptr<LocationLike> location);
 
     /// Disables the addLocation method and builds the kdtree.
     void Finalize();
 
     /// Gets a GeoLocation by Id and check if the Id exists.
-    std::shared_ptr<GeoLocation> GetById(unsigned int id) const { return m_locations.at(m_id_to_index.at(id)); }
+    std::shared_ptr<LocationLike> GetById(unsigned int id) const { return m_locations.at(m_id_to_index.at(id)); }
 
     /// Search for locations in \p radius (in km) around \p start.
-    std::vector<const GeoLocation*> GeoLocationsInRadius(const GeoLocation& start, double radius) const;
+    std::vector<const LocationLike*> LocationsInRadius(const LocationLike& start, double radius) const;
 
     /**
      * Gets the locations in a rectangle determined by the two coordinates (long1, lat1) and (long2, lat2).
@@ -66,26 +69,26 @@ public:
      *  |       |     |       |
      *  +-------p2    p2------+
      */
-    std::set<const GeoLocation*> GeoLocationsInBox(double long1, double lat1, double long2, double lat2) const;
+    std::set<const LocationLike*> LocationsInBox(double long1, double lat1, double long2, double lat2) const;
 
     /// Gets the location in a rectangle defined by the two GeoLocations.
-    std::set<const GeoLocation*> GeoLocationsInBox(GeoLocation* loc1, GeoLocation* loc2) const;
+    std::set<const LocationLike*> LocationsInBox(LocationLike* loc1, LocationLike* loc2) const;
 
     /// Gets the K biggest (in population count) locations of this Region
-    std::vector<GeoLocation*> TopK(size_t k) const;
+    std::vector<LocationLike*> TopK(size_t k) const;
 
 public:
     /// Build a GeoAggregator with a predefined functor and given args for the Policy.
     template <typename Policy, typename F>
-    GeoAggregator<Policy, F> BuildAggregator(F functor, typename Policy::Args&& args) const;
+    GeoAggregator<LocationLike, Policy, F> BuildAggregator(F functor, typename Policy::Args&& args) const;
 
     /// Build a GeoAggregator that gets its functor when calling, with given args for the Policy.
     template <typename Policy>
-    GeoAggregator<Policy> BuildAggregator(typename Policy::Args&& args) const;
+    GeoAggregator<LocationLike, Policy> BuildAggregator(typename Policy::Args&& args) const;
 
 public:
-    using iterator       = std::vector<std::shared_ptr<GeoLocation>>::iterator;
-    using const_iterator = std::vector<std::shared_ptr<GeoLocation>>::const_iterator;
+    using iterator       = typename std::vector<std::shared_ptr<LocationLike>>::iterator;
+    using const_iterator = typename std::vector<std::shared_ptr<LocationLike>>::const_iterator;
 
     /// Iterator to first GeoLocation.
     iterator begin() { return m_locations.begin(); }
@@ -100,10 +103,10 @@ public:
     const_iterator cend() const { return m_locations.cend(); }
 
     /// Gets a GeoLocation by index, doesn't performs a range check.
-    std::shared_ptr<GeoLocation>& operator[](size_t index) { return m_locations[index]; }
+    std::shared_ptr<LocationLike>& operator[](size_t index) { return m_locations[index]; }
 
     /// Gets a GeoLocation by index, doesn't performs a range check.
-    const std::shared_ptr<GeoLocation>& operator[](size_t index) const { return m_locations[index]; }
+    const std::shared_ptr<LocationLike>& operator[](size_t index) const { return m_locations[index]; }
 
     /// Gets a range of GeoLocation indices by province ID
     const std::vector<unsigned int> get_L_for_P(const unsigned int& province){ return p_id_to_index[province]; }
@@ -117,7 +120,7 @@ private:
 
 private:
     ///< Container for GeoLocations in Region.
-    std::vector<std::shared_ptr<GeoLocation>> m_locations;
+    std::vector<std::shared_ptr<LocationLike>> m_locations;
 
     ///< Associative container maps GeoLocation Id to index in m_locations.
     std::unordered_map<unsigned int, unsigned int> m_id_to_index;
@@ -129,7 +132,11 @@ private:
     bool m_finalized;
 
     ///< Internal KdTree for quick spatial lookup.
-    GeoGridKdTree m_tree;
+    KdTree<geogrid_detail::KdTree2DPoint<LocationLike>> m_tree;
 };
+
+// explicit template instantiations
+extern template class Region<EpiLocation<Coordinate>>;
+extern template class Region<Location<Coordinate>>;
 
 } // namespace geopop

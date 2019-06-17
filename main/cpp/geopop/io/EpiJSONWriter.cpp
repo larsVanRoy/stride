@@ -97,7 +97,7 @@ json EpiJSONWriter::WriteCoordinate(const geopop::Coordinate& coordinate)
     return coordinate_object;
 }
 
-json EpiJSONWriter::WriteLocation(const std::shared_ptr<geopop::Location> location)
+json EpiJSONWriter::WriteLocation(const std::shared_ptr<geopop::Location<Coordinate>> location)
 {
     json location_object = json::object();
 
@@ -107,7 +107,7 @@ json EpiJSONWriter::WriteLocation(const std::shared_ptr<geopop::Location> locati
     return location_object;
 }
 
-json EpiJSONWriter::WriteHealthStatus(const std::shared_ptr<geopop::Location> location)
+json EpiJSONWriter::WriteHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location)
 {
 
     json pool = json::object();
@@ -118,7 +118,7 @@ json EpiJSONWriter::WriteHealthStatus(const std::shared_ptr<geopop::Location> lo
     return pool;
 }
 
-json EpiJSONWriter::WritePoolHealthStatus(const std::shared_ptr<geopop::Location> location, Id id) {
+json EpiJSONWriter::WritePoolHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location, Id id) {
     json health_status = json::array();
 
     vector<unsigned long> status(NumOfHealthStatus(), 0);

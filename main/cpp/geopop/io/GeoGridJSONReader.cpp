@@ -57,7 +57,7 @@ void GeoGridJSONReader::Read()
         auto locations = json_file["locations"];
 
         for (auto it = locations.begin(); it != locations.end(); it++) {
-                shared_ptr<Location> loc;
+                shared_ptr<Location<Coordinate>> loc;
                 loc = ParseLocation(*it);
                 geoGrid.AddLocation(move(loc));
         }
@@ -87,7 +87,7 @@ string GeoGridJSONReader::JSONCast(json& json_object)
         return json_object.get<string>();
 }
 
-shared_ptr<Location> GeoGridJSONReader::ParseLocation(json& location)
+shared_ptr<Location<Coordinate>> GeoGridJSONReader::ParseLocation(json& location)
 {
         const auto id         = JSONCast<unsigned int>(location["id"]);
         const auto name       = JSONCast<string>(location["name"]);
@@ -96,7 +96,7 @@ shared_ptr<Location> GeoGridJSONReader::ParseLocation(json& location)
 
         const auto coordinate = ParseCoordinate(location["coordinate"]);
 
-        auto result         = make_shared<Location>(id, province, coordinate, name, population);
+        auto result         = make_shared<Location<Coordinate>>(id, province, coordinate, name, population);
         auto contactPools = location["contactPools"];
         for (auto it = contactPools.begin(); it != contactPools.end(); it++) {
                ParseContactPools(result, *it);
@@ -124,7 +124,7 @@ Coordinate GeoGridJSONReader::ParseCoordinate(json& coordinate)
         return {longitude, latitude};
 }
 
-void GeoGridJSONReader::ParseContactPools(std::shared_ptr<geopop::Location> loc, nlohmann::json &contactCenter)
+void GeoGridJSONReader::ParseContactPools(std::shared_ptr<geopop::Location<Coordinate>> loc, nlohmann::json &contactCenter)
 {
         const auto type = JSONCast<string>(contactCenter["class"]);
         ContactType::Id typeId;
@@ -156,7 +156,7 @@ void GeoGridJSONReader::ParseContactPools(std::shared_ptr<geopop::Location> loc,
         }
 }
 
-void GeoGridJSONReader::ParseContactPool(std::shared_ptr<Location> loc, json& contactPool, ContactType::Id typeId)
+void GeoGridJSONReader::ParseContactPool(std::shared_ptr<Location<Coordinate>> loc, json& contactPool, ContactType::Id typeId)
 {
         // Don't use the id of the ContactPool but the let the Population create an id.
         auto result = m_population->RefPoolSys().CreateContactPool(typeId);

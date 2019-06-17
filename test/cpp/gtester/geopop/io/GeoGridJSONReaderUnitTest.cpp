@@ -49,7 +49,7 @@ TEST(GeoGridJSONReaderUnitTest, locationsTest)
         getGeoGridFromFile("test0.json", pop.get());
         auto& geoGrid = pop->RefGeoGrid();
 
-        map<unsigned int, shared_ptr<Location>> locations;
+        map<unsigned int, shared_ptr<Location<Coordinate>>> locations;
         locations[geoGrid[0]->GetID()] = geoGrid[0];
         locations[geoGrid[1]->GetID()] = geoGrid[1];
         locations[geoGrid[2]->GetID()] = geoGrid[2];
@@ -86,7 +86,7 @@ TEST(GeoGridJSONReaderUnitTest, commutesTest)
         getGeoGridFromFile("test7.json", pop.get());
         auto& geoGrid = pop->RefGeoGrid();
 
-        map<unsigned int, shared_ptr<Location>> locations;
+        map<unsigned int, shared_ptr<Location<Coordinate>>> locations;
 
         locations[geoGrid[0]->GetID()] = geoGrid[0];
         locations[geoGrid[1]->GetID()] = geoGrid[1];
@@ -96,8 +96,8 @@ TEST(GeoGridJSONReaderUnitTest, commutesTest)
         auto location2 = locations[2];
         auto location3 = locations[3];
 
-        auto sortLoc = [](vector<pair<Location*, double>> loc) {
-                sort(begin(loc), end(loc), [](const pair<Location*, double>& a, const pair<Location*, double>& b) {
+        auto sortLoc = [](vector<pair<Location<Coordinate>*, double>> loc) {
+                sort(begin(loc), end(loc), [](const pair<Location<Coordinate>*, double>& a, const pair<Location<Coordinate>*, double>& b) {
                         return a.first->GetID() < b.first->GetID();
                 });
                 return loc;

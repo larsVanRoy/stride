@@ -49,7 +49,7 @@ void Populator<stride::ContactType::Id::College>::Apply(GeoGrid& geoGrid, GeoGri
                     m_rn_man.GetUniformIntGenerator(0, static_cast<int>(nearByCollegePools.size()), 0U);
 
                 // 2. find all colleges where students from this location commute to
-                vector<Location*> commutingCollege;
+                vector<Location<Coordinate>*> commutingCollege;
                 vector<double>    commutingWeights;
                 for (const auto& commute : loc->CRefOutgoingCommutes()) {
                         const auto& cpools = commute.first->CRefPools(Id::College);
