@@ -45,7 +45,7 @@ void CompareContactPools(stride::ContactType::Id                                
 
 void CompareCoordinate(const Coordinate& coordinate, const proto::GeoGrid_Location_Coordinate& protoCoordinate);
 
-void CompareLocation(const Location& location, const proto::GeoGrid_Location& protoLocation);
+void CompareLocation(const Location<Coordinate>& location, const proto::GeoGrid_Location& protoLocation);
 
 void ComparePerson(const proto::GeoGrid_Person& protoPerson);
 
@@ -70,7 +70,7 @@ template <>
 inline void ReadHDF5Attribute(const std::string& name, std::string* data, const H5::H5Object& object)
 {
         auto attr = object.openAttribute(name);
-        attr.read(H5::StrType(H5T_C_S1, H5T_VARIABLE), *data);
+        attr.read(attr.getStrType(), *data);
 }
 template <typename T>
 void ReadHDF5Dataset(const std::string& name, T* data, const H5::H5Object& object)

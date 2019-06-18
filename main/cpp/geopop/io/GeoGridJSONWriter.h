@@ -17,6 +17,7 @@
 
 #include "GeoGridWriter.h"
 #include "geopop/Location.h"
+#include "geopop/geo/Coordinate.h"
 
 #include <nlohmann/json.hpp>
 
@@ -58,7 +59,7 @@ private:
         nlohmann::json WriteCoordinate(const Coordinate& coordinate);
 
         /// Create a JSON object containing all info needed to reconstruct a Location.
-        nlohmann::json WriteLocation(const Location& location);
+        nlohmann::json WriteLocation(const Location<Coordinate>& location);
 
         /// Create a JSON object containing all info needed to reconstruct a Person.
         nlohmann::json WritePerson(stride::Person* person);

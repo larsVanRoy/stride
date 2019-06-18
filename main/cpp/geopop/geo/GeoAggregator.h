@@ -38,7 +38,7 @@ inline double DegreeToRadian(double deg) { return deg / 180.0 * M_PI; }
 
 namespace geopop {
 
-class GeoLocation;
+template <class Data> class GeoLocation;
 
 /// Aggregates into a vector that must should remain alive for the usage duration of the Collector.
 template <typename InsertIter, typename T>
@@ -81,11 +81,11 @@ class GeoAggregator
 /**
  * A GeoAggregator that has to be called with a functor.
  */
-template <typename Policy>
-class GeoAggregator<Policy>
+template <class Data, typename Policy>
+class GeoAggregator<Data, Policy>
 {
 public:
-        GeoAggregator(const KdTree<geogrid_detail::KdTree2DPoint>& tree, typename Policy::Args&& args)
+        GeoAggregator(const KdTree<geogrid_detail::KdTree2DPoint<Data>>& tree, typename Policy::Args&& args)
             : m_policy(std::forward<typename Policy::Args>(args)), m_tree(tree)
         {
         }
@@ -96,7 +96,7 @@ public:
         {
                 auto box = m_policy.GetBoundingBox();
                 m_tree.Apply(
-                    [&f, this](const geogrid_detail::KdTree2DPoint& pt) -> bool {
+                    [&f, this](const geogrid_detail::KdTree2DPoint<Data>& pt) -> bool {
                             if (m_policy.Contains(pt)) {
                                     f(pt.GetLocation());
                             }
@@ -107,23 +107,23 @@ public:
 
 private:
         Policy                                       m_policy;
-        const KdTree<geogrid_detail::KdTree2DPoint>& m_tree;
+        const KdTree<geogrid_detail::KdTree2DPoint<Data>>& m_tree;
 };
 
 /**
  * A GeoAggregator constructed with a functor.
  */
-template <typename Policy, typename F>
-class GeoAggregator<Policy, F> : public GeoAggregator<Policy>
+template <class Data, typename Policy, typename F>
+class GeoAggregator<Data, Policy, F> : public GeoAggregator<Data, Policy>
 {
 public:
-        GeoAggregator(const KdTree<geogrid_detail::KdTree2DPoint>& tree, F f, typename Policy::Args&& args)
-            : GeoAggregator<Policy>(tree, std::forward<typename Policy::Args&&>(args)), m_functor(std::move(f))
+        GeoAggregator(const KdTree<geogrid_detail::KdTree2DPoint<Data>>& tree, F f, typename Policy::Args&& args)
+            : GeoAggregator<Data, Policy>(tree, std::forward<typename Policy::Args&&>(args)), m_functor(std::move(f))
         {
         }
 
         /// Aggregate over the policy with the functor specified at construction time
-        void operator()() { GeoAggregator<Policy>::operator()(m_functor); }
+        void operator()() { GeoAggregator<Data, Policy>::operator()(m_functor); }
 
 private:
         F m_functor;
@@ -132,45 +132,47 @@ private:
 /**
  * GeoAggregator Policy that aggregates locations within a radius (in km) of a center point.
  */
-
+template <class Data>
 class RadiusPolicy
 {
 public:
-        using Args = std::tuple<geogrid_detail::KdTree2DPoint, double>;
+        using Args = std::tuple<geogrid_detail::KdTree2DPoint<Data>, double>;
 
         explicit RadiusPolicy(Args args) : m_center(std::move(std::get<0>(args))), m_radius(std::get<1>(args)) {}
 
-        AABBox<geogrid_detail::KdTree2DPoint> GetBoundingBox() const
+        AABBox<geogrid_detail::KdTree2DPoint<Data>> GetBoundingBox() const
         {
                 using namespace geoaggregator_detail;
 
-                AABBox<geogrid_detail::KdTree2DPoint> box{};
+                AABBox<geogrid_detail::KdTree2DPoint<Data>> box{};
 
                 // As of boost 1.66, there's seems no way to do this in Boost.Geometry
                 constexpr double EARTH_RADIUS_KM = 6371.0;
                 const double     scaled_radius   = m_radius / EARTH_RADIUS_KM;
 
-                const double startlon = m_center.Get<0>();
-                const double startlat = m_center.Get<1>();
+                const typename Data::coordinate_type c = m_center.GetPoint();
+                const double startlon = boost::geometry::get<0>(c);
+                const double startlat = boost::geometry::get<1>(c);
                 const double londiff  = RadianToDegree(scaled_radius / std::cos(DegreeToRadian(startlat)));
                 const double latdiff  = RadianToDegree(scaled_radius);
 
-                box.upper = geogrid_detail::KdTree2DPoint(startlon + londiff, startlat + latdiff);
-                box.lower = geogrid_detail::KdTree2DPoint(startlon - londiff, startlat - latdiff);
+                box.upper = geogrid_detail::KdTree2DPoint<Data>(startlon + londiff, startlat + latdiff);
+                box.lower = geogrid_detail::KdTree2DPoint<Data>(startlon - londiff, startlat - latdiff);
 
                 return box;
         }
 
-        bool Contains(const geogrid_detail::KdTree2DPoint& pt) const { return pt.InRadius(m_center, m_radius); }
+        bool Contains(const geogrid_detail::KdTree2DPoint<Data>& pt) const { return pt.InRadius(m_center, m_radius); }
 
 private:
-        geogrid_detail::KdTree2DPoint m_center;
+        geogrid_detail::KdTree2DPoint<Data> m_center;
         double                        m_radius;
 };
 
 /**
  * GeoAggregator Policy that aggregates over an axis aligned bounding box.
  */
+template <class Data>
 class BoxPolicy
 {
 public:
@@ -178,13 +180,13 @@ public:
 
         explicit BoxPolicy(Args args) : m_args(std::move(args)) {}
 
-        AABBox<geogrid_detail::KdTree2DPoint> GetBoundingBox() const
+        AABBox<geogrid_detail::KdTree2DPoint<Data>> GetBoundingBox() const
         {
                 using std::get;
                 return {{get<0>(m_args), get<1>(m_args)}, {get<2>(m_args), get<3>(m_args)}};
         }
 
-        bool Contains(const geogrid_detail::KdTree2DPoint&) const { return true; }
+        bool Contains(const geogrid_detail::KdTree2DPoint<Data>&) const { return true; }
 
 private:
         Args m_args;
@@ -193,6 +195,7 @@ private:
 /**
  * A GeoAggregator Policy that aggregates over a (clockwise) polygon.
  */
+template <class Data>
 class PolygonPolicy
 {
 public:
@@ -200,17 +203,17 @@ public:
 
         explicit PolygonPolicy(boost::geometry::model::polygon<Coordinate, true> args) : m_poly(std::move(args)) {}
 
-        AABBox<geogrid_detail::KdTree2DPoint> GetBoundingBox() const
+        AABBox<geogrid_detail::KdTree2DPoint<Data>> GetBoundingBox() const
         {
                 using boost::geometry::get;
                 AABBox<Coordinate> boostbox;
                 boost::geometry::envelope(m_poly, boostbox);
-                AABBox<geogrid_detail::KdTree2DPoint> box{{get<0>(boostbox.lower), get<1>(boostbox.lower)},
+                AABBox<geogrid_detail::KdTree2DPoint<Data>> box{{get<0>(boostbox.lower), get<1>(boostbox.lower)},
                                                           {get<0>(boostbox.upper), get<1>(boostbox.upper)}};
                 return box;
         }
 
-        bool Contains(const geogrid_detail::KdTree2DPoint& pt) const
+        bool Contains(const geogrid_detail::KdTree2DPoint<Data>& pt) const
         {
                 return boost::geometry::within(pt.GetPoint(), m_poly);
         }

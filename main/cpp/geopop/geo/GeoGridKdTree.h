@@ -16,12 +16,15 @@
 #pragma once
 
 #include "KdTree.h"
+#include "Coordinate.h"
 #include "KdTree2DPoint.h"
+#include "geopop/Location.h"
 
 namespace geopop {
 
-extern template class KdTree<geogrid_detail::KdTree2DPoint>;
+extern template class KdTree<geogrid_detail::KdTree2DPoint<Location<Coordinate>>>;
+extern template class KdTree<geogrid_detail::KdTree2DPoint<EpiLocation<Coordinate>>>;
 
-using GeoGridKdTree = KdTree<geogrid_detail::KdTree2DPoint>;
+using GeoGridKdTree = KdTree<geogrid_detail::KdTree2DPoint<Location<Coordinate>>>;
 
 } // namespace geopop

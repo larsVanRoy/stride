@@ -15,7 +15,8 @@
 
 /**
  * @file
- * Initialize populations: implementation.
+ * Initialize populations: implementation. NOTICE: WorkplacePopulator logic
+ * requires that CollegePopulator is executed prior to WorkplacePopulator.
  */
 
 #include "GeoPopBuilder.h"
@@ -84,7 +85,7 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
                         {3,  "run.geopop_gen.west_flanders_household_file"},
                         {4,  "run.geopop_gen.east_flanders_household_file"},
                         {7,  "run.geopop_gen.limburg_household_file"},
-                        {11, "run.geopop_gen.major_cities_file"}
+                        {11, "run.geopop_gen.major_cities_household_file"}
                 };
 
         std::map<unsigned int, string> files;
@@ -153,6 +154,7 @@ void GeoPopBuilder::MakeLocations(GeoGrid& geoGrid, const GeoGridConfig& geoGrid
         const auto locationsReader = ReaderFactory::CreateLocationsReader(citiesFileName);
         locationsReader->FillGeoGrid(geoGrid);
 
+
         if (!commutingFileName.empty()) {
                 const auto commutesReader = ReaderFactory::CreateCommutesReader(commutingFileName);
                 commutesReader->FillGeoGrid(geoGrid);
@@ -185,6 +187,9 @@ void GeoPopBuilder::MakePools(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 
 void GeoPopBuilder::MakePersons(GeoGrid& geoGrid, GeoGridConfig& geoGridConfig)
 {
+        // NOTICE: WorkplacePopulator logic requires that CollegePopulator
+        // has been executed prior to WorkplacePopulator.
+
         DaycarePopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);
 
         PreSchoolPopulator(m_rn_man, m_stride_logger).Apply(geoGrid, geoGridConfig);

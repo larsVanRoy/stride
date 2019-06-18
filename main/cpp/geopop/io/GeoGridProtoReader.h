@@ -19,6 +19,7 @@
 #include "contact/ContactPool.h"
 #include "contact/ContactType.h"
 #include "geopop/Location.h"
+#include "geopop/geo/Coordinate.h"
 
 #include <memory>
 #include <set>
@@ -54,11 +55,11 @@ public:
 
 private:
         /// Create ContactPools based on protobuf ContactPools info.
-        void ParseContactPools(std::shared_ptr<Location>                   loc,
+        void ParseContactPools(std::shared_ptr<Location<Coordinate>>       loc,
                                const proto::GeoGrid_Location_ContactPools& protoContactPools);
 
         /// Create a ContactPool based on the provided protobuf ContactPool.
-        void ParseContactPool(std::shared_ptr<Location>                               loc,
+        void ParseContactPool(std::shared_ptr<Location<Coordinate>>                   loc,
                               const proto::GeoGrid_Location_ContactPools_ContactPool& protoContactPool,
                               stride::ContactType::Id                                 typeId);
 
@@ -66,7 +67,7 @@ private:
         Coordinate ParseCoordinate(const proto::GeoGrid_Location_Coordinate& protoCoordinate);
 
         /// Create a Location based on  protobuf Location info.
-        std::shared_ptr<Location> ParseLocation(const proto::GeoGrid_Location& protoLocation);
+        std::shared_ptr<Location<Coordinate>> ParseLocation(const proto::GeoGrid_Location& protoLocation);
 
         /// Create a Person based on protobuf Person info.
         stride::Person* ParsePerson(const proto::GeoGrid_Person& person);

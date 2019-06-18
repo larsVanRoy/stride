@@ -102,7 +102,7 @@ void GeoGridHDF5Reader::ReadLocation(const Group& object, GeoGrid& geoGrid)
         ReadAttribute("longitude", &longitude, object);
         ReadAttribute("latitude", &latitude, object);
 
-        auto location_ptr = make_shared<Location>(id, province, Coordinate{longitude, latitude}, name, population);
+        auto location_ptr = make_shared<Location<Coordinate>>(id, province, Coordinate{longitude, latitude}, name, population);
 
         for (unsigned int i = 0; i < size; ++i) {
                 auto pool_group = object.openGroup("ContactPools").openDataSet("Pool" + to_string(i + 1));
@@ -123,7 +123,7 @@ void GeoGridHDF5Reader::ReadLocation(const Group& object, GeoGrid& geoGrid)
         geoGrid.AddLocation(move(location_ptr));
 }
 
-void GeoGridHDF5Reader::ReadContactPool(const DataSet& object, std::shared_ptr<Location> location_ptr)
+void GeoGridHDF5Reader::ReadContactPool(const DataSet& object, std::shared_ptr<Location<Coordinate>> location_ptr)
 {
         unsigned int size;
         string       type;
@@ -159,7 +159,7 @@ template <>
 void GeoGridHDF5Reader::ReadAttribute(const std::string& name, std::string* data, const H5::H5Object& object)
 {
         auto attr = object.openAttribute(name);
-        attr.read(StrType(H5T_C_S1, H5T_VARIABLE), *data);
+        attr.read(attr.getStrType(), *data);
 }
 template <typename T>
 void GeoGridHDF5Reader::ReadDataset(const std::string& name, T* data, const H5::H5Object& object)

@@ -66,7 +66,7 @@ void GeoGridHDF5Writer::WriteContactPool(H5::Group& group, stride::ContactPool* 
         auto type = ToString(contactPool->GetType());
         WriteAttribute("type", type, dataset);
 }
-void GeoGridHDF5Writer::WriteLocation(H5::H5File& file, std::shared_ptr<Location> location)
+void GeoGridHDF5Writer::WriteLocation(H5::H5File& file, std::shared_ptr<Location<Coordinate>> location)
 {
         auto group = file.openGroup("Locations");
         group      = group.createGroup("Location" + to_string(++m_location_counter));
@@ -93,7 +93,7 @@ void GeoGridHDF5Writer::WriteLocation(H5::H5File& file, std::shared_ptr<Location
         WriteAttribute("size", m_pool_counter, group);
         m_pool_counter = 0U;
 }
-void GeoGridHDF5Writer::WriteCommutes(H5::H5File& file, std::shared_ptr<Location> location, H5::Group& group)
+void GeoGridHDF5Writer::WriteCommutes(H5::H5File& file, std::shared_ptr<Location<Coordinate>> location, H5::Group& group)
 {
         auto commutes = location->CRefOutgoingCommutes();
 
@@ -136,5 +136,13 @@ void GeoGridHDF5Writer::WriteDataset(const std::string& name, std::vector<T> val
         auto    dataSpace = DataSpace(1, dimensions);
         auto    dataSet   = object.createDataSet(name, type, dataSpace);
         dataSet.write(values.data(), type);
+}
+
+template <>
+void GeoGridHDF5Writer::WriteAttribute(const std::string& name, const std::string& value, H5::H5Object& object)
+{
+        auto type = GetH5Type(value);
+        auto attr = object.createAttribute(name, type, DataSpace());
+        attr.write(type, value.data());
 }
 } // namespace geopop

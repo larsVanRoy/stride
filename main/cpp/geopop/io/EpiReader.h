@@ -15,8 +15,6 @@
 
 #pragma once
 
-#include "geopop/GeoGrid.h"
-
 #include <memory>
 #include <fstream>
 
@@ -32,6 +30,10 @@ class EpiReader
 {
 public:
     explicit EpiReader(std::unique_ptr<std::ifstream> input_stream) : m_stream(std::move(input_stream)) {};
+
+    explicit EpiReader(const std::string& filename) : m_stream() {
+            m_stream = std::make_unique<std::ifstream>(filename);
+    }
     /// Construct the Writer.
 
     virtual ~EpiReader() {m_stream->close(); };

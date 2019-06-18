@@ -35,10 +35,10 @@ using namespace geopop;
  * @param schoolCount       The number of K12Schools at each Location.
  * @param houseHoldCount    The number of households at each Location.
  * @param personCount       The number of persons per Household.
- * @param pop               The population carrying this GeoGrid.
+ * @param pop               The     population carrying this GeoGrid.
  */
-void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCount, int houseHoldCount,
-                 int personCount, Population* pop)
+void MakeGeoGrid(const GeoGridConfig&, int locCount, int locPop, int daycareCount, int preSchoolCount, int schoolCount,
+                 int houseHoldCount, int personCount, Population* pop)
 {
         vector<unsigned int> populationSample = {
             17, 27, 65, 40, 29, 76, 27, 50, 28, 62, 50, 14, 30, 36, 12, 31, 25, 72, 62, 4,  40, 52, 55, 50, 62,
@@ -58,14 +58,22 @@ void MakeGeoGrid(const GeoGridConfig& , int locCount, int locPop, int schoolCoun
         GeoGridConfig      config{};
         auto&              geoGrid = pop->RefGeoGrid();
         RnMan              rnMan(RnInfo{});
+        DaycareGenerator   dcGen(rnMan);
+        PreSchoolGenerator psGen(rnMan);
         K12SchoolGenerator k12Gen(rnMan);
         HouseholdGenerator hhGen(rnMan);
 
         size_t sampleId = 0;
         auto   personId = 0U;
         for (int locI = 0; locI < locCount; locI++) {
-                auto loc = make_shared<Location>(locI, 1, Coordinate(0.0, 0.0), "", locPop);
+                auto loc = make_shared<Location<Coordinate>>(locI, 1, Coordinate(0.0, 0.0), "", locPop);
 
+                for (int dcI = 0; dcI < daycareCount; dcI++){
+                        dcGen.AddPools(*loc, pop, config);
+                }
+                for (int psI = 0; psI < preSchoolCount; psI++){
+                        psGen.AddPools(*loc, pop, config);
+                }
                 for (int schI = 0; schI < schoolCount; schI++) {
                         k12Gen.AddPools(*loc, pop, config);
                 }

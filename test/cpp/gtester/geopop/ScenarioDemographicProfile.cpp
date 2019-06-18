@@ -24,6 +24,7 @@
 #include <memory>
 #include <iostream>
 #include <geopop/GeoGridConfig.h>
+#include <math.h>
 
 using namespace std;
 using namespace geopop;
@@ -67,7 +68,7 @@ TEST_F(ScenarioDemographicProfileTest, correctUseOfProvinces)
 
     // assure that this data was properly read into our geogrid configuration
     std::string expected_configuration =
-    R"(Input:
+            R"(Input:
 Fraction college commuters:                          0
 Fraction workplace commuters:                        0
 Participation fraction of daycare:                   0.45
@@ -192,19 +193,19 @@ TEST_F(ScenarioDemographicProfileTest, correctUseInGenerator)
     m_gg_config.param.participation_college = 0.8;
     m_gg_config.param.participation_workplace = 0.5;
 
-    auto loc1 = make_shared<Location>(1, 1, Coordinate(0, 0), "D", 30000);
+    auto loc1 = make_shared<Location<Coordinate>>(1, 1, Coordinate(0, 0), "D", 30000);
     m_geo_grid.AddLocation(loc1);
 
-    auto loc2 = make_shared<Location>(2, 2, Coordinate(0, 0), "A", 30000);
+    auto loc2 = make_shared<Location<Coordinate>>(2, 2, Coordinate(0, 0), "A", 30000);
     m_geo_grid.AddLocation(loc2);
 
-    auto loc3 = make_shared<Location>(3, 3, Coordinate(0, 0), "B", 30000);
+    auto loc3 = make_shared<Location<Coordinate>>(3, 3, Coordinate(0, 0), "B", 30000);
     m_geo_grid.AddLocation(loc3);
 
-    auto loc4 = make_shared<Location>(4, 4, Coordinate(0, 0), "C", 30000);
+    auto loc4 = make_shared<Location<Coordinate>>(4, 4, Coordinate(0, 0), "C", 30000);
     m_geo_grid.AddLocation(loc4);
 
-    auto loc5 = make_shared<Location>(5, 5, Coordinate(0, 0), "ANTWERPEN", 30000);
+    auto loc5 = make_shared<Location<Coordinate>>(5, 5, Coordinate(0, 0), "ANTWERPEN", 30000);
     m_geo_grid.AddLocation(loc5);
 
     // make it so that the default configuration is general and includes all kinds of ages ranges
@@ -368,7 +369,7 @@ for region:                                          Major Cities
         }
 
         if(find(m_gg_config.majorCities.begin(), m_gg_config.majorCities.end(), loc->GetName()) !=
-                m_gg_config.majorCities.end()){
+           m_gg_config.majorCities.end()){
             k12Count += loc->CRefPools<Id::K12School>().size();
         }
         else{
@@ -394,24 +395,20 @@ for region:                                          Major Cities
         EXPECT_EQ(el.second, m_gg_config.regionInfo[el.first].count_households);
     }
 
-    // ceil(13.500 daycare students / 100 students per pool) = 1350
-    EXPECT_EQ(daycareCount, 1350 * m_gg_config.pools[Id::Daycare]);
-
-    // ceil(29.700 preschool students / 250 students per pool) = 119
-    EXPECT_EQ(preschoolCount, 119 * m_gg_config.pools[Id::PreSchool]);
-
-    // ceil(30.000 k12school students / 500 persons per pool) = 60
-    EXPECT_EQ(k12Count, 60 * m_gg_config.pools[Id::K12School]);
-
-    // ceil(18.000 workplace persons / 20 workers per pool) = 900
-    EXPECT_EQ(workplaceCount, 900 * m_gg_config.pools[Id::Workplace]);
-
-    // ceil(10.328 college students / 3.000 students per pool) = 4
-    EXPECT_EQ(collegeCount, 4 * m_gg_config.pools[Id::College]);
-
-    // ceil(120.000 persons / 2.000 persons per pool) = 60
-    EXPECT_EQ(primaryCount, 60 * m_gg_config.pools[Id::PrimaryCommunity]);
-
-    // ceil(120.000 persons / 2.000 persons per pool) = 60
-    EXPECT_EQ(secondaryCount, 60 * m_gg_config.pools[Id::SecondaryCommunity]);
+    double expect = ceil(static_cast<double>(13500) / m_gg_config.people[Id::Daycare]) * m_gg_config.pools[Id::Daycare];
+    EXPECT_EQ(daycareCount, expect);
+    expect = ceil(static_cast<double>(29700) / m_gg_config.people[Id::PreSchool]) * m_gg_config.pools[Id::PreSchool];
+    EXPECT_EQ(preschoolCount, expect);
+    expect = ceil(static_cast<double>(30000) / m_gg_config.people[Id::K12School]) * m_gg_config.pools[Id::K12School];
+    EXPECT_EQ(k12Count, expect);
+    expect = ceil(static_cast<double>(18000) / m_gg_config.people[Id::Workplace]) * m_gg_config.pools[Id::Workplace];
+    EXPECT_EQ(workplaceCount, expect);
+    expect = ceil(static_cast<double>(10328) / m_gg_config.people[Id::College]) * m_gg_config.pools[Id::College];
+    EXPECT_EQ(collegeCount, expect);
+    expect = ceil(static_cast<double>(120000) / m_gg_config.people[Id::PrimaryCommunity]) *
+             m_gg_config.pools[Id::PrimaryCommunity];
+    EXPECT_EQ(primaryCount, expect);
+    expect = ceil(static_cast<double>(120000) / m_gg_config.people[Id::SecondaryCommunity]) *
+             m_gg_config.pools[Id::SecondaryCommunity];
+    EXPECT_EQ(secondaryCount, expect);
 }

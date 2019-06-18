@@ -17,29 +17,34 @@
 #include "contact/ContactType.h"
 #include "disease/Health.h"
 
-#include <cmath>
+#include <boost/geometry/core/access.hpp>
 #include <algorithm>
+#include <cmath>
 
 namespace geopop {
 
 using namespace std;
 using namespace stride::ContactType;
 
-EpiLocation::EpiLocation(unsigned int id, unsigned int province, Coordinate coordinate, string name, unsigned int popCount)
-    : GeoLocation(id, province, coordinate, name, popCount)
+template <class CoordinateLike>
+EpiLocation<CoordinateLike>::EpiLocation(unsigned int id, unsigned int province, CoordinateLike coordinate, string name, unsigned int popCount)
+    : GeoLocation<CoordinateLike>(id, province, coordinate, name, popCount)
 {
 }
 
-bool EpiLocation::operator==(const EpiLocation& other) const
+template <class CoordinateLike>
+bool EpiLocation<CoordinateLike>::operator==(const EpiLocation<CoordinateLike>& other) const
 {
         using boost::geometry::get;
 
         bool temp = (m_history == other.m_history);
 
-        return temp && GetID() == other.GetID() && get<0>(GetCoordinate()) == get<0>(other.GetCoordinate()) &&
-               get<1>(GetCoordinate()) == get<1>(other.GetCoordinate()) && GetName() == other.GetName() &&
-               GetProvince() == other.GetProvince() && GetPopCount() == other.GetPopCount();
+        return temp && this->GetID() == other.GetID() && get<0>(this->GetCoordinate()) == get<0>(other.GetCoordinate()) &&
+               get<1>(this->GetCoordinate()) == get<1>(other.GetCoordinate()) && this->GetName() == other.GetName() &&
+               this->GetProvince() == other.GetProvince() && this->GetPopCount() == other.GetPopCount();
 }
+
+template class EpiLocation<Coordinate>;
 
 } // namespace geopop
 

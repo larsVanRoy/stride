@@ -56,7 +56,7 @@ TEST_F(CollegeGeneratorTest, OneLocationTest)
         m_gg_config.param.pop_size           = 45000;
         m_gg_config.regionInfo[0].popcount_college = 9000;
 
-        auto loc1 = make_shared<Location>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.param.pop_size);
+        auto loc1 = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Antwerpen", m_gg_config.param.pop_size);
         m_geo_grid.AddLocation(loc1);
 
         m_college_generator.Apply(m_geo_grid, m_gg_config);
@@ -85,7 +85,7 @@ TEST_F(CollegeGeneratorTest, MultipleLocationsTest)
         array<unsigned int, 15> sizes{28559, 33319, 39323, 37755, 35050, 10060, 13468, 8384,
                                       9033,  31426, 33860, 4110,  50412, 25098, 40135};
         for (const auto size : sizes) {
-                const auto loc = make_shared<Location>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size);
+                const auto loc = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Size: " + to_string(size), size);
                 m_geo_grid.AddLocation(loc);
         }
         m_college_generator.Apply(m_geo_grid, m_gg_config);

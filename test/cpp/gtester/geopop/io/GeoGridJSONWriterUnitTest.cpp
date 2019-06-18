@@ -99,9 +99,9 @@ TEST(GeoGridJSONWriterUnitTest, locationTest)
 {
         auto pop     = Population::Create();
         auto geoGrid = GeoGrid(pop.get());
-        geoGrid.AddLocation(make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500));
-        geoGrid.AddLocation(make_shared<Location>(2, 3, Coordinate(0, 0), "Gent", 5000));
-        geoGrid.AddLocation(make_shared<Location>(3, 2, Coordinate(0, 0), "Mons", 2500));
+        geoGrid.AddLocation(make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Bavikhove", 2500));
+        geoGrid.AddLocation(make_shared<Location<Coordinate>>(2, 3, Coordinate(0, 0), "Gent", 5000));
+        geoGrid.AddLocation(make_shared<Location<Coordinate>>(3, 2, Coordinate(0, 0), "Mons", 2500));
 
         string expectedJSON = R"({
             "locations":[
@@ -155,7 +155,7 @@ TEST(GeoGridJSONWriterUnitTest, contactPoolTest)
         auto pop      = Population::Create();
         auto geoGrid  = GeoGrid(pop.get());
 
-        auto location = make_shared<Location>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
+        auto location = make_shared<Location<Coordinate>>(1, 4, Coordinate(0, 0), "Bavikhove", 2500);
 
         auto pool1 = pop->RefPoolSys().CreateContactPool(Id::K12School);
         location->RegisterPool(pool1, Id::K12School);

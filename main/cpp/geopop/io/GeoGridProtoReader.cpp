@@ -58,7 +58,7 @@ void GeoGridProtoReader::Read()
         m_commutes.clear();
 }
 
-void GeoGridProtoReader::ParseContactPools(shared_ptr<Location>                        loc,
+void GeoGridProtoReader::ParseContactPools(shared_ptr<Location<Coordinate>>            loc,
                                            const proto::GeoGrid_Location_ContactPools& protoContactPools)
 {
         const auto protoType = protoContactPools.type();
@@ -86,7 +86,7 @@ Coordinate GeoGridProtoReader::ParseCoordinate(const proto::GeoGrid_Location_Coo
         return {protoCoordinate.longitude(), protoCoordinate.latitude()};
 }
 
-void GeoGridProtoReader::ParseContactPool(shared_ptr<Location>                                    loc,
+void GeoGridProtoReader::ParseContactPool(shared_ptr<Location<Coordinate>>                        loc,
                                           const proto::GeoGrid_Location_ContactPools_ContactPool& protoContactPool,
                                           Id                                                      type)
 {
@@ -103,7 +103,7 @@ void GeoGridProtoReader::ParseContactPool(shared_ptr<Location>                  
         }
 }
 
-shared_ptr<Location> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Location& protoLocation)
+shared_ptr<Location<Coordinate>> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Location& protoLocation)
 {
         const auto  id         = protoLocation.id();
         const auto& name       = protoLocation.name();
@@ -111,7 +111,7 @@ shared_ptr<Location> GeoGridProtoReader::ParseLocation(const proto::GeoGrid_Loca
         const auto  population = protoLocation.population();
         const auto& coordinate = ParseCoordinate(protoLocation.coordinate());
 
-        auto loc = make_shared<Location>(id, province, coordinate, name, population);
+        auto loc = make_shared<Location<Coordinate>>(id, province, coordinate, name, population);
 
         for (int idx = 0; idx < protoLocation.contactpools_size(); idx++) {
                 const proto::GeoGrid_Location_ContactPools& protoPools = protoLocation.contactpools(idx);

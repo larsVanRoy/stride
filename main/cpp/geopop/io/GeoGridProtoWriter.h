@@ -18,6 +18,7 @@
 #include "GeoGridWriter.h"
 #include "geopop/Location.h"
 
+#include <geopop/geo/Coordinate.h>
 #include <set>
 
 namespace stride {
@@ -65,7 +66,7 @@ private:
         void WriteCoordinate(const Coordinate& coordinate, proto::GeoGrid_Location_Coordinate* protoCoordinate);
 
         /// Create a ProtoBuf Location containing all the info needed to reconstruct a Location.
-        void WriteLocation(Location& location, proto::GeoGrid_Location* protoLocation);
+        void WriteLocation(Location<Coordinate>& location, proto::GeoGrid_Location* protoLocation);
 
         /// Create a ProtoBuf Person containing all the info needed to reconstruct a Person.
         void WritePerson(stride::Person* person, proto::GeoGrid_Person* protoPerson);

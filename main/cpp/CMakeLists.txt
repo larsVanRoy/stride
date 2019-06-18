@@ -31,8 +31,8 @@ endif()
 set_source_files_properties(
     geopop/io/GeoGridProtoReader.cpp
     geopop/io/GeoGridProtoWriter.cpp
-    geopop/io/EpiProtoWriter.h
-    geopop/io/EpiProtoWriter.cpp
+#    geopop/io/EpiProtoWriter.h
+#    geopop/io/EpiProtoWriter.cpp
     PROPERTIES
     COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
 )
@@ -70,7 +70,6 @@ set(STRIDE_SRC
     execs/SimController.cpp
     execs/StanController.cpp
     #---
-    #geopop/ContactCenter.cpp
     geopop/geo/Coordinate.h
     geopop/geo/Region.cpp
     geopop/geo/GeoLocation.cpp
@@ -95,8 +94,8 @@ set(STRIDE_SRC
     #---
     ${PROTO_HEADER}
     ${PROTO_SRC}
-    ${EPI_PROTO_HDR}
-    ${EPI_PROTO_SRC}
+#    ${EPI_PROTO_HDR}
+#    ${EPI_PROTO_SRC}
     #---
     geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
@@ -127,8 +126,14 @@ set(STRIDE_SRC
     geopop/io/ReaderFactory.cpp
     geopop/io/EpiWriterFactory.cpp
     geopop/io/EpiJSONWriter.cpp
-    geopop/io/EpiProtoWriter.cpp
-    geopop/io/EpiProtoWriter.h
+#    geopop/io/EpiProtoWriter.cpp
+#    geopop/io/EpiProtoWriter.h
+#    geopop/io/EpiHDF5Writer.h
+#    geopop/io/EpiHDF5Writer.cpp
+#    geopop/io/EpiGridHDF5Types.h
+#    geopop/io/EpiGridHDF5Types.cpp
+#    geopop/io/EpiHDF5Reader.cpp
+#    geopop/io/EpiHDF5Reader.h
     geopop/io/EpiWriter.h
     geopop/io/EpiReader.h
     geopop/io/EpiReaderFactory.cpp
@@ -146,11 +151,11 @@ set(STRIDE_SRC
     ${PROTO_HEADER}
     ${PROTO_SRC}
     #---
-    geopop/EpiLocation.cpp
+#    geopop/EpiLocation.cpp
     viewers/InfectedFile.cpp
     viewers/PersonsFile.cpp
     viewers/SummaryFile.cpp
-    viewers/EpiViewer.cpp
+#    viewers/EpiViewer.cpp
     #---
     pop/AbstractPopBuilder.cpp
     pop/Person.cpp

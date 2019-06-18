@@ -31,7 +31,7 @@ namespace stride {
 
 class HealthPool;
 
-/// Stores the % of people of each health status for every ContactType
+/// Stores the % of people of each health status for every AgeBracket
 class PoolStatus {
 public:
     PoolStatus();
