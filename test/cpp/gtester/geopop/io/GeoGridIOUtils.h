@@ -70,8 +70,7 @@ template <>
 inline void ReadHDF5Attribute(const std::string& name, std::string* data, const H5::H5Object& object)
 {
         auto attr = object.openAttribute(name);
-        auto type = attr.getTypeClass();
-        attr.read(type, *data);
+        attr.read(attr.getStrType(), *data);
 }
 template <typename T>
 void ReadHDF5Dataset(const std::string& name, T* data, const H5::H5Object& object)

@@ -159,7 +159,7 @@ template <>
 void GeoGridHDF5Reader::ReadAttribute(const std::string& name, std::string* data, const H5::H5Object& object)
 {
         auto attr = object.openAttribute(name);
-        attr.read(StrType(H5T_C_S1, H5T_VARIABLE), *data);
+        attr.read(attr.getStrType(), *data);
 }
 template <typename T>
 void GeoGridHDF5Reader::ReadDataset(const std::string& name, T* data, const H5::H5Object& object)

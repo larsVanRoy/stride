@@ -146,6 +146,14 @@ void GeoGridHDF5Writer::WritePeople(H5::H5File& file)
         }
         WriteDataset("People", people, file);
 }
+template<>
+void GeoGridHDF5Writer::WriteAttribute(const std::string& name, const std::string& value, H5::H5Object& object)
+{
+        auto type = GetH5Type(value);
+        auto attr = object.createAttribute(name, type, DataSpace());
+        attr.write(type, value.data());
+}
+
 template <typename T>
 void GeoGridHDF5Writer::WriteAttribute(const std::string& name, const T& value, H5Object& object)
 {
