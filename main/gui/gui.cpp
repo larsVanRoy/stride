@@ -23,42 +23,46 @@
 using namespace gui;
 
 int main(int argc, char *argv[]) {
+    std::string filename;
+    if(argc != 2) {
+        std::cout << "use: ./executable [filename]" << std::endl;
+        return -1;
+    }
+    else {
+        filename = argv[1];
+    }
+
+
     std::shared_ptr<geopop::EpiReader> reader = nullptr;
     try {
-        reader = geopop::EpiReaderFactory::CreateEpiReader("epi_output.json");
+        reader = geopop::EpiReaderFactory::CreateEpiReader(filename);
     }
     catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
         return -1;
     }
+
     std::shared_ptr<geopop::EpiGrid> grid = reader->Read();
-    std::cout << "Grid size: " << grid->size();
 
     QGuiApplication::setApplicationName("Stride");
     QGuiApplication app(argc, argv);
 
     QQuickView view;
 
-    Controller cont;
-
-    cont.m_grid = grid;
+    Controller controller(grid);
 
     if (QFontDatabase::addApplicationFont("resources/fontello.ttf") == -1)
         qWarning() << "Failed to load resources/fontello.ttf";
 
-
-    QStringList selectors;
-
     QQmlApplicationEngine engine;
-    QQmlFileSelector::get(&engine)->setExtraSelectors(selectors);
 
-    engine.rootContext()->setContextProperty("controller", &cont);
+    engine.rootContext()->setContextProperty("controller", &controller);
 
     engine.load(QUrl::fromLocalFile("resources/AppWindow.qml"));
     if (engine.rootObjects().isEmpty())
         return -1;
 
-    cont.m_app = engine.rootObjects()[0];
+    controller.Initialize(engine.rootObjects()[0]);
 
     return app.exec();
 }

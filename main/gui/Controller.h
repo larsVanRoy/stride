@@ -31,25 +31,25 @@ enum class StateSelect : unsigned short {
 class Controller : public QObject {
 Q_OBJECT
 public:
-    explicit Controller(QObject *parent = nullptr);
+    explicit Controller(std::shared_ptr<geopop::EpiGrid>);
 
     ~Controller();
 
-    Q_PROPERTY(unsigned int m_day READ GetCurrentDay)
+    /// No copy constructor.
+    Controller(const Controller&) = delete;
+
+    /// No copy assignment.
+    Controller& operator=(const Controller&) = delete;
+
+    void Initialize(QObject* rootwindow);
 
     Q_INVOKABLE void print() const {
         std::cout << "test controller" << std::endl;
     }
 
-    Q_INVOKABLE void loadFile();
-
-    Q_INVOKABLE QString GetName(unsigned int ID);
-
     Q_INVOKABLE QList<QObject*> getLocations();
 
     Q_INVOKABLE QString GetPopCount(unsigned int ID);
-
-    Q_INVOKABLE double GetIllDouble(unsigned int ID);
 
     Q_INVOKABLE void InitializeMultiSelect(double longitude, double latitude);
 
@@ -63,23 +63,28 @@ public:
 
     Q_INVOKABLE void previousDay();
 
-    Q_INVOKABLE void SetInfo();
-
     Q_INVOKABLE double GetColor(unsigned int ID);
 
-    Q_INVOKABLE unsigned int GetCurrentDay();
+    Q_INVOKABLE QString GetCurrentDay();
 
     Q_INVOKABLE void DisplayInfo();
 
     Q_INVOKABLE void SetSelectedLocation(unsigned int ID);
 
-    std::string show;
+    Q_INVOKABLE void ToggleSelect(QString);
 
-    QList<QObject*> result;
+    Q_INVOKABLE void AgeSelect(QString);
 
-    std::shared_ptr<geopop::EpiGrid> m_grid;
+    Q_INVOKABLE void AgeDeSelect(QString);
 
-    QObject* m_app;
+    Q_INVOKABLE void HealthSelect(QString);
+
+    Q_INVOKABLE void HealthDeSelect(QString);
+
+    Q_INVOKABLE void Update();
+
+    void DisplayDay();
+
 private:
     bool SetObjectText(const std::string& objectName, const std::string& text);
 
@@ -87,15 +92,25 @@ private:
 
     std::vector<const geopop::EpiLocation<geopop::Coordinate>*> m_selectedLocations;
 
-    std::vector<stride::AgeBrackets::AgeBracket> m_selectedAgeBrackets;
+    std::set<stride::AgeBrackets::AgeBracket> m_selectedAgeBrackets;
 
-    std::vector<stride::HealthStatus> m_selectedHealthStatus;
+    std::set<stride::HealthStatus> m_selectedHealthStatus;
 
     StateSelect m_selection;
 
-    unsigned int m_day; ///current day
+    unsigned int m_day;     ///current day
+
+    unsigned int m_maxDay;  ///max day
+
+    unsigned int m_step;    ///days between steps
 
     geopop::Coordinate m_multiSelect;
+
+    QList<QObject*> result;
+
+    std::shared_ptr<geopop::EpiGrid> m_grid;
+
+    QObject* m_app;
 };
 
 }

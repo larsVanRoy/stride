@@ -101,7 +101,6 @@ void EpiJSONReader::ParseHistory(const nlohmann::json &history) {
         try {
             const nlohmann::json &step = history[i];
             locations = step["locations"];
-            const nlohmann::json &day = step["timestep"];
         }
         catch(std::exception& e){
             std::cout << "Error: ParseHistory" << e.what() << std::endl;

@@ -1,10 +1,9 @@
 var component;
 var sprite;
-var listSprites  // array => []  object => () !!
+var listSprites;
 
 function createSpriteObjects()
 {
-    var time = 0;
     for (var i=0; i<listSprites.length; i++) {
         component = Qt.createComponent("location.qml");
 
@@ -16,25 +15,25 @@ function createSpriteObjects()
         }
         else
         {
-            var c = "#" + (listSprites[i].ill * 100) + "FF0000"   // Rood toevoegen Let op 100% klopt nog niet
-            var ill = 0.5-controller.GetIllDouble(listSprites[i].ID)*2/3
-            if (ill < 0.0){
-                ill = 0.0
+            var c = 0.5-controller.GetColor(listSprites[i].ID)
+            if (c < 0.0){
+                c = 0.0;
             }
-            sprite.color = Qt.hsla(0.35, 1, ill,0.75);
+            else if(c > 1.0){
+                c = 1.0;
+            }
+            sprite.color = Qt.hsla(0.35, 1, c,0.75);
             sprite.center.longitude = listSprites[i].longitude;
             sprite.center.latitude = listSprites[i].latitude;
             sprite.population = listSprites[i].population;
             var scale = 12/(10000-50)*(sprite.population-50)-6;
             sprite.radius = 3000/(1+Math.exp(-scale)) + 1000;
             sprite.id = listSprites[i].ID;
-            // sprite.radius = sprite.population
             map.addMapItem(sprite);
         }
     }
 
     for (var i = 0; i<listSprites.length; i++) {
-        // console.log("Create sprite objects: ", listSprites[i].latitude)
         component = Qt.createComponent("location.qml");
 
         sprite = component.createObject( root, {});
@@ -50,9 +49,7 @@ function createSpriteObjects()
             sprite.center.latitude = listSprites[i].latitude;
             sprite.population = listSprites[i].population;
             sprite.radius = 100;
-            sprite.time = time;
             sprite.id = listSprites[i].ID;
-            time = time + 1;
             map.addMapItem(sprite);
         }
     }
@@ -68,7 +65,7 @@ function removeMapElements() {
 }
 
 function createSprites(){
-    // Lijst vullen
+    // fill list
     listSprites = controller.getLocations();
     createSpriteObjects(listSprites);
 }
@@ -82,31 +79,11 @@ function initializeMap(){
 function refreshSprites() {
     for(var i = 0; i < map.mapItems.length; i++) {
         if(map.mapItems[i].objectName === "location"){
-            var ill = 0.5-controller.GetIllDouble(map.mapItems[i].id)*2/3
-            if (ill < 0.0){
-                ill = 0.0
+            var c = 0.5-controller.GetColor(map.mapItems[i].id);
+            if (c < 0.0){
+                c = 0.0
             }
-            map.mapItems[i].color = Qt.hsla(0.35, 1, ill,0.75);
+            map.mapItems[i].color = Qt.hsla(0.35, 1, c,0.75);
         }
-    }
-}
-
-
-function showText() {
-    //property alias tekst: sideBar.allText.tekst
-    var tekst = "";
-    if (listSprites.length !== 0) {
-        // open sidebar
-        sideRect.open()
-
-       for (var i=0; i<listSprites.length; i++) {
-           tekst = tekst +
-                   "Longitude: " + listSprites[i].longitude + "\n" +
-                   "Latitude: " + listSprites[i].latitude + "\n" +
-                   "Population: " + listSprites[i].population + "\n" +
-                   "Ill: " + listSprites[i].radius + "\n" +
-                   "\n";
-       }
-       allText.text = tekst;
     }
 }

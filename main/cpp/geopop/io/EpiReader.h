@@ -38,7 +38,6 @@ public:
 
     /// Write the epidemiological status to ostream.
     virtual std::shared_ptr<EpiGrid> Read() = 0;
-
 protected:
     std::unique_ptr<std::ifstream> m_stream;
 };

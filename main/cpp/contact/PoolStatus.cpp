@@ -71,10 +71,18 @@ void PoolStatus::addStatus(const AgeBrackets::AgeBracket& ageBracket, std::share
 }
 
 double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket) const {
-    return this->getStatus(ageBracket)->sum(stride::HealthStatusList);
+    double scale = 0;
+    for(const AgeBrackets::AgeBracket& a : AgeBrackets::AgeBracketList){
+        scale += getStatus(a)->sum(stride::HealthStatusList);
+    }
+    return this->getStatus(ageBracket)->sum(stride::HealthStatusList)/scale;
 }
 
-double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::vector<HealthStatus>& ID) const {
+double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::set<HealthStatus>& ID) const {
+    double scale = 0;
+    for(const AgeBrackets::AgeBracket& a : AgeBrackets::AgeBracketList){
+        scale += getStatus(a)->sum(stride::HealthStatusList);
+    }
     return this->getStatus(ageBracket)->sum(ID);
 }
 
@@ -113,7 +121,7 @@ void HealthPool::setHealth(HealthStatus ID, double fraction) {
     }
 }
 
-double HealthPool::getHealth(HealthStatus ID) const {
+double HealthPool::getHealth(const HealthStatus& ID) const {
     switch (ID) {
         case HealthStatus::Susceptible:
             return m_susceptible;
@@ -141,9 +149,9 @@ bool HealthPool::operator==(const HealthPool& other) const {
     m_exposed == other.m_exposed && m_susceptible == other.m_susceptible;
 }
 
-double HealthPool::sum(const std::vector<HealthStatus>& ID) const {
+double HealthPool::sum(const std::set<HealthStatus>& ID) const {
     double result = 0;
-    for (HealthStatus i : ID){
+    for (const HealthStatus& i : ID){
         result += getHealth(i);
     }
     return result;

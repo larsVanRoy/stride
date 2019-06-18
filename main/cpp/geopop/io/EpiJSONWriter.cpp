@@ -65,7 +65,7 @@ void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, unsigned timeStep)
     }
 
     json step = json::object();
-    step["timestep"] = std::to_string(timeStep);
+    step["timestep"] = timeStep;
     step["locations"] = locations_array;
     m_json["history"].push_back(step);
 }

@@ -1,11 +1,10 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.12
 import QtQuick.Window 2.0
+import QtQuick.Layouts 1.2
 import Qt.labs.platform 1.0
 import QtLocation 5.12
 import QtPositioning 5.12
-//import "sidebar.qml" as Sidebar
-//import location 1.0
 
 import "componentCreation.js" as Script
 
@@ -14,6 +13,8 @@ ApplicationWindow {
     id: root
     width: 1024
     height: 600
+    minimumWidth: flow_.implicitWidth
+    minimumHeight: flow_.implicitHeight
     visible: true
     title: "Stride"
 
@@ -22,33 +23,40 @@ ApplicationWindow {
         Script.refreshSprites();
     }
 
-    MessageDialog {
-        id: errorDialog
-    }
-
     header: ToolBar {
         leftPadding: 8
-
         Flow {
             id: flow_
             width: parent.width
             Row {
                 id: tools
-                ToolButton {
-                    id: openButton
-                    text: "\uF115" // icon-folder-open-empty
-                    font.family: "fontello"
-                    onClicked: {
-                        console.log("Set info?")
-                        controller.SetInfo();
+                Row{
+                    id: rowDay
+                    Layout.alignment: "AlignVCenter"
+                    Label {
+                        Layout.minimumHeight: 30
+                        text: "Day: "
+                        font.family: "fontello"
+                        horizontalAlignment: Label.AlignHCenter
+                        verticalAlignment: Label.AlignVCenter
+                        elide: Label.ElideRight
+                    }
+                    Label {
+                        id: currentDay
+                        objectName: "currentDay"
+                        text: "0/0"
+                        font.family: "fontello"
+                        horizontalAlignment: Label.AlignHCenter
+                        verticalAlignment: Label.AlignVCenter
+                        elide: Label.ElideRight
                     }
                 }
                 ToolSeparator {
-                    contentItem.visible: openButton.y === previousDay.y
+                    contentItem.visible: rowDay.y === previousDay.y
                 }
                 ToolButton {
                     id: previousDay
-                    text: "Previous Day" // icon-docs
+                    text: "Previous Day"
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: {
@@ -57,7 +65,7 @@ ApplicationWindow {
                 }
                 ToolButton {
                     id: nextDay
-                    text: "Next Day" // icon-paste
+                    text: "Next Day"
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: {
@@ -69,7 +77,7 @@ ApplicationWindow {
                 }
                 ToolButton {
                     id: boxSelect
-                    text: "Box" // icon-docs
+                    text: "Box"
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: {
@@ -79,7 +87,7 @@ ApplicationWindow {
                 }
                 ToolButton {
                     id: circleSelect
-                    text: "Radius" // icon-paste
+                    text: "Radius"
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: {
@@ -87,15 +95,282 @@ ApplicationWindow {
                         map.selectType = "circle";
                     }
                 }
-//                ToolSeparator {
-//                    contentItem.visible: nextDay.y === boxSelect.y
-//                }
-//                ComboBox {
+                    ToolSeparator {
+                        contentItem.visible: circleSelect.y === selectAgeBracket.y
+                    }
+                    Row {
+                        id: selectAgeBracket
+                        ToolButton {
+                            id: daycareSelect
+                            text: "DC"
+                            objectName: "daycare"
+                            font.family: "fontello"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.AgeSelect(objectName.toString())
+                                    daycare.visible = true;
+                                }
+                                else{
+                                    controller.AgeDeSelect(objectName.toString())
+                                    daycare.visible = false;
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: preschoolSelect
+                            text: "PRE"
+                            font.family: "fontello"
+                            objectName: "preschool"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.AgeSelect(objectName.toString())
+                                    preschool.visible = true;
+                                }
+                                else{
+                                    controller.AgeDeSelect(objectName.toString())
+                                    preSchool.visible = false;
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: k12schoolSelect
+                            text: "K12"
+                            font.family: "fontello"
+                            objectName: "k12school"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.AgeSelect(objectName.toString())
+                                    k12School.visible = true;
+                                }
+                                else{
+                                    controller.AgeDeSelect(objectName.toString())
+                                    k12School.visible = false;
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: collegeSelect
+                            text: "COL"
+                            font.family: "fontello"
+                            objectName: "college"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.AgeSelect(objectName.toString())
+                                    college.visible = true;
+                                }
+                                else{
+                                    controller.AgeDeSelect(objectName.toString())
+                                    college.visible = false;
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: workplaceSelect
+                            text: "WP"
+                            font.family: "fontello"
+                            objectName: "workplace"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.AgeSelect(objectName.toString())
+                                    workplace.visible = true;
+                                }
+                                else{
+                                    controller.AgeDeSelect(objectName.toString())
+                                    workplace.visible = false;
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: retiredSelect
+                            text: "RET"
+                            font.family: "fontello"
+                            objectName: "retired"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.AgeSelect(objectName.toString())
+                                    retired.visible = true;
+                                }
+                                else{
+                                    controller.AgeDeSelect(objectName.toString())
+                                    retired.visible = false;
+                                }
+                            }
+                        }
 
-//                }
+                    }
+                    ToolSeparator {
+                        contentItem.visible: selectHealthStatus.y === selectAgeBracket.y
+                    }
+                    Row {
+                        id: selectHealthStatus
+                        ToolButton {
+                            id: immuneSelect
+                            text: "IM"
+                            font.family: "fontello"
+                            objectName: "immune"
+                            checkable: true
+                            checked: false
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.HealthSelect(objectName.toString())
+                                }
+                                else{
+                                    controller.HealthDeSelect(objectName.toString())
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: susceptibleSelect
+                            text: "SU"
+                            font.family: "fontello"
+                            objectName: "susceptible"
+                            checkable: true
+                            checked: false
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.HealthSelect(objectName.toString())
+                                }
+                                else{
+                                    controller.HealthDeSelect(objectName.toString())
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: exposed
+                            text: "EX"
+                            font.family: "fontello"
+                            objectName: "exposed"
+                            checkable: true
+                            checked: false
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.HealthSelect(objectName.toString())
+                                }
+                                else{
+                                    controller.HealthDeSelect(objectName.toString())
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: infectiousSelect
+                            text: "IN"
+                            font.family: "fontello"
+                            objectName: "infectious"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.HealthSelect(objectName.toString())
+                                }
+                                else{
+                                    controller.HealthDeSelect(objectName.toString())
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: infectiousAndSymptomaticSelect
+                            text: "IS"
+                            font.family: "fontello"
+                            objectName: "infectious and symptomatic"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.HealthSelect(objectName.toString())
+                                }
+                                else{
+                                    controller.HealthDeSelect(objectName.toString())
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: symptomaticSelect
+                            text: "SY"
+                            font.family: "fontello"
+                            objectName: "symptomatic"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.HealthSelect(objectName.toString())
+                                }
+                                else{
+                                    controller.HealthDeSelect(objectName.toString())
+                                }
+                            }
+                        }
+                        ToolButton {
+                            id: recoveredSelect
+                            text: "RE"
+                            font.family: "fontello"
+                            objectName: "recovered"
+                            checkable: true
+                            checked: true
+                            ToolTip.delay: 500
+                            ToolTip.visible: hovered
+                            ToolTip.text: objectName
+                            onClicked: {
+                                if(checked){
+                                    controller.HealthSelect(objectName.toString())
+                                }
+                                else{
+                                    controller.HealthDeSelect(objectName.toString())
+
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
-    }
 
     Rectangle
     {
@@ -309,8 +584,6 @@ ApplicationWindow {
                 Column{
                     width: parent.width
                     height: parent.height
-//                    x: 0
-//                    y: 0
                     spacing: 2
                     Row{
                         width: 200
@@ -334,8 +607,8 @@ ApplicationWindow {
                         spacing: 8
                         width: 200
                         height: 30
+                        id: population
                         Label{
-                            id: population
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("Population:")
@@ -344,7 +617,6 @@ ApplicationWindow {
                             horizontalAlignment: Text.AlignRight
                             font.pointSize: parent.height/3
                             minimumPointSize: 5
-//                            fontSizeMode: Text.Fit
                         }
                         Label{
                             id: populationValue
@@ -357,15 +629,14 @@ ApplicationWindow {
                             horizontalAlignment: Text.AlignHCenter
                             font.pointSize: parent.height/3
                             minimumPointSize: 5
-//                            fontSizeMode: Text.Fit
                         }
                     }
                     Row{
                         spacing: 8
                         width: 200
                         height: 30
+                        id: total
                         Label{
-                            id: total
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("Total:")
@@ -392,8 +663,8 @@ ApplicationWindow {
                         spacing: 8
                         width: 200
                         height: 30
+                        id: daycare
                         Label{
-                            id: daycare
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("Daycare:")
@@ -402,7 +673,6 @@ ApplicationWindow {
                             horizontalAlignment: Text.AlignRight
                             font.pointSize: parent.height/3
                             minimumPointSize: 5
-//                            fontSizeMode: Text.Fit
                         }
                         Label{
                             id: daycareValue
@@ -421,8 +691,8 @@ ApplicationWindow {
                         spacing: 8
                         width: 200
                         height: 30
+                        id: preSchool
                         Label{
-                            id: preSchool
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("PreSchool:")
@@ -449,8 +719,8 @@ ApplicationWindow {
                         spacing: 8
                         width: 200
                         height: 30
+                        id: k12School
                         Label{
-                            id: k12School
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("K12School:")
@@ -477,8 +747,8 @@ ApplicationWindow {
                         spacing: 8
                         width: 200
                         height: 30
+                        id: college
                         Label{
-                            id: college
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("College:")
@@ -505,8 +775,8 @@ ApplicationWindow {
                         spacing: 8
                         width: 200
                         height: 30
+                        id: workplace
                         Label{
-                            id: workplace
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("Workplace:")
@@ -533,8 +803,8 @@ ApplicationWindow {
                         spacing: 8
                         width: 200
                         height: 30
+                        id: retired
                         Label{
-                            id: retired
                             width: parent.width/2
                             height: parent.height
                             text: qsTr("Retired:")

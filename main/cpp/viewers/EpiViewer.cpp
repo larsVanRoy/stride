@@ -64,6 +64,7 @@ void EpiViewer::Update(const sim_event::Id id)
                 m_epi_output->Write(geoGrid, ++m_timestep);
             }
             m_epi_output->Finalize();
+            break;
         }
 
         default: break;

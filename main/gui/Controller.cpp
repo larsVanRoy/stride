@@ -16,13 +16,22 @@
 
 namespace gui {
 
-Controller::Controller(QObject *parent) : QObject(parent), m_app(nullptr),
-m_grid(nullptr), result({}), m_day(0), m_multiSelect({0,0}), show("all"),
-m_selectedLocations({}), m_selection(StateSelect::unassigned),
-m_selectedAgeBrackets(stride::AgeBrackets::AgeBracketList),
-m_selectedHealthStatus({})
+using namespace stride;
+using namespace stride::AgeBrackets;
+
+
+Controller::Controller(std::shared_ptr<geopop::EpiGrid> grid) :
+QObject(nullptr), m_selectedLocations({}), m_selectedAgeBrackets(AgeBracketList),
+m_selectedHealthStatus({}), m_selection(StateSelect::unassigned), m_day(0),
+m_maxDay(0),  m_step(1), m_multiSelect({0,0}), result({}),
+m_grid(grid), m_app(nullptr)
 {
-    m_selectedHealthStatus = {stride::HealthStatus::Infectious, stride::HealthStatus::Symptomatic, stride::HealthStatus::InfectiousAndSymptomatic};
+    m_selectedHealthStatus = {
+            stride::HealthStatus::Symptomatic,
+            stride::HealthStatus::Infectious,
+            stride::HealthStatus::Recovered,
+            stride::HealthStatus::InfectiousAndSymptomatic};
+    m_maxDay = m_step*m_grid->operator[](0)->maxDays();
 }
 
 Controller::~Controller(){
@@ -31,17 +40,10 @@ Controller::~Controller(){
     }
 }
 
-void Controller::loadFile() {
-    std::shared_ptr<geopop::EpiReader> reader = nullptr;
-    try {
-        reader = geopop::EpiReaderFactory::CreateEpiReader("epi-output.json");
-    }
-    catch (const std::exception &e) {
-        std::cerr << e.what() << std::endl;
-        return;
-    }
-    m_grid = reader->Read();
-};
+void Controller::Initialize(QObject* rootwindow) {
+    m_app = rootwindow;
+    Update();
+}
 
 QList<QObject*> Controller::getLocations() {
     for(QObject* q : result) {
@@ -49,12 +51,13 @@ QList<QObject*> Controller::getLocations() {
     }
     result = {};
 
-    if(m_grid.get() == nullptr){
+    if(m_grid == nullptr){
         return result;
     }
 
     unsigned int largest = 0;
-    unsigned int smallest = -1;
+    unsigned int smallest = std::numeric_limits<unsigned int>::lowest();
+
     for(size_t i = 0; i < m_grid->size(); ++i) {
         auto loc = m_grid->operator[](i);
         if (largest < loc->GetPopCount()) {
@@ -63,72 +66,54 @@ QList<QObject*> Controller::getLocations() {
         if (smallest > loc->GetPopCount()) {
             smallest = loc->GetPopCount();
         }
-        result.push_back(new Location(loc->GetCoordinate().get<0>(), loc->GetCoordinate().get<1>(), loc->GetPopCount(),
-                             GetIllDouble(loc->GetID()), loc->GetID()));
+        result.push_back(new Location(loc->GetCoordinate().get<0>(), loc->GetCoordinate().get<1>(), loc->GetPopCount(), loc->GetID()));
     }
     return result;
-}
-
-QString Controller::GetName(unsigned int ID) {
-    return QString("test GetName");
 }
 
 QString Controller::GetPopCount(unsigned int ID) {
     return QString::number(m_grid->GetById(ID)->GetPopCount());
 }
 
-double Controller::GetIllDouble(unsigned int ID) {
-    double ill = 0.0;
-    std::shared_ptr<stride::PoolStatus> p = m_grid->GetById(ID)->GetPoolStatus(m_day);
-
-    for(stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
-        std::shared_ptr<stride::HealthPool> h = p->getStatus(ageBracket);
-        ill += h->operator[](stride::HealthStatus::Infectious);
-        ill += h->operator[](stride::HealthStatus::InfectiousAndSymptomatic);
-        ill += h->operator[](stride::HealthStatus::Symptomatic);
-    }
-
-    return ill;
-}
-
 double Controller::GetColor(unsigned int ID) {
-    double color = 0;
-    std::shared_ptr<stride::PoolStatus> p = m_grid->GetById(ID)->GetPoolStatus(m_day);
-    for(stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
-        std::shared_ptr<stride::HealthPool> h = p->getStatus(ageBracket);
-        for(const stride::HealthStatus& hs : m_selectedHealthStatus) {
-            color += h->operator[](hs);
-        }
-    }
 
-    return color;
+    double color = 0;
+    double bracketSize = 0;
+    std::shared_ptr<stride::PoolStatus> p;
+    try {
+        p = m_grid->GetById(ID)->GetPoolStatus(m_day);
+    }
+    catch(const std::exception& e){
+        std::cout << e.what() << std::endl;
+        std::cout << "Color: " << ID << std::endl;
+        throw e;
+    }
+    for(stride::AgeBrackets::AgeBracket ageBracket : m_selectedAgeBrackets) {
+        const auto& h = p->getStatus(ageBracket);
+        color += h->sum(m_selectedHealthStatus);
+        bracketSize += h->sum(stride::HealthStatusList);
+    }
+    return color/bracketSize;
 }
 
 void Controller::nextDay() {
     if(m_day < m_grid->operator[](0)->maxDays() - 1){
         m_day++;
-        QMetaObject::invokeMethod(m_app, "refreshMap");
-        DisplayInfo();
+        Update();
     }
 }
 
 void Controller::previousDay() {
     if(m_day > 0){
         m_day--;
-        QMetaObject::invokeMethod(m_app, "refreshMap");
-        DisplayInfo();
+        Update();
     }
 }
 
-void Controller::SetInfo() {
-    QObject* locName = m_app->findChild<QObject*>(QStringLiteral("locName"));
-    if(locName) {
-        std::cout << "Setting locName" << std::endl;
-        locName->setProperty("text", QStringLiteral("woop"));
-    }
-    else{
-        std::cerr << "locname not found" << std::endl;
-    }
+void Controller::DisplayDay(){
+    QObject* dayObject = m_app->findChild<QObject*>("currentDay");
+    if(dayObject)
+        dayObject->setProperty("text", GetCurrentDay());
 }
 
 bool Controller::SetObjectText(const std::string& objectName, const std::string& text) {
@@ -137,7 +122,6 @@ bool Controller::SetObjectText(const std::string& objectName, const std::string&
         obj->setProperty("text", QString::fromStdString(text));
         return true;
     }
-    std::cout << "Could not find child: " << objectName << std::endl;
     return false;   //failed
 }
 
@@ -158,11 +142,13 @@ std::string DoubleToString(double d, unsigned int precision = 0){
     }
 
     str = str.substr(0,size+precision);
+    if(str.size() == 0){
+        return "0";
+    }
     return str;
 }
 
 bool Controller::SetObjectPercentage(const std::string& objectName, double percentage, unsigned int precision) {
-
     return SetObjectText(objectName, DoubleToString(percentage*100, precision) + "%");
 }
 
@@ -185,81 +171,41 @@ void Controller::DisplayInfo() {
         }
     }
 
-    double tot_population   = 0;
-    double tot_daycare      = 0;
-    double tot_preschool    = 0;
-    double tot_k12school    = 0;
-    double tot_college      = 0;
-    double tot_workplace    = 0;
-    double tot_retired      = 0;
-    double population   = 0;
-    double daycare      = 0;
-    double preschool    = 0;
-    double k12school    = 0;
-    double college      = 0;
-    double workplace    = 0;
-    double retired      = 0;
-    double total    = 0;
+    std::vector<double> percentages(stride::AgeBrackets::NumOfAgeBrackets()+1, 0);
+    std::vector<double> total_populations(stride::AgeBrackets::NumOfAgeBrackets()+1, 0);
 
-    std::cout << "\n";
-    for(auto& loc : m_selectedLocations) {
-        population  += loc->GetPopCount();
-        daycare     = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Daycare, m_selectedHealthStatus)   * loc->GetPopCount();
-        preschool   = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::PreSchool, m_selectedHealthStatus) * loc->GetPopCount();
-        k12school   = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::K12School, m_selectedHealthStatus) * loc->GetPopCount();
-        college     = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::College, m_selectedHealthStatus)   * loc->GetPopCount();
-        workplace   = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Workplace, m_selectedHealthStatus) * loc->GetPopCount();
-        retired     = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Retired, m_selectedHealthStatus)   * loc->GetPopCount();
-        total       += daycare + preschool + k12school + college + workplace + retired;
+    std::vector<double> temp_percentage(stride::AgeBrackets::NumOfAgeBrackets(), 0); //temporary
+    std::vector<double> temp_population(stride::AgeBrackets::NumOfAgeBrackets(), 0); //temporary
 
-        std::cout << "loc:\n";
-        double tmp;
-        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Daycare);
+    for(const auto& loc : m_selectedLocations) {
+        for(const auto& b : m_selectedAgeBrackets) {
+            percentages[ToSize(b)]           = loc->GetPoolStatus(m_day)->getPercentage(b, m_selectedHealthStatus)*loc->GetPopCount();
+            percentages[NumOfAgeBrackets()] += percentages[ToSize(b)];
 
-        std::cout << "\t" << daycare << "/" << tmp << std::endl;
-        if(tmp != 0)
-            tot_daycare += daycare;
-        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::PreSchool);
-        std::cout << "\t" << preschool << "/" << tmp << std::endl;
-        if(tmp != 0)
-            tot_preschool += preschool;
-        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::K12School);
-        std::cout << "\t" << k12school << "/" << tmp << std::endl;
-        if(tmp != 0)
-            tot_k12school += k12school;
-        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::College);
-        std::cout << "\t" << college << "/" << tmp << std::endl;
-        if(tmp != 0)
-            tot_college += college/tmp;
-        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Workplace);
-        std::cout << "\t" << workplace << "/" << tmp << std::endl;
-        if(tmp != 0)
-            tot_workplace += workplace;
-        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Retired);
-        std::cout << "\t" << retired << "/" << tmp << std::endl;
-        if(tmp != 0)
-            tot_retired += retired;
+            total_populations[ToSize(b)]           = loc->GetPoolStatus(m_day)->getPercentage(b)*loc->GetPopCount();
+            total_populations[NumOfAgeBrackets()]  += total_populations[ToSize(b)];
+        }
     }
-    std::cout << "\n";
 
-    daycare     /= population;
-    preschool   /= population;
-    k12school   /= population;
-    college     /= population;
-    workplace   /= population;
-    retired     /= population;
-    total       /= population;
+    double tot_daycare     = percentages[0]/total_populations[0];
+    double tot_preschool   = percentages[1]/total_populations[1];
+    double tot_k12school   = percentages[2]/total_populations[2];
+    double tot_college     = percentages[3]/total_populations[3];
+    double tot_workplace   = percentages[4]/total_populations[4];
+    double tot_retired     = percentages[5]/total_populations[5];
+    double tot_total       = percentages[6]/total_populations[6];
+
 
     unsigned int precision = 2;
 
-    SetObjectText("populationValue", DoubleToString(population, 0));
-    SetObjectPercentage("totalValue", total,precision);
-    SetObjectPercentage("daycareValue", daycare,precision);
-    SetObjectPercentage("preschoolValue", preschool,precision);
-    SetObjectPercentage("k12schoolValue", k12school,precision);
-    SetObjectPercentage("collegeValue", college,precision);
-    SetObjectPercentage("workplaceValue", workplace, precision);
-    SetObjectPercentage("retiredValue", retired, precision);
+    SetObjectText("populationValue",DoubleToString(total_populations[6], 0));
+    SetObjectPercentage("totalValue",     tot_total,precision);
+    SetObjectPercentage("daycareValue",   tot_daycare,precision);
+    SetObjectPercentage("preschoolValue", tot_preschool,precision);
+    SetObjectPercentage("k12schoolValue", tot_k12school,precision);
+    SetObjectPercentage("collegeValue",   tot_college,precision);
+    SetObjectPercentage("workplaceValue", tot_workplace, precision);
+    SetObjectPercentage("retiredValue",   tot_retired, precision);
 
     QMetaObject::invokeMethod(m_app->findChild<QObject*>("sideRect"), "open");
 }
@@ -277,8 +223,9 @@ void Controller::SetSelectedLocation(unsigned int ID) {
     DisplayInfo();
 }
 
-unsigned int Controller::GetCurrentDay() {
-    return m_day;
+QString Controller::GetCurrentDay() {
+    unsigned int day = m_day*m_step;
+    return QString::fromStdString(std::to_string(day) + "/" + std::to_string(m_maxDay-1));
 }
 
 void Controller::InitializeMultiSelect(double longitude, double latitude) {
@@ -300,5 +247,118 @@ void Controller::RadiusSelect(double distance) {
     m_selectedLocations = selectedLoc;
     m_selection = StateSelect::radius;
     DisplayInfo();
+}
+
+void Controller::ToggleSelect(QString selectName) {
+    if(selectName.toStdString() == "daycare") {
+        std::cout << "daycare toggled";
+        const auto& found = m_selectedAgeBrackets.find(stride::AgeBrackets::AgeBracket::Daycare);
+        if(found == m_selectedAgeBrackets.end()){
+            m_selectedAgeBrackets.insert(stride::AgeBrackets::AgeBracket::Daycare);
+        }
+        else{
+            m_selectedAgeBrackets.erase(stride::AgeBrackets::AgeBracket::Daycare);
+        }
+    }
+}
+
+void Controller::Update() {
+    DisplayDay();
+    DisplayInfo();
+    QMetaObject::invokeMethod(m_app, "refreshMap");
+}
+
+void Controller::AgeSelect(QString age) {
+    if(age.toStdString() == "daycare"){
+        m_selectedAgeBrackets.insert(stride::AgeBrackets::AgeBracket::Daycare);
+    }
+    else if(age.toStdString() == "preschool"){
+        m_selectedAgeBrackets.insert(stride::AgeBrackets::AgeBracket::PreSchool);
+    }
+    else if(age.toStdString() == "k12school"){
+        m_selectedAgeBrackets.insert(stride::AgeBrackets::AgeBracket::K12School);
+    }
+    else if(age.toStdString() == "college"){
+        m_selectedAgeBrackets.insert(stride::AgeBrackets::AgeBracket::College);
+    }
+    else if(age.toStdString() == "workplace"){
+        m_selectedAgeBrackets.insert(stride::AgeBrackets::AgeBracket::Workplace);
+    }
+    else if(age.toStdString() == "retired"){
+        m_selectedAgeBrackets.insert(stride::AgeBrackets::AgeBracket::Retired);
+    }
+    Update();
+}
+
+void Controller::AgeDeSelect(QString age) {
+    if(age.toStdString() == "daycare"){
+        m_selectedAgeBrackets.erase(stride::AgeBrackets::AgeBracket::Daycare);
+    }
+    if(age.toStdString() == "preschool"){
+        m_selectedAgeBrackets.erase(stride::AgeBrackets::AgeBracket::PreSchool);
+    }
+    if(age.toStdString() == "k12school"){
+        m_selectedAgeBrackets.erase(stride::AgeBrackets::AgeBracket::K12School);
+    }
+    if(age.toStdString() == "college"){
+        m_selectedAgeBrackets.erase(stride::AgeBrackets::AgeBracket::College);
+    }
+    if(age.toStdString() == "workplace"){
+        m_selectedAgeBrackets.erase(stride::AgeBrackets::AgeBracket::Workplace);
+    }
+    if(age.toStdString() == "retired"){
+        m_selectedAgeBrackets.erase(stride::AgeBrackets::AgeBracket::Retired);
+    }
+    Update();
+}
+
+void Controller::HealthSelect(QString health) {
+    if(health.toStdString() == "immune"){
+        m_selectedHealthStatus.insert(stride::HealthStatus::Immune);
+    }
+    else if(health.toStdString() == "exposed"){
+        m_selectedHealthStatus.insert(stride::HealthStatus::Exposed);
+    }
+    else if(health.toStdString() == "infectious"){
+        m_selectedHealthStatus.insert(stride::HealthStatus::Infectious);
+    }
+    else if(health.toStdString() == "symptomatic"){
+        m_selectedHealthStatus.insert(stride::HealthStatus::Symptomatic);
+    }
+    else if(health.toStdString() == "recovered"){
+        m_selectedHealthStatus.insert(stride::HealthStatus::Recovered);
+    }
+    else if(health.toStdString() == "susceptible"){
+        m_selectedHealthStatus.insert(stride::HealthStatus::Susceptible);
+    }
+    else if(health.toStdString() == "infectious and symptomatic"){
+        m_selectedHealthStatus.insert(stride::HealthStatus::InfectiousAndSymptomatic);
+    }
+    Update();
+}
+
+void Controller::HealthDeSelect(QString health) {
+    if(health.toStdString() == "immune"){
+        m_selectedHealthStatus.erase(stride::HealthStatus::Immune);
+    }
+    else if(health.toStdString() == "exposed"){
+        m_selectedHealthStatus.erase(stride::HealthStatus::Exposed);
+    }
+    else if(health.toStdString() == "infectious"){
+        m_selectedHealthStatus.erase(stride::HealthStatus::Infectious);
+    }
+    else if(health.toStdString() == "symptomatic"){
+        m_selectedHealthStatus.erase(stride::HealthStatus::Symptomatic);
+    }
+    else if(health.toStdString() == "recovered"){
+        m_selectedHealthStatus.erase(stride::HealthStatus::Recovered);
+    }
+    else if(health.toStdString() == "susceptible"){
+        m_selectedHealthStatus.erase(stride::HealthStatus::Susceptible);
+    }
+    else if(health.toStdString() == "infectious and symptomatic"){
+        m_selectedHealthStatus.erase(stride::HealthStatus::InfectiousAndSymptomatic);
+    }
+    Update();
 }
 }

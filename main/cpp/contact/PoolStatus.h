@@ -26,6 +26,7 @@
 
 #include <vector>
 #include <map>
+#include <set>
 #include <memory>
 
 namespace stride {
@@ -70,7 +71,7 @@ public:
 
     double getPercentage(const AgeBrackets::AgeBracket& ageBracket) const;
 
-    double getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::vector<HealthStatus>& ID) const;
+    double getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::set<HealthStatus>& ID) const;
 
 private:
     std::vector<std::shared_ptr<HealthPool>> m_status;   ///< matrix of the health status of a ContactType m_status[ContactType::Id][HealthStatus]
@@ -96,14 +97,14 @@ public:
 
     void setHealth(HealthStatus ID, double fraction);
 
-    double getHealth(HealthStatus ID) const;
+    double getHealth(const HealthStatus& ID) const;
 
-    double operator[](HealthStatus ID) const { return getHealth(ID); };
+    double operator[](const HealthStatus& ID) const { return getHealth(ID); };
 
     bool operator==(const HealthPool& other) const;
 
     /// Sum of fractions of all given ID
-    double sum(const std::vector<HealthStatus>& ID) const;
+    double sum(const std::set<HealthStatus>& ID) const;
 
     /// returns size of HealthPool
     static unsigned size() { return 7; };
