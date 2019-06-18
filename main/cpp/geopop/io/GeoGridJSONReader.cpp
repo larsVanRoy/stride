@@ -41,9 +41,6 @@ void GeoGridJSONReader::Read()
         json json_file;
 
         try {
-                char blub[5];
-                m_inputStream->getline(blub, 256);
-                std::cout << blub << std::endl;
                 json_file = json::parse(*m_inputStream);
 
         } catch (json::parse_error& e) {

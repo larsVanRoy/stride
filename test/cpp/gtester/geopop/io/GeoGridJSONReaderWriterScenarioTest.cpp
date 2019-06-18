@@ -54,6 +54,17 @@ namespace {
         auto file = make_unique<ifstream>();
         std::cout << "1" << std::endl;
         file->open(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + filename);
+
+        std::cout << "0-0-0-0-0--0-0-0-0-0-0-0-0-" << std::endl;
+        std::ifstream ifs;
+        ifs.open(FileSys::GetTestsDir().string()+"/testdata/GeoGridJSON/"+filename);
+        char c = ifs.get();
+        while(ifs.good()){
+            std::cout << c;
+            c = ifs.get();
+        }
+        ifs.close();
+
         std::cout << "2" << std::endl;
         GeoGridJSONReader geoGridJSONReader(move(file), pop);
         std::cout << "3" << std::endl;
