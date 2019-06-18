@@ -105,7 +105,7 @@ private:
     unsigned int m_step;    ///days between steps
 
     geopop::Coordinate m_multiSelect;
-
+    
     QList<QObject*> result;
 
     std::shared_ptr<geopop::EpiGrid> m_grid;

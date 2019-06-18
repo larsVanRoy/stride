@@ -5,6 +5,7 @@
 #include "Controller.h"
 #include "Location.h"
 #include <cmath>
+#include <QVariant>
 
 
 #include "../cpp/contact/AgeBrackets.h"
@@ -113,13 +114,13 @@ void Controller::previousDay() {
 void Controller::DisplayDay(){
     QObject* dayObject = m_app->findChild<QObject*>("currentDay");
     if(dayObject)
-        dayObject->setProperty("text", GetCurrentDay());
+        dayObject->setProperty("text", QVariant(GetCurrentDay()));
 }
 
 bool Controller::SetObjectText(const std::string& objectName, const std::string& text) {
     QObject* obj = m_app->findChild<QObject*>(QString::fromStdString(objectName));
     if(obj) {
-        obj->setProperty("text", QString::fromStdString(text));
+        obj->setProperty("text", QVariant(QString::fromStdString(text)));
         return true;
     }
     return false;   //failed
