@@ -43,7 +43,8 @@ void GeoGridJSONReader::Read()
         try {
                 json_file = json::parse(*m_inputStream);
 
-        } catch (json::parse_error&) {
+        } catch (json::parse_error& e) {
+                std::cout << "Here is the magic error you receive on mac: " << e.what() << std::endl;
                 throw Exception("Problem parsing JSON file, check whether empty or invalid JSON.");
         }
 
