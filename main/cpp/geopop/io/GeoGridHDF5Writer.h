@@ -68,4 +68,8 @@ private:
         unsigned int m_location_counter = 0U;
         unsigned int m_pool_counter = 0U;
 };
+
+template<>
+void GeoGridHDF5Writer::WriteAttribute(const std::string& name, const std::string& value, H5::H5Object& object);
+
 } // namespace geopop
