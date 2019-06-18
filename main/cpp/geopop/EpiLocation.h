@@ -49,6 +49,8 @@ public:
 
         std::shared_ptr<stride::PoolStatus> GetPoolStatus(unsigned int day) { return m_history.at(day); };
 
+        const std::shared_ptr<const stride::PoolStatus> GetPoolStatus(unsigned int day) const { return m_history.at(day); };
+
         void AddPoolStatus(std::shared_ptr<stride::PoolStatus> status) { m_history.push_back(status); };
 
 private:

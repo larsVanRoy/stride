@@ -23,7 +23,6 @@ MapCircle{
         onClicked: {
             map.setInvisible();
             controller.SetSelectedLocation(id);
-            sideRect.open();
         }
     }
 }

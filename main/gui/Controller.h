@@ -13,13 +13,20 @@
 #include <QList>
 
 #include "../cpp/geopop/geo/Coordinate.h"
-//#include "../cpp/geopop/EpiGrid.h"
+#include "../cpp/geopop/EpiLocation.h"
 
 namespace geopop {
 class EpiGrid;
 }
 
 namespace gui {
+
+enum class StateSelect : unsigned short {
+    unassigned,
+    location,
+    box,
+    radius
+};
 
 class Controller : public QObject {
 Q_OBJECT
@@ -40,15 +47,7 @@ public:
 
     Q_INVOKABLE QList<QObject*> getLocations();
 
-    Q_INVOKABLE QString GetLocationName(unsigned int ID);
-
-    Q_INVOKABLE QString GetLatitude(unsigned int ID);
-
-    Q_INVOKABLE QString GetLongitude(unsigned int ID);
-
     Q_INVOKABLE QString GetPopCount(unsigned int ID);
-
-    Q_INVOKABLE QString GetIll(unsigned int ID);
 
     Q_INVOKABLE double GetIllDouble(unsigned int ID);
 
@@ -66,17 +65,13 @@ public:
 
     Q_INVOKABLE void SetInfo();
 
-    Q_INVOKABLE void SetSelectedLocation(int ID) { m_selectedLocationId = ID; }
-
     Q_INVOKABLE double GetColor(unsigned int ID);
 
-    unsigned int GetCurrentDay();
+    Q_INVOKABLE unsigned int GetCurrentDay();
 
     Q_INVOKABLE void DisplayInfo();
 
     Q_INVOKABLE void SetSelectedLocation(unsigned int ID);
-
-//    Q_INVOKABLE void UpdateInfo(unsigned int ID);
 
     std::string show;
 
@@ -90,14 +85,17 @@ private:
 
     bool SetObjectPercentage(const std::string& objectName, double percentage, unsigned int precision);
 
-    unsigned int m_selectedLocationId;
+    std::vector<const geopop::EpiLocation<geopop::Coordinate>*> m_selectedLocations;
 
-    bool m_selectedLocationIdSet;
+    std::vector<stride::AgeBrackets::AgeBracket> m_selectedAgeBrackets;
+
+    std::vector<stride::HealthStatus> m_selectedHealthStatus;
+
+    StateSelect m_selection;
 
     unsigned int m_day; ///current day
 
     geopop::Coordinate m_multiSelect;
-
 };
 
 }

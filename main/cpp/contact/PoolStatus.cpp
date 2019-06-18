@@ -21,6 +21,7 @@
 #include "PoolStatus.h"
 #include "AgeBrackets.h"
 
+#include <iostream>
 #include <vector>
 #include <map>
 #include <memory>
@@ -44,7 +45,16 @@ bool PoolStatus::operator==(const PoolStatus &other) const{
 std::shared_ptr<HealthPool> PoolStatus::getStatus(const AgeBrackets::AgeBracket& ageBracket){
     return m_status[AgeBrackets::ToSize(ageBracket)];
 }
+
 std::shared_ptr<HealthPool> PoolStatus::operator[](const AgeBrackets::AgeBracket& ageBracket){
+    return m_status[AgeBrackets::ToSize(ageBracket)];
+}
+
+const std::shared_ptr<const HealthPool> PoolStatus::getStatus(const AgeBrackets::AgeBracket& ageBracket) const{
+    return m_status[AgeBrackets::ToSize(ageBracket)];
+}
+
+const std::shared_ptr<const HealthPool> PoolStatus::operator[](const AgeBrackets::AgeBracket& ageBracket) const{
     return m_status[AgeBrackets::ToSize(ageBracket)];
 }
 
@@ -60,12 +70,12 @@ void PoolStatus::addStatus(const AgeBrackets::AgeBracket& ageBracket, std::share
     m_status[AgeBrackets::ToSize(ageBracket)] = status;
 }
 
-double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket) {
+double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket) const {
     return this->getStatus(ageBracket)->sum(stride::HealthStatusList);
 }
 
-double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::vector<HealthStatus>& ID) {
-    return (this->getStatus(ageBracket)->sum(ID)/getPercentage(ageBracket));
+double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::vector<HealthStatus>& ID) const {
+    return this->getStatus(ageBracket)->sum(ID);
 }
 
 

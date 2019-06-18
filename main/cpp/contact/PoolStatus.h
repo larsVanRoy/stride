@@ -51,6 +51,10 @@ public:
 
     std::shared_ptr<HealthPool> operator[](const AgeBrackets::AgeBracket& ageBracket);
 
+    const std::shared_ptr<const HealthPool> getStatus(const AgeBrackets::AgeBracket& ageBracket) const;
+
+    const std::shared_ptr<const HealthPool> operator[](const AgeBrackets::AgeBracket& ageBracket) const;
+
     std::vector<double> operator[](HealthStatus h) const;
 
     using iterator          = std::vector<std::shared_ptr<HealthPool>>::iterator;
@@ -64,9 +68,9 @@ public:
 
     const_iterator cend() const { return m_status.cend(); }
 
-    double getPercentage(const AgeBrackets::AgeBracket& ageBracket);
+    double getPercentage(const AgeBrackets::AgeBracket& ageBracket) const;
 
-    double getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::vector<HealthStatus>& ID);
+    double getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::vector<HealthStatus>& ID) const;
 
 private:
     std::vector<std::shared_ptr<HealthPool>> m_status;   ///< matrix of the health status of a ContactType m_status[ContactType::Id][HealthStatus]

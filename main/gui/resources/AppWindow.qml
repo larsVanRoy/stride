@@ -17,8 +17,6 @@ ApplicationWindow {
     visible: true
     title: "Stride"
 
-    function test() {
-    }
 
     function refreshMap() {
         Script.refreshSprites();
@@ -131,7 +129,7 @@ ApplicationWindow {
 
                  onPressed: {
                     if(map.selectType !== "default")  {
-//                        controller.InitializeMultiSelect(map.toCoordinate(Qt.point(mouse.x, mouse.y)).longitude, map.toCoordinate(Qt.point(mouse.x, mouse.y)).latitude);
+                        controller.InitializeMultiSelect(map.toCoordinate(Qt.point(mouse.x, mouse.y)).longitude, map.toCoordinate(Qt.point(mouse.x, mouse.y)).latitude);
                         map.disable_panning = true;
                         if(map.selectType === "box"){
                             selectionBox.topLeft = map.toCoordinate(Qt.point(mouse.x, mouse.y));
@@ -209,7 +207,7 @@ ApplicationWindow {
 
                          selectionBox.topLeft = topLeft;
                          selectionBox.bottomRight = bottomRight;
-//                         controller.BoxSelect(co2.longitude, co2.latitude);
+                         controller.BoxSelect(co2.longitude, co2.latitude);
 
                          selectionBox.visible = true;
                          selectionBox.state = "created"
@@ -219,7 +217,7 @@ ApplicationWindow {
                          selectionRadius.radius = radius
                          selectionRadius.visible = true;
                          selectionRadius.state = "created";
-//                         controller.RadiusSelect(radius/1000);
+                         controller.RadiusSelect(radius/1000);
                      }
                     map.selectType = "default"
                     map.disable_panning = false;
@@ -279,6 +277,7 @@ ApplicationWindow {
 
     Rectangle{
         id: sideRect
+        objectName: "sideRect"
         height: parent.height
         anchors {right: parent.right}
 
@@ -298,63 +297,12 @@ ApplicationWindow {
             return;
         }
 
-//        Sidebar.Rectangle{
-//            anchors.top: parent.top
-//        }
-
-        function setLocationInfo(val){
-            setName(controller.GetName(val));
-            setPopulation(controller.GetPopCount(val));
-            setTotal(controller.GetTotal(val));
-        }
-
         Rectangle {
             id: sideBar
             height: parent.height
             width: root.width/5
             anchors {right: parent.right}
 
-            function setName(name){
-                locName.text = name;
-                locName.fontSizeMode = Text.Fit;
-            }
-            function setLongitude(longitude){
-//                longitudeValue.text = longitude;
-            }
-            function setLatitude(latitude){
-//                latitudeValue.text = latitude;
-            }
-            function setPopulation(pop){
-                populationValue.text = pop;
-            }
-            function setTotal(val){
-                totalValue.text = val + "%";
-                totalValue.fontSizeMode = Text.Fit;
-            }
-            function setDaycare(val){
-                daycareValue.text = val + "%";
-                daycareValue.fontSizeMode = Text.Fit;
-            }
-            function setPreschool(val){
-                preschoolValue.text = val + "%";
-                preschoolValue.fontSizeMode = Text.Fit;
-            }
-            function setK12School(val){
-                k12SchoolValue.text = val + "%";
-                k12SchoolValue.fontSizeMode = Text.Fit;
-            }
-            function setCollege(val){
-                collegeValue.text = val + "%";
-                collegeValue.fontSizeMode = Text.Fit;
-            }
-            function setWorkplace(val){
-                workplaceValue.text = val + "%";
-                workplaceValue.fontSizeMode = Text.Fit;
-            }
-            function setRetired(val){
-                retiredValue.text = val + "%";
-                retiredValue.fontSizeMode = Text.Fit;
-            }
             StackView{
                 anchors {left: parent.left}
 

@@ -18,7 +18,12 @@ namespace gui {
 
 Controller::Controller(QObject *parent) : QObject(parent), m_app(nullptr),
 m_grid(nullptr), result({}), m_day(0), m_multiSelect({0,0}), show("all"),
-m_selectedLocationIdSet(false) {}
+m_selectedLocations({}), m_selection(StateSelect::unassigned),
+m_selectedAgeBrackets(stride::AgeBrackets::AgeBracketList),
+m_selectedHealthStatus({})
+{
+    m_selectedHealthStatus = {stride::HealthStatus::Infectious, stride::HealthStatus::Symptomatic, stride::HealthStatus::InfectiousAndSymptomatic};
+}
 
 Controller::~Controller(){
     for(QObject* q : result) {
@@ -39,7 +44,6 @@ void Controller::loadFile() {
 };
 
 QList<QObject*> Controller::getLocations() {
-//    QList<QObject*> result;
     for(QObject* q : result) {
         delete q;
     }
@@ -59,18 +63,9 @@ QList<QObject*> Controller::getLocations() {
         if (smallest > loc->GetPopCount()) {
             smallest = loc->GetPopCount();
         }
-        try {
-            result.push_back(
-                    new Location(loc->GetCoordinate().get<0>(), loc->GetCoordinate().get<1>(), loc->GetPopCount(),
-                                 GetIllDouble(loc->GetID()), loc->GetID()));
-        }
-        catch(...){
-            std::cerr << "Whoopsie" << std::endl;
-            throw "nope";
-        }
+        result.push_back(new Location(loc->GetCoordinate().get<0>(), loc->GetCoordinate().get<1>(), loc->GetPopCount(),
+                             GetIllDouble(loc->GetID()), loc->GetID()));
     }
-    std::cout << "\nLargest:  " << largest << std::endl;
-    std::cout << "Smallest: " << smallest << std::endl;
     return result;
 }
 
@@ -78,24 +73,8 @@ QString Controller::GetName(unsigned int ID) {
     return QString("test GetName");
 }
 
-QString Controller::GetLatitude(unsigned int ID) {
-    return QString::number(m_grid->GetById(ID)->GetCoordinate().get<0>(), 'f', 5);
-}
-
-QString Controller::GetLongitude(unsigned int ID) {
-    return QString::number(m_grid->GetById(ID)->GetCoordinate().get<1>(), 'f', 5);
-}
-
-QString Controller::GetLocationName(unsigned int ID) {
-    return QString::fromStdString(m_grid->GetById(ID)->GetName());
-}
-
 QString Controller::GetPopCount(unsigned int ID) {
     return QString::number(m_grid->GetById(ID)->GetPopCount());
-}
-
-QString Controller::GetIll(unsigned int ID) {
-    return QString::number(GetIllDouble(ID)*100, 'f', 2);
 }
 
 double Controller::GetIllDouble(unsigned int ID) {
@@ -115,18 +94,13 @@ double Controller::GetIllDouble(unsigned int ID) {
 double Controller::GetColor(unsigned int ID) {
     double color = 0;
     std::shared_ptr<stride::PoolStatus> p = m_grid->GetById(ID)->GetPoolStatus(m_day);
-    if(show == "all") {
-        for(stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
-            std::shared_ptr<stride::HealthPool> h = p->getStatus(ageBracket);
-            color += h->operator[](stride::HealthStatus::Infectious);
-            color += h->operator[](stride::HealthStatus::InfectiousAndSymptomatic);
-            color += h->operator[](stride::HealthStatus::Symptomatic);
-            color += h->operator[](stride::HealthStatus::Recovered);
+    for(stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
+        std::shared_ptr<stride::HealthPool> h = p->getStatus(ageBracket);
+        for(const stride::HealthStatus& hs : m_selectedHealthStatus) {
+            color += h->operator[](hs);
         }
     }
-    else{
-        std::cout << "show: " << show << std::endl;
-    }
+
     return color;
 }
 
@@ -167,43 +141,118 @@ bool Controller::SetObjectText(const std::string& objectName, const std::string&
     return false;   //failed
 }
 
-bool Controller::SetObjectPercentage(const std::string& objectName, double percentage, unsigned int precision) {
+std::string DoubleToString(double d, unsigned int precision = 0){
     double rounding = pow(10, precision);
-    percentage = lround(percentage*rounding*100)/rounding;
+    d = lround(d*rounding)/rounding;
     // get numbers before point:
-    double tmp = percentage;
+    double tmp = d;
     unsigned int size = 0;
     while(tmp > 1){
         size++;
         tmp /= 10;
     }
-    std::string str = std::to_string(percentage);
+    std::string str = std::to_string(d);
 
     if(precision > 0) {
         precision += 1;     //add comma
     }
 
     str = str.substr(0,size+precision);
-    return SetObjectText(objectName, str + "%");
+    return str;
+}
+
+bool Controller::SetObjectPercentage(const std::string& objectName, double percentage, unsigned int precision) {
+
+    return SetObjectText(objectName, DoubleToString(percentage*100, precision) + "%");
 }
 
 void Controller::DisplayInfo() {
-    if(! m_selectedLocationIdSet){
-        return;
+    switch(m_selection){
+        case StateSelect::unassigned: {
+            return;
+        }
+        case StateSelect::location: {
+            SetObjectText("locName", m_selectedLocations.at(0)->GetName());
+            break;
+        }
+        case StateSelect::box: {
+            SetObjectText("locName", "Box");
+            break;
+        }
+        case StateSelect::radius: {
+            SetObjectText("locName", "Radius");
+            break;
+        }
     }
 
-    const auto& loc = m_grid->GetById(m_selectedLocationId);
-    double daycare = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Daycare);
-    double preschool = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::PreSchool);
-    double k12school = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::K12School);
-    double college = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::College);
-    double workplace = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Workplace);
-    double retired = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Retired);
-    double total = daycare + preschool + k12school + college + workplace + retired;
+    double tot_population   = 0;
+    double tot_daycare      = 0;
+    double tot_preschool    = 0;
+    double tot_k12school    = 0;
+    double tot_college      = 0;
+    double tot_workplace    = 0;
+    double tot_retired      = 0;
+    double population   = 0;
+    double daycare      = 0;
+    double preschool    = 0;
+    double k12school    = 0;
+    double college      = 0;
+    double workplace    = 0;
+    double retired      = 0;
+    double total    = 0;
+
+    std::cout << "\n";
+    for(auto& loc : m_selectedLocations) {
+        population  += loc->GetPopCount();
+        daycare     = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Daycare, m_selectedHealthStatus)   * loc->GetPopCount();
+        preschool   = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::PreSchool, m_selectedHealthStatus) * loc->GetPopCount();
+        k12school   = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::K12School, m_selectedHealthStatus) * loc->GetPopCount();
+        college     = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::College, m_selectedHealthStatus)   * loc->GetPopCount();
+        workplace   = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Workplace, m_selectedHealthStatus) * loc->GetPopCount();
+        retired     = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Retired, m_selectedHealthStatus)   * loc->GetPopCount();
+        total       += daycare + preschool + k12school + college + workplace + retired;
+
+        std::cout << "loc:\n";
+        double tmp;
+        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Daycare);
+
+        std::cout << "\t" << daycare << "/" << tmp << std::endl;
+        if(tmp != 0)
+            tot_daycare += daycare;
+        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::PreSchool);
+        std::cout << "\t" << preschool << "/" << tmp << std::endl;
+        if(tmp != 0)
+            tot_preschool += preschool;
+        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::K12School);
+        std::cout << "\t" << k12school << "/" << tmp << std::endl;
+        if(tmp != 0)
+            tot_k12school += k12school;
+        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::College);
+        std::cout << "\t" << college << "/" << tmp << std::endl;
+        if(tmp != 0)
+            tot_college += college/tmp;
+        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Workplace);
+        std::cout << "\t" << workplace << "/" << tmp << std::endl;
+        if(tmp != 0)
+            tot_workplace += workplace;
+        tmp = loc->GetPoolStatus(m_day)->getPercentage(stride::AgeBrackets::AgeBracket::Retired);
+        std::cout << "\t" << retired << "/" << tmp << std::endl;
+        if(tmp != 0)
+            tot_retired += retired;
+    }
+    std::cout << "\n";
+
+    daycare     /= population;
+    preschool   /= population;
+    k12school   /= population;
+    college     /= population;
+    workplace   /= population;
+    retired     /= population;
+    total       /= population;
 
     unsigned int precision = 2;
-    SetObjectText("locName", loc->GetName());
-    SetObjectText("populationValue", std::to_string(loc->GetPopCount()));
+
+    SetObjectText("populationValue", DoubleToString(population, 0));
     SetObjectPercentage("totalValue", total,precision);
     SetObjectPercentage("daycareValue", daycare,precision);
     SetObjectPercentage("preschoolValue", preschool,precision);
@@ -211,15 +260,21 @@ void Controller::DisplayInfo() {
     SetObjectPercentage("collegeValue", college,precision);
     SetObjectPercentage("workplaceValue", workplace, precision);
     SetObjectPercentage("retiredValue", retired, precision);
+
+    QMetaObject::invokeMethod(m_app->findChild<QObject*>("sideRect"), "open");
 }
 
 void Controller::SetSelectedLocation(unsigned int ID) {
-    const auto& loc = m_grid->GetById(ID);
-    if(m_selectedLocationId != loc->GetID()){
-        m_selectedLocationId = loc->GetID();
-        m_selectedLocationIdSet = true;
-        DisplayInfo();
+    if(m_selection == StateSelect::location) {
+        if(ID == m_selectedLocations.at(0)->GetID()){
+            // location already selected
+            return;
+        }
     }
+    m_selection = StateSelect::location;
+    m_selectedLocations = {m_grid->GetById(ID).get()};
+
+    DisplayInfo();
 }
 
 unsigned int Controller::GetCurrentDay() {
@@ -231,22 +286,19 @@ void Controller::InitializeMultiSelect(double longitude, double latitude) {
 }
 
 void Controller::BoxSelect(double longitude, double latitude) {
-    std::cout << "Box: {" << m_multiSelect.get<0>() << ", " <<m_multiSelect.get<1>() << "} and {" << longitude << ", " << latitude << "}" << std::endl;
     std::set<const geopop::EpiLocation<geopop::Coordinate>*> selectedLoc = m_grid->LocationsInBox(m_multiSelect.get<0>(), m_multiSelect.get<1>(), longitude, latitude);
-    for(const geopop::EpiLocation<geopop::Coordinate>* epi : selectedLoc){
-        std::cout << "name: " << epi->GetName() << "\n";
-    }
+
+    m_selectedLocations = {};
+    m_selectedLocations.assign(selectedLoc.begin(), selectedLoc.end());
+    m_selection = StateSelect::box;
+    DisplayInfo();
 }
 
 void Controller::RadiusSelect(double distance) {
-
-    std::cout << "Rad: {" << m_multiSelect.get<0>() << ", " <<m_multiSelect.get<1>() << "} and {" <<
-            distance << "}" << std::endl;
-
-    const geopop::EpiLocation center(-1, -1, m_multiSelect);
+    const geopop::EpiLocation center(-1, -1, m_multiSelect);    // create dummy location
     std::vector<const geopop::EpiLocation<geopop::Coordinate>*> selectedLoc = m_grid->LocationsInRadius(center, distance);
-    for(const geopop::EpiLocation<geopop::Coordinate>* epi : selectedLoc){
-        std::cout << "name: " << epi->GetName() << "\n";
-    }
+    m_selectedLocations = selectedLoc;
+    m_selection = StateSelect::radius;
+    DisplayInfo();
 }
 }
