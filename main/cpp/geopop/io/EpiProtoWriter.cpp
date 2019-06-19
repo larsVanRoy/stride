@@ -95,39 +95,38 @@ void EpiProtoWriter::WriteLocation(Location<Coordinate>& location, proto::EpiGeo
 
 void EpiProtoWriter::WriteHealthStatus(geopop::Location<Coordinate> &location, proto::EpiGeoGrid_History* protoHistory)
 {
-    static const map<AgeBrackets::AgeBracket, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket > types = {
-            {AgeBrackets::AgeBracket::Daycare, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Daycare},
-            {AgeBrackets::AgeBracket::PreSchool, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_PreSchool},
-            {AgeBrackets::AgeBracket::K12School, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_K12School},
-            {AgeBrackets::AgeBracket::College, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_College},
-            {AgeBrackets::AgeBracket::Retired, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Retired},
-            {AgeBrackets::AgeBracket::Workplace, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Workplace}};
-
-
     auto protoPools = protoHistory->add_poolsforlocations();
     protoPools->set_id(location.GetID());
-    for (AgeBrackets::AgeBracket ageBracket : AgeBrackets::AgeBracketList)
-    {
-        auto protoPool = protoPools->add_pools();
-        protoPool->set_type(types.at(ageBracket));
-        WritePoolHealthStatus(&location, protoPool);
-    }
+    WritePoolHealthStatus(&location, protoPools);
 }
 
 void EpiProtoWriter::WritePoolHealthStatus(geopop::Location<Coordinate>*                        location,
-                                           proto::EpiGeoGrid_History_PoolsForLocation_Pool*     protoPool)
+                                           proto::EpiGeoGrid_History_PoolsForLocation*          protoPool)
 {
-    vector<unsigned long> statuses(NumOfHealthStatus(), 0);
+    map<AgeBrackets::AgeBracket, map<string, double>> statuses;
+
+    for (const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList)
+    {
+        map<string, double> health;
+        for (const HealthStatus& h: HealthStatusList)
+        {
+            health[HealthToString(h)] = 0;
+        }
+        statuses[bracket] = health;
+    }
 
     for (const auto &pool : location->CRefPools(ContactType::Id::Household)) {
         for (const auto &person : *pool) {
-            statuses[ToSize(person->GetHealth().GetStatus())] ++;
+
+            statuses[AgeBrackets::ToAgeBracket(person->GetAge())][HealthToString(person->GetHealth().GetStatus())] ++;
         }
     }
-
-    for (const auto& status : statuses)
+    for (const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList)
     {
-        protoPool->add_agebracketpercentage(static_cast<double>(status)/location->GetPopCount());
+        auto HealthForBracket = protoPool->add_pools();
+        for (const auto &status : HealthStatusList) {
+            HealthForBracket->add_agebracketpercentage(static_cast<double>(statuses[bracket][HealthToString(status)]) / location->GetPopCount());
+        }
     }
 }
 

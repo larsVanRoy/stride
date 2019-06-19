@@ -67,7 +67,7 @@ private:
     /// Create a protoBuf pool status containing all the info about the health status
     /// within a given pool
     void WritePoolHealthStatus(Location<Coordinate>*                                location,
-                               proto::EpiGeoGrid_History_PoolsForLocation_Pool*     protoPool);
+                               proto::EpiGeoGrid_History_PoolsForLocation*          protoPool);
 
 private:
     std::ofstream m_stream;            ///< output stream
