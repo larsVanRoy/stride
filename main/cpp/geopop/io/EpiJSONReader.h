@@ -37,7 +37,7 @@ class EpiJSONReader : public EpiReader
 {
 public:
     /// Construct the EpiJSONReader with the istream which contains the JSON.
-    explicit EpiJSONReader(std::unique_ptr<std::ifstream> inputStream) : EpiReader(std::move(inputStream))
+    EpiJSONReader(std::unique_ptr<std::ifstream> inputStream) : EpiReader(std::move(inputStream)), m_grid()
     {
         m_grid = std::make_shared<EpiGrid>();
     };
@@ -80,7 +80,7 @@ private:
     T JSONCast(const nlohmann::json& json_object);
 
 private:
-    std::shared_ptr<EpiGrid> m_grid;
+    std::shared_ptr<EpiGrid> m_grid;    ///< final EpiGrid object
 };
 
 } // namespace geopop
