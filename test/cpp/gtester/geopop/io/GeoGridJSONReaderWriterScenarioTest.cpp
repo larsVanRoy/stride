@@ -52,22 +52,18 @@ namespace {
     {
         std::cout << "In function getGeoGridFromFile" << std::endl;
         auto file = make_unique<ifstream>();
-        std::cout << "1" << std::endl;
         file->open(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + filename);
 
-        std::cout << "0-0-0-0-0--0-0-0-0-0-0-0-0-" << std::endl;
-        std::ifstream ifs;
-        ifs.open(FileSys::GetTestsDir().string()+"/testdata/GeoGridJSON/"+filename);
-        char c = ifs.get();
-        while(ifs.good()){
-            std::cout << c;
-            c = ifs.get();
-        }
-        ifs.close();
+//        stringstream ss;
+//        char line[3486];
+//        while(file->getline(line, 3486)){
+//            ss << line << std::endl;
+//        }
+//
+//        std::cout << ss.str() << std::endl;
 
-        std::cout << "2" << std::endl;
+        std::cout << "1" << std::endl;
         GeoGridJSONReader geoGridJSONReader(move(file), pop);
-        std::cout << "3" << std::endl;
         geoGridJSONReader.Read();
         std::cout << "LEaving function getGeoGridFromFile" << std::endl;
     }
@@ -124,7 +120,7 @@ namespace {
 
         GeoGridJSONWriter writer;
         stringstream ss;
-        writer.Write(*geoGrid, ss);
+        writer.Write(*geoGrid, FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/OWN_readerwriter.json");
 
         string expected1 = R"(
             {
@@ -197,12 +193,14 @@ namespace {
                     }
                 ]})";
 
-        ofstream outputFileStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/OWN_readerwriter.json");
-        outputFileStream << ss.str();
+        ifstream Fileout;
+        Fileout.open(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/OWN_readerwriter.json");
+        string line;
+        while(std::getline(Fileout, line)){
+            ss << line << std::endl;
+        }
 
-        std::cout << "Checking generated string that was written to a file" << std::endl;
-        std::cout << ss.str() << std::endl;
-
+//        std::cout << ss.str().size() << std::endl;
         EXPECT_TRUE(compareJSONs(ss.str(), expected1));
 
         auto pop2 = Population::Create();
