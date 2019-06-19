@@ -46,7 +46,6 @@ set(SRC
     UnitSegmentedVector.cpp
     UnitSlice1.cpp
     UnitSlice2.cpp
-    UnitDemographicProfileTest.cpp
     #---
     #---
     geopop/generators/DaycareGeneratorTest.cpp
@@ -87,6 +86,7 @@ set(SRC
 #    ---
     geopop/WorkplaceScenarioTest.cpp
     geopop/ScenarioDemographicProfile.cpp
+    geopop/UnitDemographicProfileTest.cpp
 #    ---
     myhayai/DeliveryMan.cpp
     myhayai/MyhayaiTests.cpp
