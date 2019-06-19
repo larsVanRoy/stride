@@ -44,14 +44,8 @@ shared_ptr<EpiGrid> EpiProtoReader::Read()
     }
 
     ParseHistory();
-//    try{
-//        ParseHistory();
-//    }
-//    catch(exception& e){
-//        cout << e.what() << endl;
-//        throw Exception("Problem parsing History of Protobuf file, check whether empty or invalid protobuf.");
-//    }
 
+    m_grid->Finalize();
     return m_grid;
 }
 
@@ -110,8 +104,8 @@ void EpiProtoReader::ParseHistory()
             {
                 AgeBrackets::AgeBracket bracket = AgeBracketTypes.at(idx3);
                 ParseLocationPools(locPools.pools(idx3), status, bracket);
-                epiLocation->AddPoolStatus(status);
             }
+            epiLocation->AddPoolStatus(status);
         }
     }
 }
