@@ -137,7 +137,7 @@ json EpiJSONWriter::WriteHealthStatus(const std::shared_ptr<geopop::Location<Coo
         for(const HealthStatus& h : stride::HealthStatusList) {
             Jhealth[stride::HealthToString(h)] = (double) status[bracket][stride::HealthToString(h)] / location->GetPopCount();
         }
-        health_status[AgeBrackets::ToString(bracket)] =Jhealth;
+        health_status[AgeBrackets::AgeBracketToString(bracket)] =Jhealth;
     }
 
     return health_status;

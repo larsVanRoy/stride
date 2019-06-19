@@ -7,7 +7,7 @@ unsigned short int ToSize(const AgeBracket& h) {
     return static_cast<unsigned short int>(h);
 }
 
-std::string ToString(const AgeBracket& ageBracket)
+std::string AgeBracketToString(const AgeBracket& ageBracket)
 {
     switch(ageBracket){
         case AgeBracket::Daycare:
@@ -23,7 +23,6 @@ std::string ToString(const AgeBracket& ageBracket)
         case AgeBracket::Retired:
             return "Retired";
     }
-    return "Retired";
 }
 
 AgeBracket ToAgeBracket(double age){

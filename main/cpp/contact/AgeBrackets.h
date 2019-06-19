@@ -40,7 +40,7 @@ unsigned short int ToSize(const AgeBracket& h);
 inline constexpr unsigned int NumOfAgeBrackets() { return 6U; }
 
 /// AgeBracket to string
-std::string ToString(const AgeBracket& ageBracket);
+std::string AgeBracketToString(const AgeBracket& ageBracket);
 
 /// Keeps all available AgeBrackets in a template pack and exposes it as a std::initialize_list
 template <AgeBracket... AgeBrackets>

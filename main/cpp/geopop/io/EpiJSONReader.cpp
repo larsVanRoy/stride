@@ -114,7 +114,7 @@ void EpiJSONReader::ParseLocationAgeBrackets(const nlohmann::json &pools, std::s
     std::shared_ptr<stride::PoolStatus> status = std::make_shared<stride::PoolStatus>();
     try {
         for (stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
-            std::shared_ptr<stride::HealthPool> h = ParseAgeBracket(pools[stride::AgeBrackets::ToString(ageBracket)]);
+            std::shared_ptr<stride::HealthPool> h = ParseAgeBracket(pools[stride::AgeBrackets::AgeBracketToString(ageBracket)]);
             status->addStatus(ageBracket, h);
         }
     }
@@ -122,7 +122,6 @@ void EpiJSONReader::ParseLocationAgeBrackets(const nlohmann::json &pools, std::s
         std::cout << "Error in ParseLocationPools: " << e.what() << std::endl;
         throw e;
     }
-//    LocationPools
 
     loc->AddPoolStatus(status);
 }
@@ -146,13 +145,9 @@ void EpiJSONReader::ParseHistoryLocation(const nlohmann::json &location) {
 std::shared_ptr<stride::HealthPool> EpiJSONReader::ParseAgeBracket(const nlohmann::json &pool) {
     std::shared_ptr<stride::HealthPool> result = std::make_shared<stride::HealthPool>();
     try {
-        result->setHealth(stride::HealthStatus::Immune, pool[stride::HealthToString(stride::HealthStatus::Immune)]);
-        result->setHealth(stride::HealthStatus::Susceptible, pool[stride::HealthToString(stride::HealthStatus::Susceptible)]);
-        result->setHealth(stride::HealthStatus::Infectious, pool[stride::HealthToString(stride::HealthStatus::Infectious)]);
-        result->setHealth(stride::HealthStatus::InfectiousAndSymptomatic, pool[stride::HealthToString(stride::HealthStatus::InfectiousAndSymptomatic)]);
-        result->setHealth(stride::HealthStatus::Recovered, pool[stride::HealthToString(stride::HealthStatus::Recovered)]);
-        result->setHealth(stride::HealthStatus::Exposed, pool[stride::HealthToString(stride::HealthStatus::Exposed)]);
-        result->setHealth(stride::HealthStatus::Symptomatic, pool[stride::HealthToString(stride::HealthStatus::Symptomatic)]);
+        for(const auto& h : stride::HealthStatusList){
+            result->setHealth(h, pool[stride::HealthToString(h)]);
+        }
     }
     catch(std::exception& e){
         std::cout << "Error in ParsePool: " << e.what() << std::endl;
