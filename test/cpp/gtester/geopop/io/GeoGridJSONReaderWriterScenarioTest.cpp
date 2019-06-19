@@ -50,22 +50,10 @@ namespace {
 
     void getGeoGridFromFile(const string& filename, Population* pop)
     {
-        std::cout << "In function getGeoGridFromFile" << std::endl;
         auto file = make_unique<ifstream>();
         file->open(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/" + filename);
-
-//        stringstream ss;
-//        char line[3486];
-//        while(file->getline(line, 3486)){
-//            ss << line << std::endl;
-//        }
-//
-//        std::cout << ss.str() << std::endl;
-
-        std::cout << "1" << std::endl;
         GeoGridJSONReader geoGridJSONReader(move(file), pop);
         geoGridJSONReader.Read();
-        std::cout << "LEaving function getGeoGridFromFile" << std::endl;
     }
 
 
@@ -199,14 +187,10 @@ namespace {
         while(std::getline(Fileout, line)){
             ss << line << std::endl;
         }
-
-//        std::cout << ss.str().size() << std::endl;
         EXPECT_TRUE(compareJSONs(ss.str(), expected1));
 
         auto pop2 = Population::Create();
-        std::cout << "Calling function getGeoGridFromfile in test body" << std::endl;
         getGeoGridFromFile("OWN_readerwriter.json", pop2.get());
-        std::cout << "You succesfully passed it for some reason..." << std::endl;
         auto& geoGrid2 = pop2->RefGeoGrid();
 
         const auto location1 = geoGrid2[0];
