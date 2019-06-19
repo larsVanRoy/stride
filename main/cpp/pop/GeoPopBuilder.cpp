@@ -106,12 +106,12 @@ shared_ptr<Population> GeoPopBuilder::Build(shared_ptr<Population> pop)
         // ------------------------------------------------------------
         // Set the workplace data.
         // ------------------------------------------------------------
-        m_stride_logger->trace("Starting Reading of Workplace files.");
         boost::optional<const ptree& > workplace_config = m_config.get_child_optional("run.geopop_gen.workplace_file");
         if(workplace_config) {
+            m_stride_logger->trace("Starting Reading of Workplace files.");
                 ggConfig.SetWorkplaceData(m_config.get<string>("run.geopop_gen.workplace_file"));
+            m_stride_logger->trace("Finished Reading of Workplace files.");
         }
-        m_stride_logger->trace("Finished Reading of Workplace files.");
 
         // ------------------------------------------------------------
         // Read locations file (commute file only if present).
