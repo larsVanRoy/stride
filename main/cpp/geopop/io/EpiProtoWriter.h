@@ -43,15 +43,16 @@ public:
     /// Construct the EpiProtoriter.
     explicit EpiProtoWriter(const std::string& filename);
 
+    /// Generate file name and open the file stream.
+    void Initialize(const geopop::GeoGrid& geoPopGrid) override;
+
     /// Convert the provided GeoGrid to an the epidemiological status and
     /// write the status to the proved ostream in Protobuf format.
     void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep) override;
 
-private:
-    /// Generate file name and open the file stream.
-    void Initialize(const geopop::GeoGrid& geoPopGrid) override;
-
     void Finalize() override;
+
+private:
 
     /// Create a ProtoBuf Coordinate containing all the info needed to reconstruct a Coordinate..
     void WriteCoordinates(const Coordinate& coordinate, proto::EpiGeoGrid_Location_Coordinates* protoCoordinates);
@@ -66,7 +67,6 @@ private:
     /// Create a protoBuf pool status containing all the info about the health status
     /// within a given pool
     void WritePoolHealthStatus(Location<Coordinate>*                                location,
-                               stride::ContactType::Id                              id,
                                proto::EpiGeoGrid_History_PoolsForLocation_Pool*     protoPool);
 
 private:
