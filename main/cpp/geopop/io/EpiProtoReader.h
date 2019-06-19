@@ -58,7 +58,7 @@ private:
     Coordinate ParseCoordinate(const proto::EpiGeoGrid_Location_Coordinates& coordinates);
 
     /// Create an EpiLocation based on the information stored in the Protobuf object.
-    std::shared_ptr<EpiLocation> ParseLocation(const proto::EpiGeoGrid_Location& location);
+    std::shared_ptr<EpiLocation<Coordinate>> ParseLocation(const proto::EpiGeoGrid_Location& location);
 
     /// Update the EpiGrid and add the correct information related to the history.
     void ParseHistory();
@@ -67,7 +67,7 @@ private:
     void ParseHistoryLocation(const proto::EpiGeoGrid_History_PoolsForLocation& loc);
 
     /// Update the information in the EpiGrid related to the history of a pool of a location.
-    std::shared_ptr<stride::HealthPool> ParseLocationPools(const proto::EpiGeoGrid_History_PoolsForLocation_Pool& pool);
+    std::shared_ptr<stride::PoolStatus> ParseLocationPools(const proto::EpiGeoGrid_History_PoolsForLocation_Pool& pool);
 
 private:
     std::shared_ptr<EpiGrid> m_grid;    ///< final EpiGrid object

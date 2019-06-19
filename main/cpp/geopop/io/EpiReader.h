@@ -24,6 +24,7 @@ namespace geopop {
 
 class EpiGrid;
 class EpiJSONReader;
+class EpiProtoReader;
 /**
  * An interface for reading the epidemiological status to a file, can be implemented with multiple file types.
  * json is currently implemented.

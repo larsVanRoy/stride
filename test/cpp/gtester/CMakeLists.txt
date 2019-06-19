@@ -60,6 +60,8 @@ set(SRC
 #    ---
     geopop/io/CitiesCSVReaderTest.cpp
     geopop/io/CommutesCSVReaderTest.cpp
+    geopop/io/EpiGridProtoReaderTest.cpp
+    geopop/io/EpiGridProtoWriterTest.cpp
     geopop/io/GeoGridIOUtils.cpp
     geopop/io/GeoGridJSONReaderUnitTest.cpp
     geopop/io/GeoGridJSONReaderWriterScenarioTest.cpp

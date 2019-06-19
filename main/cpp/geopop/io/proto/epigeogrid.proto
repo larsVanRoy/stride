@@ -32,18 +32,16 @@ message EpiGeoGrid {
         message PoolsForLocation {
             int32 id = 1;
             message Pool {
-                repeated double percentage = 1;
-                enum Type {
-                    K12School = 0;
-                    PrimaryCommunity = 1;
-                    SecondaryCommunity = 2;
+                enum AgeBracket {
+                    Daycare = 0;
+                    PreSchool = 1;
+                    K12School = 2;
                     College = 3;
-                    Household = 4;
-                    Workplace = 5;
-                    Daycare = 6;
-                    PreSchool = 7;
+                    Workplace = 4;
+                    Retired = 5;
                 }
-                Type type = 2;
+                AgeBracket type = 1;
+                repeated double AgeBracketPercentage = 2;
             }
             repeated Pool pools = 2;
         }

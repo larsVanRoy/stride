@@ -44,8 +44,6 @@ void EpiProtoWriter::Initialize(const geopop::GeoGrid &geoPopGrid)
 {
     GOOGLE_PROTOBUF_VERIFY_VERSION;
 
-
-
     for (unsigned i = 0; i < geoPopGrid.size(); i++) {
         WriteLocation(*geoPopGrid[i], m_protogrid.add_locations());
     }
@@ -97,34 +95,31 @@ void EpiProtoWriter::WriteLocation(Location<Coordinate>& location, proto::EpiGeo
 
 void EpiProtoWriter::WriteHealthStatus(geopop::Location<Coordinate> &location, proto::EpiGeoGrid_History* protoHistory)
 {
-    static const map<Id, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type > types = {\
-            {Id::Daycare, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_Daycare},
-            {Id::PreSchool, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_PreSchool},
-            {Id::K12School, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_K12School},
-            {Id::PrimaryCommunity, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_PrimaryCommunity},
-            {Id::SecondaryCommunity, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_SecondaryCommunity},
-            {Id::College, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_College},
-            {Id::Household, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_Household},
-            {Id::Workplace, proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_Workplace}};
+    static const map<AgeBrackets::AgeBracket, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket > types = {
+            {AgeBrackets::AgeBracket::Daycare, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Daycare},
+            {AgeBrackets::AgeBracket::PreSchool, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_PreSchool},
+            {AgeBrackets::AgeBracket::K12School, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_K12School},
+            {AgeBrackets::AgeBracket::College, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_College},
+            {AgeBrackets::AgeBracket::Retired, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Retired},
+            {AgeBrackets::AgeBracket::Workplace, proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Workplace}};
 
 
     auto protoPools = protoHistory->add_poolsforlocations();
     protoPools->set_id(location.GetID());
-    for (unsigned typeId = 0; typeId < NumOfTypes(); typeId++)
+    for (AgeBrackets::AgeBracket ageBracket : AgeBrackets::AgeBracketList)
     {
         auto protoPool = protoPools->add_pools();
-        protoPool->set_type(types.at(static_cast<Id>(typeId)));
-        WritePoolHealthStatus(&location, static_cast<Id>(typeId), protoPool);
+        protoPool->set_type(types.at(ageBracket));
+        WritePoolHealthStatus(&location, protoPool);
     }
 }
 
 void EpiProtoWriter::WritePoolHealthStatus(geopop::Location<Coordinate>*                        location,
-                                           stride::ContactType::Id                              id,
                                            proto::EpiGeoGrid_History_PoolsForLocation_Pool*     protoPool)
 {
     vector<unsigned long> statuses(NumOfHealthStatus(), 0);
 
-    for (const auto &pool : location->CRefPools(id)) {
+    for (const auto &pool : location->CRefPools(ContactType::Id::Household)) {
         for (const auto &person : *pool) {
             statuses[ToSize(person->GetHealth().GetStatus())] ++;
         }
@@ -132,7 +127,7 @@ void EpiProtoWriter::WritePoolHealthStatus(geopop::Location<Coordinate>*        
 
     for (const auto& status : statuses)
     {
-        protoPool->add_percentage(static_cast<double>(status)/location->GetPopCount());
+        protoPool->add_agebracketpercentage(static_cast<double>(status)/location->GetPopCount());
     }
 }
 

@@ -25,9 +25,12 @@ using namespace std;
 using namespace stride;
 using namespace stride::util;
 using namespace stride::ContactType;
+using namespace proto;
 
 shared_ptr<EpiGrid> EpiProtoReader::Read()
 {
+    GOOGLE_PROTOBUF_VERIFY_VERSION;
+
     if (!m_protogrid.ParseFromIstream(m_stream.get())){
         throw runtime_error("Failed to parse Proto file");
     }
@@ -40,13 +43,14 @@ shared_ptr<EpiGrid> EpiProtoReader::Read()
         throw Exception("Problem parsing Locations of protobuf file, check whether empty or invalid protobuf.");
     }
 
-    try{
-        ParseHistory();
-    }
-    catch(exception& e){
-        cout << e.what() << endl;
-        throw Exception("Problem parsing History of Protobuf file, check whether empty or invalid protobuf.");
-    }
+    ParseHistory();
+//    try{
+//        ParseHistory();
+//    }
+//    catch(exception& e){
+//        cout << e.what() << endl;
+//        throw Exception("Problem parsing History of Protobuf file, check whether empty or invalid protobuf.");
+//    }
 
     return m_grid;
 }
@@ -60,7 +64,7 @@ void EpiProtoReader::ParseLocations()
     }
 }
 
-shared_ptr<EpiLocation> EpiProtoReader::ParseLocation(const proto::EpiGeoGrid_Location &location)
+shared_ptr<EpiLocation<Coordinate>> EpiProtoReader::ParseLocation(const proto::EpiGeoGrid_Location &location)
 {
     int id = location.id();
     string name = location.name();
@@ -68,7 +72,7 @@ shared_ptr<EpiLocation> EpiProtoReader::ParseLocation(const proto::EpiGeoGrid_Lo
     int population = location.population();
     Coordinate coordinate = ParseCoordinate(location.coordinates());
 
-    return make_shared<EpiLocation>(id, province, coordinate, name, population);
+    return make_shared<EpiLocation<Coordinate>>(id, province, coordinate, name, population);
 }
 
 Coordinate EpiProtoReader::ParseCoordinate(const proto::EpiGeoGrid_Location_Coordinates &coordinates)
@@ -86,62 +90,83 @@ void EpiProtoReader::ParseHistory()
         const proto::EpiGeoGrid_History& history = m_protogrid.history(idx);
         for (int idx2 = 0; idx2 < history.poolsforlocations_size(); idx2 ++)
         {
-            ParseHistoryLocation(history.poolsforlocations(idx2));
+            const EpiGeoGrid_History_PoolsForLocation& locPools = history.poolsforlocations(idx2);
+            shared_ptr<EpiLocation<Coordinate>> epiLocation = m_grid->GetById(static_cast<uint>(locPools.id()));
+
+            for (int idx3 = 0; idx3 < locPools.pools_size(); idx3 ++)
+            {
+                shared_ptr<PoolStatus> status = ParseLocationPools(locPools.pools(idx3));
+                epiLocation->AddPoolStatus(status);
+            }
         }
     }
 }
 
 void EpiProtoReader::ParseHistoryLocation(const proto::EpiGeoGrid_History_PoolsForLocation &loc)
 {
-    static const map<proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type , Id> types = {
-            {proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_K12School, Id::K12School},
-            {proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_PrimaryCommunity, Id::PrimaryCommunity},
-            {proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_SecondaryCommunity, Id::SecondaryCommunity},
-            {proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_College, Id::College},
-            {proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_Household, Id::Household},
-            {proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_Workplace, Id::Workplace},
-            {proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_Daycare, Id::Daycare},
-            {proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_PreSchool, Id::PreSchool}};
-
-    shared_ptr<EpiLocation> epiLocation = m_grid->GetById(static_cast<uint>(loc.id()));
-    shared_ptr<PoolStatus> status = make_shared<PoolStatus>();
+    shared_ptr<EpiLocation<Coordinate>> epiLocation = m_grid->GetById(static_cast<uint>(loc.id()));
 
     for (int idx = 0; idx < loc.pools_size(); idx ++)
     {
-        shared_ptr<HealthPool> h = ParseLocationPools(loc.pools(idx));
-        Id i = types.at(loc.pools(idx).type());
-        status->addStatus(i, h);
+        shared_ptr<PoolStatus> status = ParseLocationPools(loc.pools(idx));
+        epiLocation->AddPoolStatus(status);
     }
-
-    epiLocation->AddPoolStatus(status);
 
 }
 
-shared_ptr<HealthPool> EpiProtoReader::ParseLocationPools(const proto::EpiGeoGrid_History_PoolsForLocation_Pool &pool)
+shared_ptr<PoolStatus> EpiProtoReader::ParseLocationPools(const proto::EpiGeoGrid_History_PoolsForLocation_Pool &pool)
 {
-    shared_ptr<HealthPool> h = make_shared<HealthPool>();
-    for (int idx = 0; idx < pool.percentage_size(); idx ++)
+    static const map<int, AgeBrackets::AgeBracket> AgeBracketTypes = {
+            {0, AgeBrackets::AgeBracket::Daycare},
+            {1, AgeBrackets::AgeBracket::PreSchool},
+            {2, AgeBrackets::AgeBracket::K12School},
+            {3, AgeBrackets::AgeBracket::College},
+            {4, AgeBrackets::AgeBracket::Workplace},
+            {5, AgeBrackets::AgeBracket::Retired}};
+
+    static const map<int, HealthStatus> HealthPoolTypes = {
+            {0, HealthStatus::Exposed},
+            {1, HealthStatus::Immune},
+            {2, HealthStatus::Infectious},
+            {3, HealthStatus::InfectiousAndSymptomatic},
+            {4, HealthStatus::Recovered},
+            {5, HealthStatus::Susceptible},
+            {6, HealthStatus::Symptomatic}
+    };
+
+    shared_ptr<PoolStatus> status = make_shared<PoolStatus>();
+    for (auto idx = 0; idx < 6; idx ++)
     {
-        double fraction = pool.percentage(idx);
-        h->setHealth(static_cast<HealthStatus>(idx), fraction);
+        AgeBrackets::AgeBracket ageBracket = AgeBracketTypes.at(idx);
+        shared_ptr<HealthPool> h = make_shared<HealthPool>();
+        for (auto idx2 = 0; idx2 < 7; idx2 ++)
+        {
+            double percentage = pool.agebracketpercentage(idx2);
+            h->setHealth(HealthPoolTypes.at(idx2), percentage);
+        }
+        status->addStatus(ageBracket, h);
     }
 
-    return h;
+    return status;
 }
 
 void EpiProtoReader::Print() {
     for (unsigned int i = 0; i < m_grid->size(); ++i) {
-        std::cout << "Location: " << i << "\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetName() << "\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetPopCount() << "\n";
-        std::cout << "\t(" << m_grid->operator[](i)->GetCoordinate().get<0>() << ", " << m_grid->operator[](i)->GetCoordinate().get<1>() << ")\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Susceptible)[0] << "\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Exposed)[0] << "\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Infectious)[0] << "\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Symptomatic)[0] << "\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::InfectiousAndSymptomatic)[0] << "\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Recovered)[0] << "\n";
-        std::cout << "\t" << m_grid->operator[](i)->GetPoolStatus(0)->operator[](stride::HealthStatus::Immune)[0] << "\n";
+        std::cout << "Location: \n";
+        std::cout << "\tid: " << i << "\n";
+        std::cout << "\tName: " << m_grid->operator[](i)->GetName() << "\n";
+        std::cout << "\tpop count: " << m_grid->operator[](i)->GetPopCount() << "\n";
+        std::cout << "\t(Coorindates: " << m_grid->operator[](i)->GetCoordinate().get<0>() << ", " << m_grid->operator[](i)->GetCoordinate().get<1>() << ")\n";
+        for (size_t day = 0; day < m_grid->operator[](i)->maxDays(); day ++){
+            std::cout << "\tday: " << day << "\n";
+            std::cout << "\t\t" << m_grid->operator[](i)->GetPoolStatus(day)->operator[](stride::HealthStatus::Susceptible)[0] << "\n";
+            std::cout << "\t\t" << m_grid->operator[](i)->GetPoolStatus(day)->operator[](stride::HealthStatus::Exposed)[0] << "\n";
+            std::cout << "\t\t" << m_grid->operator[](i)->GetPoolStatus(day)->operator[](stride::HealthStatus::Infectious)[0] << "\n";
+            std::cout << "\t\t" << m_grid->operator[](i)->GetPoolStatus(day)->operator[](stride::HealthStatus::Symptomatic)[0] << "\n";
+            std::cout << "\t\t" << m_grid->operator[](i)->GetPoolStatus(day)->operator[](stride::HealthStatus::InfectiousAndSymptomatic)[0] << "\n";
+            std::cout << "\t\t" << m_grid->operator[](i)->GetPoolStatus(day)->operator[](stride::HealthStatus::Recovered)[0] << "\n";
+            std::cout << "\t\t" << m_grid->operator[](i)->GetPoolStatus(day)->operator[](stride::HealthStatus::Immune)[0] << "\n";
+        }
         std::cout << std::endl;
     }
 }
