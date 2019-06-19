@@ -137,4 +137,12 @@ void GeoGridHDF5Writer::WriteDataset(const std::string& name, std::vector<T> val
         auto    dataSet   = object.createDataSet(name, type, dataSpace);
         dataSet.write(values.data(), type);
 }
+
+template <>
+void GeoGridHDF5Writer::WriteAttribute(const std::string& name, const std::string& value, H5::H5Object& object)
+{
+        auto type = GetH5Type(value);
+        auto attr = object.createAttribute(name, type, DataSpace());
+        attr.write(type, value.data());
+}
 } // namespace geopop

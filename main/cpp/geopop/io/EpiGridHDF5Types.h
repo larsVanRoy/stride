@@ -20,7 +20,7 @@ namespace H5 {
     struct H5GeoLocation{
         unsigned int id;
         unsigned int population;
-        std::string name;
+        char name[50];
         unsigned int province;
         double longitude;
         double latitude;

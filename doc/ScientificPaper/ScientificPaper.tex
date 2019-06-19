@@ -7,7 +7,7 @@
 
 \begin{document}
 	%
-	\title{Simulation Paper}
+	\title{Scientific Paper}
 	
 	\author{Benjamin Vandersmissen\inst{1} \and
 		Lars Van Roy\inst{2} \and \\
@@ -43,6 +43,21 @@
 	\section{Data Formats}
 	\subsection{JSON}
 	\subsection{HDF5}
+	HDF5 is a scientific dataformat specifically designed to store and organise large amounts of data. In this section, we compare the sizes of the fileformats already available in stride (protobuf and JSON) with the size of an HDF5 file and we also cover the write speed. Both these metrics are based on the configuration file \textit{run\_generate\_default.xml} with only the output file changed.
+	\\
+	As shown in table \ref{table:1}, HDF5 is memory-wise between protobuf and JSON. This is because protobuf is a heavily compressed format and HDF5 not, but HDF5 isn't a plain text format like JSON either. In terms of write speed, HDF5 is way worse than Protobuf and JSON. A simple explanation for this is the fact that HDF5 doesn't support streams, while JSON and Protobuf do. This means that HDF5 has to write everything with it's own procedures which isn't as efficient. HDF5 doesn't support streams, because it was originally a C library, when streams didn't exist yet and the C++ implementation is just a wrapper around the original C library.
+	\begin{table}
+		\centering
+		\begin{tabular}{|c|c|c|}
+			\hline
+			\textbf{FileFormat} & \textbf{Size (Kb)}  & \textbf{Average write Time (s)}\\ \hline
+			Protobuf & 13.713 & 1.74\\ \hline
+			JSON & 317.050 & 5.25\\ \hline
+			HDF5 & 125.066 & 30.45 \\ \hline
+		\end{tabular}
+		\caption{Performance of different data formats based on 10 runs of run\_generate\_default.xml}
+		\label{table:1}
+	\end{table}
 	\section{Data Visualization}
 	\section{Workplace Size Distribution}
 	\subsection{Introduction}

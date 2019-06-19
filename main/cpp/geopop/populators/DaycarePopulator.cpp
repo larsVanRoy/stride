@@ -23,39 +23,36 @@
 
 namespace geopop {
 
-    using namespace std;
-    using namespace stride;
-    using namespace stride::ContactType;
+using namespace std;
+using namespace stride;
+using namespace stride::ContactType;
 
-    template<>
-    void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, GeoGridConfig&)
-    {
+template <>
+void Populator<stride::ContactType::Id::Daycare>::Apply(GeoGrid& geoGrid, GeoGridConfig&)
+{
         m_logger->trace("Starting to populate Daycares");
 
-        for (unsigned i = 0; i <geoGrid.size(); ++i) {
-            const auto& loc = geoGrid[i];
-            if (loc->GetPopCount() == 0) {
-                continue;
-            }
-
-            // 1. find all daycares in an area of 10-k*10 km
-            const vector<ContactPool*>& classes = geoGrid.GetNearbyPools(Id::Daycare, *loc);
-
-            auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(classes.size()), 0U);
-
-            // 2. for every student assign a class
-            for (auto& pool : loc->RefPools(Id::Household)) {
-                for (Person* p : *pool) {
-                    if (AgeBrackets::Daycare::HasAge(p->GetAge())) {
-                        auto& c = classes[dist()];
-                        c->AddMember(p);
-                        p->SetPoolId(Id::Daycare, c->GetId());
-                    }
+        for (unsigned i = 0; i < geoGrid.size(); ++i) {
+                const auto& loc = geoGrid[i];
+                if (loc->GetPopCount() == 0) {
+                        continue;
                 }
-            }
+                // 1. find all daycares in an area of 10-k*10 km
+                const vector<ContactPool*>& classes = geoGrid.GetNearbyPools(Id::Daycare, *loc);
+                auto dist = m_rn_man.GetUniformIntGenerator(0, static_cast<int>(classes.size()), 0U);
+                // 2. for every student assign a class
+                for (auto& pool : loc->RefPools(Id::Household)) {
+                        for (Person* p : *pool) {
+                                if (AgeBrackets::Daycare::HasAge(p->GetAge())) {
+                                        auto& c = classes[dist()];
+                                        c->AddMember(p);
+                                        p->SetPoolId(Id::Daycare, c->GetId());
+                                }
+                        }
+                }
         }
 
         m_logger->trace("Done populating Daycares");
-    }
+}
 
 } // namespace geopop

@@ -40,6 +40,7 @@ void LocationsCSVReader::FillGeoGrid(GeoGrid& geoGrid) const
                 const auto loc = make_shared<Location<Coordinate>>(row.GetValue<int>(0), row.GetValue<int>(1),
                                                        Coordinate(row.GetValue<double>(6), row.GetValue<double>(5)),
                                                        row.GetValue(7));
+
                 geoGrid.AddLocation(loc);
                 locations.emplace_back(loc, row.GetValue<int>(2));
                 totalPopulation += row.GetValue<int>(2);
