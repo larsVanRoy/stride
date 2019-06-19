@@ -108,7 +108,7 @@ namespace {
 
         GeoGridJSONWriter writer;
         stringstream ss;
-        writer.Write(*geoGrid, ss);
+        writer.Write(*geoGrid, FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/OWN_readerwriter.json");
 
         string expected1 = R"(
             {
@@ -181,9 +181,12 @@ namespace {
                     }
                 ]})";
 
-        ofstream outputFileStream(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/OWN_readerwriter.json");
-        outputFileStream << ss.str();
-
+        ifstream Fileout;
+        Fileout.open(FileSys::GetTestsDir().string() + "/testdata/GeoGridJSON/OWN_readerwriter.json");
+        string line;
+        while(std::getline(Fileout, line)){
+            ss << line << std::endl;
+        }
         EXPECT_TRUE(compareJSONs(ss.str(), expected1));
 
         auto pop2 = Population::Create();
