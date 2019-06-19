@@ -174,24 +174,6 @@ TEST(EpiGridProtoReaderTest, historyTest)
         CompareEpiGrid(epiGrid, "historyTest.proto");
 }
 
-TEST(EpiGridProtoReaderTest, poolsForLocationTest)
-{
-        EpiGeoGrid epiGrid;
-
-        fillLocation(1, "Bavikhove", 2500, 0, 0, epiGrid.add_locations());
-        fillLocation(2, "Gent", 5000, 0, 0, epiGrid.add_locations());
-        fillLocation(3, "Mons", 2500, 0, 0, epiGrid.add_locations());
-
-        EpiGeoGrid_History* history = epiGrid.add_history();
-        fillHistory(0, history);
-
-        fillPoolsForLocation(1, history->add_poolsforlocations());
-        fillPoolsForLocation(2, history->add_poolsforlocations());
-        fillPoolsForLocation(3, history->add_poolsforlocations());
-
-        CompareEpiGrid(epiGrid, "poolsForLocationTest.proto");
-}
-
 TEST(EpiGridProtoReaderTest, Poolstest)
 {
         EpiGeoGrid epiGrid;
