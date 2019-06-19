@@ -15,6 +15,7 @@
 
 #include "EpiReaderFactory.h"
 #include "EpiJSONReader.h"
+#include "EpiProtoReader.h"
 #include "util/Exception.h"
 
 #include <memory>
@@ -39,15 +40,13 @@ std::shared_ptr<EpiReader> EpiReaderFactory::CreateEpiReader(const std::string& 
     if (!filesys::exists(path)) {
         throw stride::util::Exception("GeoGridReaderFactory::CreateReader> File not found: " + path.string());
     }
-//    std::unique_ptr<std::ifstream> stream;
-//    stream->open(filename);
 
     if (path.extension().string() == ".json") {
         return std::make_shared<EpiJSONReader>(std::make_unique<std::ifstream>(path.string()));
     }
-//        else if (path.extension().string() == ".proto") {
-//            return std::make_shared<EpiJSONWriter>();
-//        }
+    else if (path.extension().string() == ".proto") {
+        return std::make_shared<EpiProtoReader>(std::make_unique<std::ifstream>(path.string()));
+    }
 //        else if (path.extension().string() == ".h5") {
 //            return std::make_shared<EpiJSONWriter>();
 //        }
