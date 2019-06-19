@@ -11,17 +11,19 @@ std::string AgeBracketToString(const AgeBracket& ageBracket)
 {
     switch(ageBracket){
         case AgeBracket::Daycare:
-            return "Daycare";
+            return std::string("Daycare");
         case AgeBracket::PreSchool:
-            return "PreSchool";
+            return std::string("PreSchool");
         case AgeBracket::K12School:
-            return "K12School";
+            return std::string("K12School");
         case AgeBracket::College:
-            return "College";
+            return std::string("College");
         case AgeBracket::Workplace:
-            return "Workplace";
+            return std::string("Workplace");
         case AgeBracket::Retired:
-            return "Retired";
+            return std::string("Retired");
+        default:
+            return std::string("Unknown AgeBracket");
     }
 }
 
