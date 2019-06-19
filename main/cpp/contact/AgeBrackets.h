@@ -15,6 +15,7 @@
  */
 
 #include <iterator>
+#include <string>
 
 namespace stride {
 
