@@ -85,45 +85,41 @@ Coordinate EpiProtoReader::ParseCoordinate(const proto::EpiGeoGrid_Location_Coor
 
 void EpiProtoReader::ParseHistory()
 {
-    for (int idx = 0; idx < m_protogrid.history_size(); idx ++)
-    {
-        const proto::EpiGeoGrid_History& history = m_protogrid.history(idx);
-        for (int idx2 = 0; idx2 < history.poolsforlocations_size(); idx2 ++)
-        {
-            const EpiGeoGrid_History_PoolsForLocation& locPools = history.poolsforlocations(idx2);
-            shared_ptr<EpiLocation<Coordinate>> epiLocation = m_grid->GetById(static_cast<uint>(locPools.id()));
-
-            for (int idx3 = 0; idx3 < locPools.pools_size(); idx3 ++)
-            {
-                shared_ptr<PoolStatus> status = ParseLocationPools(locPools.pools(idx3));
-                epiLocation->AddPoolStatus(status);
-            }
-        }
-    }
-}
-
-void EpiProtoReader::ParseHistoryLocation(const proto::EpiGeoGrid_History_PoolsForLocation &loc)
-{
-    shared_ptr<EpiLocation<Coordinate>> epiLocation = m_grid->GetById(static_cast<uint>(loc.id()));
-
-    for (int idx = 0; idx < loc.pools_size(); idx ++)
-    {
-        shared_ptr<PoolStatus> status = ParseLocationPools(loc.pools(idx));
-        epiLocation->AddPoolStatus(status);
-    }
-
-}
-
-shared_ptr<PoolStatus> EpiProtoReader::ParseLocationPools(const proto::EpiGeoGrid_History_PoolsForLocation_Pool &pool)
-{
     static const map<int, AgeBrackets::AgeBracket> AgeBracketTypes = {
             {0, AgeBrackets::AgeBracket::Daycare},
             {1, AgeBrackets::AgeBracket::PreSchool},
             {2, AgeBrackets::AgeBracket::K12School},
             {3, AgeBrackets::AgeBracket::College},
             {4, AgeBrackets::AgeBracket::Workplace},
-            {5, AgeBrackets::AgeBracket::Retired}};
+            {5, AgeBrackets::AgeBracket::Retired}
+    };
 
+    //loop over days
+    for (int idx = 0; idx < m_protogrid.history_size(); idx ++)
+    {
+        const proto::EpiGeoGrid_History& history = m_protogrid.history(idx);
+        // loop over locations
+        for (int idx2 = 0; idx2 < history.poolsforlocations_size(); idx2 ++)
+        {
+            const EpiGeoGrid_History_PoolsForLocation& locPools = history.poolsforlocations(idx2);
+            shared_ptr<EpiLocation<Coordinate>> epiLocation = m_grid->GetById(static_cast<uint>(locPools.id()));
+            shared_ptr<PoolStatus> status = make_shared<PoolStatus>();
+
+            // loop over AgeBrackets
+            for (int idx3 = 0; idx3 < locPools.pools_size(); idx3 ++)
+            {
+                AgeBrackets::AgeBracket bracket = AgeBracketTypes.at(idx3);
+                ParseLocationPools(locPools.pools(idx3), status, bracket);
+                epiLocation->AddPoolStatus(status);
+            }
+        }
+    }
+}
+
+void EpiProtoReader::ParseLocationPools(const proto::EpiGeoGrid_History_PoolsForLocation_Pool &pool,
+                                                          shared_ptr<PoolStatus>                                status,
+                                                          AgeBrackets::AgeBracket                               bracket)
+{
     static const map<int, HealthStatus> HealthPoolTypes = {
             {0, HealthStatus::Exposed},
             {1, HealthStatus::Immune},
@@ -134,20 +130,14 @@ shared_ptr<PoolStatus> EpiProtoReader::ParseLocationPools(const proto::EpiGeoGri
             {6, HealthStatus::Symptomatic}
     };
 
-    shared_ptr<PoolStatus> status = make_shared<PoolStatus>();
-    for (auto idx = 0; idx < 6; idx ++)
+    shared_ptr<HealthPool> h = make_shared<HealthPool>();
+    // loop over HealthPools
+    for (auto idx2 = 0; idx2 < 7; idx2 ++)
     {
-        AgeBrackets::AgeBracket ageBracket = AgeBracketTypes.at(idx);
-        shared_ptr<HealthPool> h = make_shared<HealthPool>();
-        for (auto idx2 = 0; idx2 < 7; idx2 ++)
-        {
-            double percentage = pool.agebracketpercentage(idx2);
-            h->setHealth(HealthPoolTypes.at(idx2), percentage);
-        }
-        status->addStatus(ageBracket, h);
+        double percentage = pool.agebracketpercentage(idx2);
+        h->setHealth(HealthPoolTypes.at(idx2), percentage);
     }
-
-    return status;
+    status->addStatus(bracket, h);
 }
 
 void EpiProtoReader::Print() {

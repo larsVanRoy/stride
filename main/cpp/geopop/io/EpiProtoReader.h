@@ -63,11 +63,10 @@ private:
     /// Update the EpiGrid and add the correct information related to the history.
     void ParseHistory();
 
-    /// Update the information in the EpiGrid related to the history of a location.
-    void ParseHistoryLocation(const proto::EpiGeoGrid_History_PoolsForLocation& loc);
-
     /// Update the information in the EpiGrid related to the history of a pool of a location.
-    std::shared_ptr<stride::PoolStatus> ParseLocationPools(const proto::EpiGeoGrid_History_PoolsForLocation_Pool& pool);
+    void ParseLocationPools(const proto::EpiGeoGrid_History_PoolsForLocation_Pool& pool,
+                            std::shared_ptr<stride::PoolStatus>                    status,
+                            stride::AgeBrackets::AgeBracket                        bracket);
 
 private:
     std::shared_ptr<EpiGrid> m_grid;    ///< final EpiGrid object
