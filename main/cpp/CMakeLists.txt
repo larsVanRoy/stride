@@ -31,8 +31,8 @@ endif()
 set_source_files_properties(
     geopop/io/GeoGridProtoReader.cpp
     geopop/io/GeoGridProtoWriter.cpp
-#    geopop/io/EpiProtoWriter.h
-#    geopop/io/EpiProtoWriter.cpp
+    geopop/io/EpiProtoWriter.h
+    geopop/io/EpiProtoWriter.cpp
     PROPERTIES
     COMPILE_FLAGS "-I${Protobuf_PBS_DIR}"
 )
@@ -50,7 +50,7 @@ set(STRIDE_SRC
     #---
     calendar/Calendar.cpp
     #---
-    contact/AgeContactProfile.cpp
+        contact/AgeContactProfile.cpp
     contact/ContactLogMode.cpp
     contact/ContactPool.cpp
     contact/ContactPoolSys.cpp
@@ -72,7 +72,6 @@ set(STRIDE_SRC
     execs/SimController.cpp
     execs/StanController.cpp
     #---
-#    geopop/ContactCenter.cpp
     geopop/geo/Coordinate.h
     geopop/geo/Region.cpp
     geopop/geo/GeoLocation.cpp

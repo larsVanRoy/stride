@@ -28,15 +28,14 @@
 
 namespace stride {
 
-
 PoolStatus::PoolStatus() : m_status({}){
     m_status.resize(AgeBrackets::NumOfAgeBrackets());
 }
 
 bool PoolStatus::operator==(const PoolStatus &other) const{
     for (const AgeBrackets::AgeBracket& ageBracket : AgeBrackets::AgeBracketList) {
-        const auto v1 = m_status[AgeBrackets::ToSize(ageBracket)];
-        const auto v2 = other.m_status[AgeBrackets::ToSize(ageBracket)];
+        const auto& v1 = m_status[AgeBrackets::ToSize(ageBracket)];
+        const auto& v2 = other.m_status[AgeBrackets::ToSize(ageBracket)];
         if(v1 != v2)
             return false;
     }

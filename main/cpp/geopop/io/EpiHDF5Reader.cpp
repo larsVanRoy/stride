@@ -79,6 +79,7 @@ void EpiHDF5Reader::ReadLocationPools(const H5::Group& location_group, shared_pt
                 for (size_t j = 0; j < health_status.size(); ++j){
                         h->setHealth(static_cast<HealthStatus >(j), health_status[j]);
                 }
+
                 status->addStatus(bracket, h);
         }
         location->AddPoolStatus(status);

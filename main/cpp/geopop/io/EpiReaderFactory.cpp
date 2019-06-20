@@ -45,13 +45,12 @@ std::shared_ptr<EpiReader> EpiReaderFactory::CreateEpiReader(const std::string& 
     if (path.extension().string() == ".json") {
         return std::make_shared<EpiJSONReader>(std::make_unique<std::ifstream>(path.string()));
     }
+    else if (path.extension().string() == ".h5") {
+        return std::make_shared<EpiHDF5Reader>(filename);
+    }
     else if (path.extension().string() == ".proto") {
         return std::make_shared<EpiProtoReader>(std::make_unique<std::ifstream>(path.string()));
     }
-
-//        else if (path.extension().string() == ".h5") {
-//            return std::make_shared<EpiJSONWriter>();
-//        }
     else {
         throw stride::util::Exception("EpiWriterFactory::CreateWriter> Unsupported file extension: " +
                                       path.extension().string());
