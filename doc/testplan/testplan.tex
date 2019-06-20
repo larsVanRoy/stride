@@ -341,7 +341,7 @@ This test will check whether ProtoBuf writer is capable of writing locations pro
 \newline
 \textbf{How will we achieve this?} 
 We will achieve this by using the EpiGridProtoWriter with a made GeoGrid. We can check if this was according to plan, by comparing the resulting ProtoBuf object with the original GeoGrid.
-\subsubsection{EpiGridProtoWriterTest.contanctPoolsTest} 
+\subsubsection{EpiGridProtoWriterTest.contactPoolsTest} 
 \textbf{What will it test?} 
 This test will check whether ProtoBuf writer is capable of writing the pools inside history properly. \\
 \newline
@@ -353,14 +353,75 @@ This test will check whether ProtoBuf reader is capable of reading the result of
 \newline
 \textbf{How will we achieve this?} 
 We will achieve this by using the EpiGridProtoWriter with a made GeoGrid followed by the EpiGridProtoReader that will read the resulting file. We can check if this was according to plan, by comparing the resulting EpiGrid object with the original GeoGrid.
-\subsubsection{EpiGridProtoReaderWriterScenartioTest.contanctPoolsTest} 
+\subsubsection{EpiGridProtoReaderWriterScenartioTest.contactPoolsTest} 
 \textbf{What will it test?} 
 This test will check whether ProtoBuf reader is capable of reading the result of protoBuf writer, that wrote a history with relevant data, along with a check whether or not the result is correct. \\
 \newline
 \textbf{How will we achieve this?} 
 We will achieve this by using the EpiGridProtoWriter with a made GeoGrid followed by the EpiGridProtoReader that will read the resulting file. We can check if this was according to plan, by comparing the resulting EpiGrid object with the original GeoGrid.
 \subsection{QT HDF5}
+\subsubsection{EpiGridHDF5ReaderTest.locationTest} 
+\textbf{What will it test?} 
+This test will check whether the HDF5 reader is capable of reading locations properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will read a premade HDF5 file using the EpiHDF5Reader, and compare the locations of the read EpiGrid with the locations of the expected EpiGrid.
+\subsubsection{EpiGridHDF5ReaderTest.historyTest} 
+\textbf{What will it test?} 
+This test will check whether HDF5 reader is capable of reading the history properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will read a premade HDF5 file using the EpiHDF5Reader, and compare the history of the read EpiGrid with the history of the expected EpiGrid.
+\subsubsection{EpiGridHDF5WriterTest.locationTest} 
+\textbf{What will it test?} 
+This test will check whether the HDF5 writer is capable of writing locations properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by generating a geogrid and writing it to a file with the EpiHDF5Writer and then we will manually check each aspect of the locations to see if it is correct.
+\subsubsection{EpiGridProtoWriterTest.contactPoolsTest} 
+\textbf{What will it test?} 
+This test will check whether the HDF5 writer is capable of writing contactpools properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by generating a geogrid and writing it to a file with the EpiHDF5Writer and then we will manually check each aspect of the contact pools to see if it is correct.
+
 \subsection{QT JSON}
+\subsubsection{EpiGridJSONReaderUnitTest.locationsTest}
+\textbf{What will it test?} 
+This test will check if the reader can properly read the locations in the json file. \\
+\newline
+\textbf{How will we achieve this?} 
+We will prepare a json file with a number of locations, read it and compare the results with predefined results.
+\subsubsection{EpiGridJSONReaderUnitTest.locationTest}
+\textbf{What will it test?} 
+This test will check if the reader can properly read the locations and the agebrackets in the json file. \\
+\newline
+\textbf{How will we achieve this?} 
+We will prepare a json file with one location and one timestep in the history, read it and compare the results with predefined results.
+\subsubsection{EpiGridJSONReaderUnitTest.historyTest}
+\textbf{What will it test?} 
+This test will check if the reader can properly read multiple timesteps in the history object of the json file. \\
+\newline
+\textbf{How will we achieve this?} 
+We will prepare a json file with one location and mulitple timesteps, read it and compare the results with predefined results.
+\subsubsection{EpiGridJSONWriterUnitTest.locationsTest}
+\textbf{What will it test?} 
+This test will check if the writer can write the location information, like name and id, to json.\\
+\newline
+\textbf{How will we achieve this?} 
+We will create a Geogrid, fill it with locations, write it to a string and compare the string with a predefined json output string.
+\subsubsection{EpiGridJSONWriterUnitTest.historyTest}
+\textbf{What will it test?} 
+This test will check if the writer can write the percentage of people per agebracket and healthstatus to json.\\
+\newline
+\textbf{How will we achieve this?} 
+We will create a Geogrid, fill it with a location and write it to a string and compare the string with a predefined json output string.
+\subsubsection{EpiGridJSONReaderWriterScenarioTest.mainTest}
+\textbf{What will it test?} 
+This test will check if the reader can read what the writer has written.\\
+\newline
+\textbf{How will we achieve this?} 
+We will create a Geogrid, fill it with a location and write two timesteps. We will then read the output from file and compare the results with predifined values.
 
 \section{Improved population generation}
 \subsection{Introduction}

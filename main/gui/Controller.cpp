@@ -80,15 +80,7 @@ double Controller::GetColor(unsigned int ID) {
 
     double color = 0;
     double bracketSize = 0;
-    std::shared_ptr<stride::PoolStatus> p;
-    try {
-        p = m_grid->GetById(ID)->GetPoolStatus(m_day);
-    }
-    catch(const std::exception& e){
-        std::cout << e.what() << std::endl;
-        std::cout << "Color: " << ID << std::endl;
-        throw e;
-    }
+    std::shared_ptr<stride::PoolStatus> p = m_grid->GetById(ID)->GetPoolStatus(m_day);
     for(stride::AgeBrackets::AgeBracket ageBracket : m_selectedAgeBrackets) {
         const auto& h = p->getStatus(ageBracket);
         color += h->sum(m_selectedHealthStatus);
@@ -220,13 +212,12 @@ void Controller::SetSelectedLocation(unsigned int ID) {
     }
     m_selection = StateSelect::location;
     m_selectedLocations = {m_grid->GetById(ID).get()};
-
     DisplayInfo();
 }
 
 QString Controller::GetCurrentDay() {
     unsigned int day = m_day*m_step;
-    return QString::fromStdString(std::to_string(day) + "/" + std::to_string(m_maxDay-1));
+    return QString::fromStdString(std::to_string(day+1) + "/" + std::to_string(m_maxDay));
 }
 
 void Controller::InitializeMultiSelect(double longitude, double latitude) {
@@ -235,7 +226,6 @@ void Controller::InitializeMultiSelect(double longitude, double latitude) {
 
 void Controller::BoxSelect(double longitude, double latitude) {
     std::set<const geopop::EpiLocation<geopop::Coordinate>*> selectedLoc = m_grid->LocationsInBox(m_multiSelect.get<0>(), m_multiSelect.get<1>(), longitude, latitude);
-
     m_selectedLocations = {};
     m_selectedLocations.assign(selectedLoc.begin(), selectedLoc.end());
     m_selection = StateSelect::box;
@@ -244,23 +234,10 @@ void Controller::BoxSelect(double longitude, double latitude) {
 
 void Controller::RadiusSelect(double distance) {
     const geopop::EpiLocation center(-1, -1, m_multiSelect);    // create dummy location
-    std::vector<const geopop::EpiLocation<geopop::Coordinate>*> selectedLoc = m_grid->LocationsInRadius(center, distance);
-    m_selectedLocations = selectedLoc;
+    m_selectedLocations = {};
+    m_selectedLocations = m_grid->LocationsInRadius(center, distance);
     m_selection = StateSelect::radius;
     DisplayInfo();
-}
-
-void Controller::ToggleSelect(QString selectName) {
-    if(selectName.toStdString() == "daycare") {
-        std::cout << "daycare toggled";
-        const auto& found = m_selectedAgeBrackets.find(stride::AgeBrackets::AgeBracket::Daycare);
-        if(found == m_selectedAgeBrackets.end()){
-            m_selectedAgeBrackets.insert(stride::AgeBrackets::AgeBracket::Daycare);
-        }
-        else{
-            m_selectedAgeBrackets.erase(stride::AgeBrackets::AgeBracket::Daycare);
-        }
-    }
 }
 
 void Controller::Update() {

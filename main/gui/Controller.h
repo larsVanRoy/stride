@@ -71,8 +71,6 @@ public:
 
     Q_INVOKABLE void SetSelectedLocation(unsigned int ID);
 
-    Q_INVOKABLE void ToggleSelect(QString);
-
     Q_INVOKABLE void AgeSelect(QString);
 
     Q_INVOKABLE void AgeDeSelect(QString);

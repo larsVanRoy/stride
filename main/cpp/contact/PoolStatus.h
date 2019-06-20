@@ -71,6 +71,7 @@ public:
 
 private:
     std::vector<std::shared_ptr<HealthPool>> m_status;   ///< matrix of the health status of a ContactType m_status[ContactType::Id][HealthStatus]
+
 };
 
 
