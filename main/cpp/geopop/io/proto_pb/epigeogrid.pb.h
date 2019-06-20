@@ -81,32 +81,30 @@ template<> ::proto::EpiGeoGrid_Location_Coordinates* Arena::CreateMaybeMessage<:
 }  // namespace google
 namespace proto {
 
-enum EpiGeoGrid_History_PoolsForLocation_Pool_Type {
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_K12School = 0,
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_PrimaryCommunity = 1,
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_SecondaryCommunity = 2,
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_College = 3,
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_Household = 4,
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_Workplace = 5,
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_Daycare = 6,
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_PreSchool = 7,
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_EpiGeoGrid_History_PoolsForLocation_Pool_Type_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::min(),
-  EpiGeoGrid_History_PoolsForLocation_Pool_Type_EpiGeoGrid_History_PoolsForLocation_Pool_Type_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::max()
+enum EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket {
+  EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Daycare = 0,
+  EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_PreSchool = 1,
+  EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_K12School = 2,
+  EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_College = 3,
+  EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Workplace = 4,
+  EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Retired = 5,
+  EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_INT_MIN_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::min(),
+  EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_INT_MAX_SENTINEL_DO_NOT_USE_ = std::numeric_limits<::google::protobuf::int32>::max()
 };
-bool EpiGeoGrid_History_PoolsForLocation_Pool_Type_IsValid(int value);
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool_Type_Type_MIN = EpiGeoGrid_History_PoolsForLocation_Pool_Type_K12School;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool_Type_Type_MAX = EpiGeoGrid_History_PoolsForLocation_Pool_Type_PreSchool;
-const int EpiGeoGrid_History_PoolsForLocation_Pool_Type_Type_ARRAYSIZE = EpiGeoGrid_History_PoolsForLocation_Pool_Type_Type_MAX + 1;
+bool EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_IsValid(int value);
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_AgeBracket_MIN = EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Daycare;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_AgeBracket_MAX = EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Retired;
+const int EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_AgeBracket_ARRAYSIZE = EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_AgeBracket_MAX + 1;
 
-const ::google::protobuf::EnumDescriptor* EpiGeoGrid_History_PoolsForLocation_Pool_Type_descriptor();
-inline const ::std::string& EpiGeoGrid_History_PoolsForLocation_Pool_Type_Name(EpiGeoGrid_History_PoolsForLocation_Pool_Type value) {
+const ::google::protobuf::EnumDescriptor* EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_descriptor();
+inline const ::std::string& EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Name(EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket value) {
   return ::google::protobuf::internal::NameOfEnum(
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_descriptor(), value);
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_descriptor(), value);
 }
-inline bool EpiGeoGrid_History_PoolsForLocation_Pool_Type_Parse(
-    const ::std::string& name, EpiGeoGrid_History_PoolsForLocation_Pool_Type* value) {
-  return ::google::protobuf::internal::ParseNamedEnum<EpiGeoGrid_History_PoolsForLocation_Pool_Type>(
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_descriptor(), name, value);
+inline bool EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Parse(
+    const ::std::string& name, EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket>(
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_descriptor(), name, value);
 }
 // ===================================================================
 
@@ -468,71 +466,67 @@ class EpiGeoGrid_History_PoolsForLocation_Pool :
 
   // nested types ----------------------------------------------------
 
-  typedef EpiGeoGrid_History_PoolsForLocation_Pool_Type Type;
-  static const Type K12School =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_K12School;
-  static const Type PrimaryCommunity =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_PrimaryCommunity;
-  static const Type SecondaryCommunity =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_SecondaryCommunity;
-  static const Type College =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_College;
-  static const Type Household =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_Household;
-  static const Type Workplace =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_Workplace;
-  static const Type Daycare =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_Daycare;
-  static const Type PreSchool =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_PreSchool;
-  static inline bool Type_IsValid(int value) {
-    return EpiGeoGrid_History_PoolsForLocation_Pool_Type_IsValid(value);
+  typedef EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket AgeBracket;
+  static const AgeBracket Daycare =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Daycare;
+  static const AgeBracket PreSchool =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_PreSchool;
+  static const AgeBracket K12School =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_K12School;
+  static const AgeBracket College =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_College;
+  static const AgeBracket Workplace =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Workplace;
+  static const AgeBracket Retired =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Retired;
+  static inline bool AgeBracket_IsValid(int value) {
+    return EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_IsValid(value);
   }
-  static const Type Type_MIN =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_Type_MIN;
-  static const Type Type_MAX =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_Type_MAX;
-  static const int Type_ARRAYSIZE =
-    EpiGeoGrid_History_PoolsForLocation_Pool_Type_Type_ARRAYSIZE;
+  static const AgeBracket AgeBracket_MIN =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_AgeBracket_MIN;
+  static const AgeBracket AgeBracket_MAX =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_AgeBracket_MAX;
+  static const int AgeBracket_ARRAYSIZE =
+    EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_AgeBracket_ARRAYSIZE;
   static inline const ::google::protobuf::EnumDescriptor*
-  Type_descriptor() {
-    return EpiGeoGrid_History_PoolsForLocation_Pool_Type_descriptor();
+  AgeBracket_descriptor() {
+    return EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_descriptor();
   }
-  static inline const ::std::string& Type_Name(Type value) {
-    return EpiGeoGrid_History_PoolsForLocation_Pool_Type_Name(value);
+  static inline const ::std::string& AgeBracket_Name(AgeBracket value) {
+    return EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Name(value);
   }
-  static inline bool Type_Parse(const ::std::string& name,
-      Type* value) {
-    return EpiGeoGrid_History_PoolsForLocation_Pool_Type_Parse(name, value);
+  static inline bool AgeBracket_Parse(const ::std::string& name,
+      AgeBracket* value) {
+    return EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_Parse(name, value);
   }
 
   // accessors -------------------------------------------------------
 
-  // repeated double percentage = 1;
-  int percentage_size() const;
-  void clear_percentage();
-  static const int kPercentageFieldNumber = 1;
-  double percentage(int index) const;
-  void set_percentage(int index, double value);
-  void add_percentage(double value);
+  // repeated double AgeBracketPercentage = 2;
+  int agebracketpercentage_size() const;
+  void clear_agebracketpercentage();
+  static const int kAgeBracketPercentageFieldNumber = 2;
+  double agebracketpercentage(int index) const;
+  void set_agebracketpercentage(int index, double value);
+  void add_agebracketpercentage(double value);
   const ::google::protobuf::RepeatedField< double >&
-      percentage() const;
+      agebracketpercentage() const;
   ::google::protobuf::RepeatedField< double >*
-      mutable_percentage();
+      mutable_agebracketpercentage();
 
-  // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.Type type = 2;
+  // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracket type = 1;
   void clear_type();
-  static const int kTypeFieldNumber = 2;
-  ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type type() const;
-  void set_type(::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type value);
+  static const int kTypeFieldNumber = 1;
+  ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket type() const;
+  void set_type(::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket value);
 
   // @@protoc_insertion_point(class_scope:proto.EpiGeoGrid.History.PoolsForLocation.Pool)
  private:
   class HasBitSetters;
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
-  ::google::protobuf::RepeatedField< double > percentage_;
-  mutable std::atomic<int> _percentage_cached_byte_size_;
+  ::google::protobuf::RepeatedField< double > agebracketpercentage_;
+  mutable std::atomic<int> _agebracketpercentage_cached_byte_size_;
   int type_;
   mutable ::google::protobuf::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_epigeogrid_2eproto;
@@ -1104,48 +1098,48 @@ inline void EpiGeoGrid_Location::set_allocated_coordinates(::proto::EpiGeoGrid_L
 
 // EpiGeoGrid_History_PoolsForLocation_Pool
 
-// repeated double percentage = 1;
-inline int EpiGeoGrid_History_PoolsForLocation_Pool::percentage_size() const {
-  return percentage_.size();
-}
-inline void EpiGeoGrid_History_PoolsForLocation_Pool::clear_percentage() {
-  percentage_.Clear();
-}
-inline double EpiGeoGrid_History_PoolsForLocation_Pool::percentage(int index) const {
-  // @@protoc_insertion_point(field_get:proto.EpiGeoGrid.History.PoolsForLocation.Pool.percentage)
-  return percentage_.Get(index);
-}
-inline void EpiGeoGrid_History_PoolsForLocation_Pool::set_percentage(int index, double value) {
-  percentage_.Set(index, value);
-  // @@protoc_insertion_point(field_set:proto.EpiGeoGrid.History.PoolsForLocation.Pool.percentage)
-}
-inline void EpiGeoGrid_History_PoolsForLocation_Pool::add_percentage(double value) {
-  percentage_.Add(value);
-  // @@protoc_insertion_point(field_add:proto.EpiGeoGrid.History.PoolsForLocation.Pool.percentage)
-}
-inline const ::google::protobuf::RepeatedField< double >&
-EpiGeoGrid_History_PoolsForLocation_Pool::percentage() const {
-  // @@protoc_insertion_point(field_list:proto.EpiGeoGrid.History.PoolsForLocation.Pool.percentage)
-  return percentage_;
-}
-inline ::google::protobuf::RepeatedField< double >*
-EpiGeoGrid_History_PoolsForLocation_Pool::mutable_percentage() {
-  // @@protoc_insertion_point(field_mutable_list:proto.EpiGeoGrid.History.PoolsForLocation.Pool.percentage)
-  return &percentage_;
-}
-
-// .proto.EpiGeoGrid.History.PoolsForLocation.Pool.Type type = 2;
+// .proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracket type = 1;
 inline void EpiGeoGrid_History_PoolsForLocation_Pool::clear_type() {
   type_ = 0;
 }
-inline ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::type() const {
+inline ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::type() const {
   // @@protoc_insertion_point(field_get:proto.EpiGeoGrid.History.PoolsForLocation.Pool.type)
-  return static_cast< ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type >(type_);
+  return static_cast< ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket >(type_);
 }
-inline void EpiGeoGrid_History_PoolsForLocation_Pool::set_type(::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type value) {
+inline void EpiGeoGrid_History_PoolsForLocation_Pool::set_type(::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket value) {
   
   type_ = value;
   // @@protoc_insertion_point(field_set:proto.EpiGeoGrid.History.PoolsForLocation.Pool.type)
+}
+
+// repeated double AgeBracketPercentage = 2;
+inline int EpiGeoGrid_History_PoolsForLocation_Pool::agebracketpercentage_size() const {
+  return agebracketpercentage_.size();
+}
+inline void EpiGeoGrid_History_PoolsForLocation_Pool::clear_agebracketpercentage() {
+  agebracketpercentage_.Clear();
+}
+inline double EpiGeoGrid_History_PoolsForLocation_Pool::agebracketpercentage(int index) const {
+  // @@protoc_insertion_point(field_get:proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracketPercentage)
+  return agebracketpercentage_.Get(index);
+}
+inline void EpiGeoGrid_History_PoolsForLocation_Pool::set_agebracketpercentage(int index, double value) {
+  agebracketpercentage_.Set(index, value);
+  // @@protoc_insertion_point(field_set:proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracketPercentage)
+}
+inline void EpiGeoGrid_History_PoolsForLocation_Pool::add_agebracketpercentage(double value) {
+  agebracketpercentage_.Add(value);
+  // @@protoc_insertion_point(field_add:proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracketPercentage)
+}
+inline const ::google::protobuf::RepeatedField< double >&
+EpiGeoGrid_History_PoolsForLocation_Pool::agebracketpercentage() const {
+  // @@protoc_insertion_point(field_list:proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracketPercentage)
+  return agebracketpercentage_;
+}
+inline ::google::protobuf::RepeatedField< double >*
+EpiGeoGrid_History_PoolsForLocation_Pool::mutable_agebracketpercentage() {
+  // @@protoc_insertion_point(field_mutable_list:proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracketPercentage)
+  return &agebracketpercentage_;
 }
 
 // -------------------------------------------------------------------
@@ -1329,10 +1323,10 @@ EpiGeoGrid::history() const {
 namespace google {
 namespace protobuf {
 
-template <> struct is_proto_enum< ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type> : ::std::true_type {};
+template <> struct is_proto_enum< ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket> : ::std::true_type {};
 template <>
-inline const EnumDescriptor* GetEnumDescriptor< ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type>() {
-  return ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type_descriptor();
+inline const EnumDescriptor* GetEnumDescriptor< ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket>() {
+  return ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_descriptor();
 }
 
 }  // namespace protobuf

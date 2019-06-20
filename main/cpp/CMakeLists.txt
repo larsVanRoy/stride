@@ -57,6 +57,8 @@ set(STRIDE_SRC
     contact/ContactType.cpp
     contact/Infector.cpp
     contact/TransmissionProfile.cpp
+    contact/AgeBrackets.cpp
+    contact/AgeBrackets.h
     contact/PoolStatus.cpp
     #---
     disease/DiseaseSeeder.cpp
@@ -70,15 +72,16 @@ set(STRIDE_SRC
     execs/SimController.cpp
     execs/StanController.cpp
     #---
-    #geopop/ContactCenter.cpp
+#    geopop/ContactCenter.cpp
     geopop/geo/Coordinate.h
     geopop/geo/Region.cpp
     geopop/geo/GeoLocation.cpp
     geopop/GeoGrid.cpp
     geopop/GeoGridConfig.cpp
     geopop/Location.cpp
-#    geopop/EpiLocation.cpp
-#    geopop/EpiGrid.cpp
+    geopop/EpiLocation.cpp
+    geopop/EpiGrid.cpp
+    geopop/EpiGrid.h
     #---
     geopop/geo/GeoGridKdTree.cpp
     geopop/geo/KdTree2DPoint.cpp
@@ -94,8 +97,8 @@ set(STRIDE_SRC
     #---
     ${PROTO_HEADER}
     ${PROTO_SRC}
-#    ${EPI_PROTO_HDR}
-#    ${EPI_PROTO_SRC}
+    ${EPI_PROTO_HDR}
+    ${EPI_PROTO_SRC}
     #---
     geopop/io/LocationsCSVReader.cpp
     geopop/io/CommutesCSVReader.cpp
@@ -124,20 +127,22 @@ set(STRIDE_SRC
     geopop/io/MajorCitiesReader.cpp
     geopop/io/MajorCitiesReader.h
     geopop/io/ReaderFactory.cpp
-#    geopop/io/EpiWriterFactory.cpp
-#    geopop/io/EpiJSONWriter.cpp
-#    geopop/io/EpiProtoWriter.cpp
-#    geopop/io/EpiProtoWriter.h
-#    geopop/io/EpiHDF5Writer.h
-#    geopop/io/EpiHDF5Writer.cpp
-#    geopop/io/EpiGridHDF5Types.h
-#    geopop/io/EpiGridHDF5Types.cpp
-#    geopop/io/EpiHDF5Reader.cpp
-#    geopop/io/EpiHDF5Reader.h
-#    geopop/io/EpiWriter.h
-#    geopop/io/EpiReader.h
-#    geopop/io/EpiReaderFactory.cpp
-#    geopop/io/EpiJSONReader.cpp
+    geopop/io/EpiWriterFactory.cpp
+    geopop/io/EpiJSONWriter.cpp
+    geopop/io/EpiProtoWriter.cpp
+    geopop/io/EpiProtoWriter.h
+    geopop/io/EpiHDF5Writer.h
+    geopop/io/EpiHDF5Writer.cpp
+    geopop/io/EpiGridHDF5Types.h
+    geopop/io/EpiGridHDF5Types.cpp
+    geopop/io/EpiHDF5Reader.cpp
+    geopop/io/EpiHDF5Reader.h
+    geopop/io/EpiProtoReader.cpp
+    geopop/io/EpiProtoReader.h
+    geopop/io/EpiWriter.h
+    geopop/io/EpiReader.h
+    geopop/io/EpiReaderFactory.cpp
+    geopop/io/EpiJSONReader.cpp
     #---
     geopop/populators/DaycarePopulator.cpp
     geopop/populators/PreSchoolPopulator.cpp
@@ -151,11 +156,11 @@ set(STRIDE_SRC
     ${PROTO_HEADER}
     ${PROTO_SRC}
     #---
-#    geopop/EpiLocation.cpp
+    geopop/EpiLocation.cpp
     viewers/InfectedFile.cpp
     viewers/PersonsFile.cpp
     viewers/SummaryFile.cpp
-#    viewers/EpiViewer.cpp
+    viewers/EpiViewer.cpp
     #---
     pop/AbstractPopBuilder.cpp
     pop/Person.cpp
@@ -186,8 +191,7 @@ set(STRIDE_SRC
     viewers/InfectedFileViewer.cpp
     viewers/InfectedViewer.cpp
     viewers/PersonsFileViewer.cpp
-    viewers/SummaryFileViewer.cpp
-)
+    viewers/SummaryFileViewer.cpp)
 
 #============================================================================
 # Build the Stride library.

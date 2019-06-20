@@ -25,7 +25,7 @@ class EpiHDF5Writer : public EpiWriter
 {
 public:
         /// Construct the EpiJSONWriter.
-        EpiHDF5Writer(const std::string& filename) : EpiWriter(), m_filename(filename){};
+        EpiHDF5Writer(const std::string& filename) : EpiWriter(), m_filename(filename), m_file(H5::H5File(filename, H5F_ACC_TRUNC)){};
 
         ~EpiHDF5Writer() = default;
 
@@ -46,10 +46,6 @@ private:
         /// Write HealthStatus in HDF5 file
         void WriteHealthStatus(H5::Group& group, const std::shared_ptr<geopop::Location<geopop::Coordinate>> location);
 
-        /// Write HealthStatus for a pool in HDF5 file
-        void WritePoolHealthStatus(H5::Group& group, const std::shared_ptr<geopop::Location<Coordinate>> location,
-                                   stride::ContactType::Id id);
-
         template<typename T>
         void WriteAttribute(const std::string& name, const T& value, H5::H5Object& object);
 
@@ -58,7 +54,7 @@ private:
 
 private:
         std::string m_filename; ///< name of the file to write to
-        std::vector<unsigned int> m_timesteps;
+        std::vector<unsigned int> m_timesteps = {};
         unsigned int m_location_counter = 0;
         H5::H5File m_file;
 };

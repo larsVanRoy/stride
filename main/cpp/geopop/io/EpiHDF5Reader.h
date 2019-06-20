@@ -29,9 +29,10 @@ public:
         /// Construct the EpiJSONReader with the istream which contains the JSON.
         explicit EpiHDF5Reader(std::unique_ptr<std::ifstream> inputStream) = delete;
 
-        explicit EpiHDF5Reader(const std::string& filename) : EpiReader(filename){
-                m_grid = std::make_shared<EpiGrid>();
-                m_file = H5::H5File(filename, H5F_ACC_RDONLY);
+        explicit EpiHDF5Reader(const std::string& filename) : EpiReader(filename),
+                                                              m_grid(std::make_shared<EpiGrid>()),
+                                                              m_file(H5::H5File(filename, H5F_ACC_RDONLY))
+        {
         }
 
         ~EpiHDF5Reader() = default;

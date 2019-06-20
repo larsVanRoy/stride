@@ -171,8 +171,8 @@ const ::google::protobuf::uint32 TableStruct_epigeogrid_2eproto::offsets[] PROTO
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
-  PROTOBUF_FIELD_OFFSET(::proto::EpiGeoGrid_History_PoolsForLocation_Pool, percentage_),
   PROTOBUF_FIELD_OFFSET(::proto::EpiGeoGrid_History_PoolsForLocation_Pool, type_),
+  PROTOBUF_FIELD_OFFSET(::proto::EpiGeoGrid_History_PoolsForLocation_Pool, agebracketpercentage_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::proto::EpiGeoGrid_History_PoolsForLocation, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -220,30 +220,29 @@ static ::google::protobuf::Message const * const file_default_instances[] = {
 };
 
 const char descriptor_table_protodef_epigeogrid_2eproto[] =
-  "\n\020epigeogrid.proto\022\005proto\"\307\005\n\nEpiGeoGrid"
+  "\n\020epigeogrid.proto\022\005proto\"\254\005\n\nEpiGeoGrid"
   "\022-\n\tLocations\030\001 \003(\0132\032.proto.EpiGeoGrid.L"
   "ocation\022*\n\007history\030\002 \003(\0132\031.proto.EpiGeoG"
   "rid.History\032\251\001\n\010Location\022\n\n\002id\030\001 \001(\005\022\014\n\004"
   "name\030\002 \001(\t\022\022\n\npopulation\030\003 \001(\005\022;\n\013coordi"
   "nates\030\004 \001(\0132&.proto.EpiGeoGrid.Location."
   "Coordinates\0322\n\013Coordinates\022\020\n\010latitude\030\001"
-  " \001(\001\022\021\n\tlongitude\030\002 \001(\001\032\261\003\n\007History\022E\n\021P"
+  " \001(\001\022\021\n\tlongitude\030\002 \001(\001\032\226\003\n\007History\022E\n\021P"
   "oolsForLocations\030\001 \003(\0132*.proto.EpiGeoGri"
   "d.History.PoolsForLocation\022\020\n\010timestep\030\002"
-  " \001(\005\032\314\002\n\020PoolsForLocation\022\n\n\002id\030\001 \001(\005\022>\n"
+  " \001(\005\032\261\002\n\020PoolsForLocation\022\n\n\002id\030\001 \001(\005\022>\n"
   "\005pools\030\002 \003(\0132/.proto.EpiGeoGrid.History."
-  "PoolsForLocation.Pool\032\353\001\n\004Pool\022\022\n\npercen"
-  "tage\030\001 \003(\001\022B\n\004type\030\002 \001(\01624.proto.EpiGeoG"
-  "rid.History.PoolsForLocation.Pool.Type\"\212"
-  "\001\n\004Type\022\r\n\tK12School\020\000\022\024\n\020PrimaryCommuni"
-  "ty\020\001\022\026\n\022SecondaryCommunity\020\002\022\013\n\007College\020"
-  "\003\022\r\n\tHousehold\020\004\022\r\n\tWorkplace\020\005\022\013\n\007Dayca"
-  "re\020\006\022\r\n\tPreSchool\020\007b\006proto3"
+  "PoolsForLocation.Pool\032\320\001\n\004Pool\022H\n\004type\030\001"
+  " \001(\0162:.proto.EpiGeoGrid.History.PoolsFor"
+  "Location.Pool.AgeBracket\022\034\n\024AgeBracketPe"
+  "rcentage\030\002 \003(\001\"`\n\nAgeBracket\022\013\n\007Daycare\020"
+  "\000\022\r\n\tPreSchool\020\001\022\r\n\tK12School\020\002\022\013\n\007Colle"
+  "ge\020\003\022\r\n\tWorkplace\020\004\022\013\n\007Retired\020\005b\006proto3"
   ;
 ::google::protobuf::internal::DescriptorTable descriptor_table_epigeogrid_2eproto = {
   false, InitDefaults_epigeogrid_2eproto, 
   descriptor_table_protodef_epigeogrid_2eproto,
-  "epigeogrid.proto", &assign_descriptors_table_epigeogrid_2eproto, 747,
+  "epigeogrid.proto", &assign_descriptors_table_epigeogrid_2eproto, 720,
 };
 
 void AddDescriptors_epigeogrid_2eproto() {
@@ -256,11 +255,11 @@ void AddDescriptors_epigeogrid_2eproto() {
 // Force running AddDescriptors() at dynamic initialization time.
 static bool dynamic_init_dummy_epigeogrid_2eproto = []() { AddDescriptors_epigeogrid_2eproto(); return true; }();
 namespace proto {
-const ::google::protobuf::EnumDescriptor* EpiGeoGrid_History_PoolsForLocation_Pool_Type_descriptor() {
+const ::google::protobuf::EnumDescriptor* EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_descriptor() {
   ::google::protobuf::internal::AssignDescriptors(&assign_descriptors_table_epigeogrid_2eproto);
   return file_level_enum_descriptors_epigeogrid_2eproto[0];
 }
-bool EpiGeoGrid_History_PoolsForLocation_Pool_Type_IsValid(int value) {
+bool EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
@@ -268,8 +267,6 @@ bool EpiGeoGrid_History_PoolsForLocation_Pool_Type_IsValid(int value) {
     case 3:
     case 4:
     case 5:
-    case 6:
-    case 7:
       return true;
     default:
       return false;
@@ -277,17 +274,15 @@ bool EpiGeoGrid_History_PoolsForLocation_Pool_Type_IsValid(int value) {
 }
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::K12School;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::PrimaryCommunity;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::SecondaryCommunity;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::College;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::Household;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::Workplace;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::Daycare;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::PreSchool;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::Type_MIN;
-const EpiGeoGrid_History_PoolsForLocation_Pool_Type EpiGeoGrid_History_PoolsForLocation_Pool::Type_MAX;
-const int EpiGeoGrid_History_PoolsForLocation_Pool::Type_ARRAYSIZE;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::Daycare;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::PreSchool;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::K12School;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::College;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::Workplace;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::Retired;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::AgeBracket_MIN;
+const EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket EpiGeoGrid_History_PoolsForLocation_Pool::AgeBracket_MAX;
+const int EpiGeoGrid_History_PoolsForLocation_Pool::AgeBracket_ARRAYSIZE;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 // ===================================================================
@@ -1059,8 +1054,8 @@ class EpiGeoGrid_History_PoolsForLocation_Pool::HasBitSetters {
 };
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int EpiGeoGrid_History_PoolsForLocation_Pool::kPercentageFieldNumber;
 const int EpiGeoGrid_History_PoolsForLocation_Pool::kTypeFieldNumber;
+const int EpiGeoGrid_History_PoolsForLocation_Pool::kAgeBracketPercentageFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 EpiGeoGrid_History_PoolsForLocation_Pool::EpiGeoGrid_History_PoolsForLocation_Pool()
@@ -1071,7 +1066,7 @@ EpiGeoGrid_History_PoolsForLocation_Pool::EpiGeoGrid_History_PoolsForLocation_Po
 EpiGeoGrid_History_PoolsForLocation_Pool::EpiGeoGrid_History_PoolsForLocation_Pool(const EpiGeoGrid_History_PoolsForLocation_Pool& from)
   : ::google::protobuf::Message(),
       _internal_metadata_(nullptr),
-      percentage_(from.percentage_) {
+      agebracketpercentage_(from.agebracketpercentage_) {
   _internal_metadata_.MergeFrom(from._internal_metadata_);
   type_ = from.type_;
   // @@protoc_insertion_point(copy_constructor:proto.EpiGeoGrid.History.PoolsForLocation.Pool)
@@ -1104,7 +1099,7 @@ void EpiGeoGrid_History_PoolsForLocation_Pool::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  percentage_.Clear();
+  agebracketpercentage_.Clear();
   type_ = 0;
   _internal_metadata_.Clear();
 }
@@ -1122,32 +1117,32 @@ const char* EpiGeoGrid_History_PoolsForLocation_Pool::_InternalParse(const char*
     ptr = ::google::protobuf::io::Parse32(ptr, &tag);
     GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
     switch (tag >> 3) {
-      // repeated double percentage = 1;
+      // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracket type = 1;
       case 1: {
-        if (static_cast<::google::protobuf::uint8>(tag) == 10) {
+        if (static_cast<::google::protobuf::uint8>(tag) != 8) goto handle_unusual;
+        ::google::protobuf::uint64 val = ::google::protobuf::internal::ReadVarint(&ptr);
+        msg->set_type(static_cast<::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket>(val));
+        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        break;
+      }
+      // repeated double AgeBracketPercentage = 2;
+      case 2: {
+        if (static_cast<::google::protobuf::uint8>(tag) == 18) {
           ptr = ::google::protobuf::io::ReadSize(ptr, &size);
           GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
           parser_till_end = ::google::protobuf::internal::PackedDoubleParser;
-          object = msg->mutable_percentage();
+          object = msg->mutable_agebracketpercentage();
           if (size > end - ptr) goto len_delim_till_end;
           auto newend = ptr + size;
           if (size) ptr = parser_till_end(ptr, newend, object, ctx);
           GOOGLE_PROTOBUF_PARSER_ASSERT(ptr == newend);
           break;
-        } else if (static_cast<::google::protobuf::uint8>(tag) != 9) goto handle_unusual;
+        } else if (static_cast<::google::protobuf::uint8>(tag) != 17) goto handle_unusual;
         do {
-          msg->add_percentage(::google::protobuf::io::UnalignedLoad<double>(ptr));
+          msg->add_agebracketpercentage(::google::protobuf::io::UnalignedLoad<double>(ptr));
           ptr += sizeof(double);
           if (ptr >= end) break;
-        } while ((::google::protobuf::io::UnalignedLoad<::google::protobuf::uint64>(ptr) & 255) == 9 && (ptr += 1));
-        break;
-      }
-      // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.Type type = 2;
-      case 2: {
-        if (static_cast<::google::protobuf::uint8>(tag) != 16) goto handle_unusual;
-        ::google::protobuf::uint64 val = ::google::protobuf::internal::ReadVarint(&ptr);
-        msg->set_type(static_cast<::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type>(val));
-        GOOGLE_PROTOBUF_PARSER_ASSERT(ptr);
+        } while ((::google::protobuf::io::UnalignedLoad<::google::protobuf::uint64>(ptr) & 255) == 17 && (ptr += 1));
         break;
       }
       default: {
@@ -1180,30 +1175,30 @@ bool EpiGeoGrid_History_PoolsForLocation_Pool::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated double percentage = 1;
+      // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracket type = 1;
       case 1: {
-        if (static_cast< ::google::protobuf::uint8>(tag) == (10 & 0xFF)) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 input, this->mutable_percentage())));
-        } else if (static_cast< ::google::protobuf::uint8>(tag) == (9 & 0xFF)) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
-                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
-                 1, 10u, input, this->mutable_percentage())));
+        if (static_cast< ::google::protobuf::uint8>(tag) == (8 & 0xFF)) {
+          int value = 0;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          set_type(static_cast< ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_AgeBracket >(value));
         } else {
           goto handle_unusual;
         }
         break;
       }
 
-      // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.Type type = 2;
+      // repeated double AgeBracketPercentage = 2;
       case 2: {
-        if (static_cast< ::google::protobuf::uint8>(tag) == (16 & 0xFF)) {
-          int value = 0;
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
-                 input, &value)));
-          set_type(static_cast< ::proto::EpiGeoGrid_History_PoolsForLocation_Pool_Type >(value));
+        if (static_cast< ::google::protobuf::uint8>(tag) == (18 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 input, this->mutable_agebracketpercentage())));
+        } else if (static_cast< ::google::protobuf::uint8>(tag) == (17 & 0xFF)) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   double, ::google::protobuf::internal::WireFormatLite::TYPE_DOUBLE>(
+                 1, 18u, input, this->mutable_agebracketpercentage())));
         } else {
           goto handle_unusual;
         }
@@ -1237,19 +1232,19 @@ void EpiGeoGrid_History_PoolsForLocation_Pool::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated double percentage = 1;
-  if (this->percentage_size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteTag(1, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
-    output->WriteVarint32(_percentage_cached_byte_size_.load(
-        std::memory_order_relaxed));
-    ::google::protobuf::internal::WireFormatLite::WriteDoubleArray(
-      this->percentage().data(), this->percentage_size(), output);
-  }
-
-  // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.Type type = 2;
+  // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracket type = 1;
   if (this->type() != 0) {
     ::google::protobuf::internal::WireFormatLite::WriteEnum(
-      2, this->type(), output);
+      1, this->type(), output);
+  }
+
+  // repeated double AgeBracketPercentage = 2;
+  if (this->agebracketpercentage_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(2, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_agebracketpercentage_cached_byte_size_.load(
+        std::memory_order_relaxed));
+    ::google::protobuf::internal::WireFormatLite::WriteDoubleArray(
+      this->agebracketpercentage().data(), this->agebracketpercentage_size(), output);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1265,23 +1260,23 @@ void EpiGeoGrid_History_PoolsForLocation_Pool::SerializeWithCachedSizes(
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  // repeated double percentage = 1;
-  if (this->percentage_size() > 0) {
+  // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracket type = 1;
+  if (this->type() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      1, this->type(), target);
+  }
+
+  // repeated double AgeBracketPercentage = 2;
+  if (this->agebracketpercentage_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
-      1,
+      2,
       ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
       target);
     target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
-        _percentage_cached_byte_size_.load(std::memory_order_relaxed),
+        _agebracketpercentage_cached_byte_size_.load(std::memory_order_relaxed),
          target);
     target = ::google::protobuf::internal::WireFormatLite::
-      WriteDoubleNoTagToArray(this->percentage_, target);
-  }
-
-  // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.Type type = 2;
-  if (this->type() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
-      2, this->type(), target);
+      WriteDoubleNoTagToArray(this->agebracketpercentage_, target);
   }
 
   if (_internal_metadata_.have_unknown_fields()) {
@@ -1305,9 +1300,9 @@ size_t EpiGeoGrid_History_PoolsForLocation_Pool::ByteSizeLong() const {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  // repeated double percentage = 1;
+  // repeated double AgeBracketPercentage = 2;
   {
-    unsigned int count = static_cast<unsigned int>(this->percentage_size());
+    unsigned int count = static_cast<unsigned int>(this->agebracketpercentage_size());
     size_t data_size = 8UL * count;
     if (data_size > 0) {
       total_size += 1 +
@@ -1315,12 +1310,12 @@ size_t EpiGeoGrid_History_PoolsForLocation_Pool::ByteSizeLong() const {
             static_cast<::google::protobuf::int32>(data_size));
     }
     int cached_size = ::google::protobuf::internal::ToCachedSize(data_size);
-    _percentage_cached_byte_size_.store(cached_size,
+    _agebracketpercentage_cached_byte_size_.store(cached_size,
                                     std::memory_order_relaxed);
     total_size += data_size;
   }
 
-  // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.Type type = 2;
+  // .proto.EpiGeoGrid.History.PoolsForLocation.Pool.AgeBracket type = 1;
   if (this->type() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
@@ -1353,7 +1348,7 @@ void EpiGeoGrid_History_PoolsForLocation_Pool::MergeFrom(const EpiGeoGrid_Histor
   ::google::protobuf::uint32 cached_has_bits = 0;
   (void) cached_has_bits;
 
-  percentage_.MergeFrom(from.percentage_);
+  agebracketpercentage_.MergeFrom(from.agebracketpercentage_);
   if (from.type() != 0) {
     set_type(from.type());
   }
@@ -1384,7 +1379,7 @@ void EpiGeoGrid_History_PoolsForLocation_Pool::Swap(EpiGeoGrid_History_PoolsForL
 void EpiGeoGrid_History_PoolsForLocation_Pool::InternalSwap(EpiGeoGrid_History_PoolsForLocation_Pool* other) {
   using std::swap;
   _internal_metadata_.Swap(&other->_internal_metadata_);
-  percentage_.InternalSwap(&other->percentage_);
+  agebracketpercentage_.InternalSwap(&other->agebracketpercentage_);
   swap(type_, other->type_);
 }
 
