@@ -45,11 +45,7 @@ struct IDPack
 
 /// Placed separately to please swig and avoid syntax errors there
 using HealthStatusPack_t =
-<<<<<<< Updated upstream
 IDPack<HealthStatus::Susceptible, HealthStatus::Exposed, HealthStatus::Infectious,
-=======
-IDPack<HealthStatus::Susceptible, HealthStatus::Exposed, HealthStatus::Infectious ,
->>>>>>> Stashed changes
 HealthStatus::Symptomatic, HealthStatus::InfectiousAndSymptomatic, HealthStatus::Recovered, HealthStatus::Immune >;
 
 /// A constexpr global variable that gives access to the available Ids
