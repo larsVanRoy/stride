@@ -35,6 +35,8 @@ public:
     explicit EpiReader(std::unique_ptr<std::ifstream> input_stream) : m_stream(std::move(input_stream)) {};
     /// Construct the Writer.
 
+    explicit EpiReader(const std::string& filename) : m_stream(std::make_unique<std::ifstream>(filename)){};
+
     virtual ~EpiReader() {m_stream->close(); };
 
     /// Write the epidemiological status to ostream.
