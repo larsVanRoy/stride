@@ -46,8 +46,6 @@ std::shared_ptr<EpiReader> EpiReaderFactory::CreateEpiReader(const std::string& 
         return std::make_shared<EpiJSONReader>(std::make_unique<std::ifstream>(path.string()));
     }
     else if (path.extension().string() == ".h5") {
-        // HDF doesn't support streams
-        stream->close();
         return std::make_shared<EpiHDF5Reader>(filename);
     }
     else if (path.extension().string() == ".proto") {
