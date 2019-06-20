@@ -218,35 +218,35 @@ By passing a random string within a JSON file the test will determine if a prope
 A test to determine if the location information retrieved from a GeoGrid is correctly formatted in a JSON file. \\
 \newline
 \textbf{How will we achieve this?}
-The test will create a GeoGrid and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file to an XML format and check if they are the same.
+The test will create a GeoGrid and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and get the contents of a file in string format and check if they are the same.
 
 \subsubsection{GeoGridJSONWriterUnitTest.contactPoolTest}
 \textbf{What will it test?}
 A test to determine if the contactPool information retrieved from a GeoGrid is correctly formatted in a JSON file.\\
 \newline
 \textbf{How will we achieve this?}
-The test will create a GeoGrid and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file to an XML format and check if they are the same.
+The test will create a GeoGrid and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and get the contents of a file in string format and check if they are the same.
 
 \subsubsection{GeoGridJSONWriterUnitTest.peopleTest}
 \textbf{What will it test?}
 This test will look in specific if the people are correctly represented in the resulting JSON file.\\
 \newline
 \textbf{How will we achieve this?}
-The test will create a population and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file to an XML format and check if they are the same.
+The test will create a population and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file in string format and check if they are the same.
 
 \subsubsection{GeoGridJSONWriterUnitTest.commutesTest}
 \textbf{What will it test?}
 This test will look in specific if the commuting information is correctly represented in the written JSON file.\\
 \newline
 \textbf{How will we achieve this?}
-The test will create a population and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file to an XML format and check if they are the same.
+The test will create a population and passes this information to the writer which will create a JSON formatted output. The test will convert this JSON and a comparison file in string format and check if they are the same.
 
 \subsubsection{GeoGridJSONReaderWriterScenarioTest.mainTest}
 \textbf{What will it test?}
-This is a test that will examine if the JSON writes outputs a JSON formatted file and reads the excact information in JSON formats.\\
+This is a test that will examine if the JSON writer outputs a JSON formatted file and reads the exact information in JSON formats.\\
 \newline
 \textbf{How will we achieve this?}
-The test creates a population and writes it to a JSON file wich will be converted to a string to chech wit the expected output. Next the same file is used to be read by the JSON reader ans all values are inspected.
+The test creates a population and writes it to a JSON file which will be converted to a string to check with the expected output. Next, the same file is used to be read by the JSON reader and all values are inspected.
 
 \subsection{HDF5}
 \subsubsection{HDF5Reader.locationsTest}
@@ -313,7 +313,7 @@ This test will check whether the people are written correctly to the HDF5 file. 
 We will achieve this by comparing the resulting HDF5 file with the correct HDF5 file.
 \section{QT}
 \subsection{visualiser}
-No tests will be made for the visualizer, as this is hard to test via code. The testing of QT will happen via simulations done by ourselves and outsiders checking if our interface is obvious and well made
+No tests will be made for the visualizer, as this is hard to test through code. The testing of QT will happen via simulations done by ourselves and outsiders checking if our interface is obvious and well made
 \subsection{QT Proto}
 \subsubsection{introduction}
 In order to make the visualizer as efficient as could be, there was need for a secondary input format that specified the data specifically needed for the visualizer. ProtoBuf is one of the supported types for the visualizer data.
@@ -355,7 +355,7 @@ This test will check whether ProtoBuf reader is capable of reading the result of
 We will achieve this by using the EpiGridProtoWriter with a made GeoGrid followed by the EpiGridProtoReader that will read the resulting file. We can check if this was according to plan, by comparing the resulting EpiGrid object with the original GeoGrid.
 \subsubsection{EpiGridProtoReaderWriterScenartioTest.contactPoolsTest} 
 \textbf{What will it test?} 
-This test will check whether ProtoBuf reader is capable of reading the result of protoBuf writer, that wrote a history with relevant data, along with a check whether or not the result is correct. \\
+This test will check whether ProtoBuf reader is capable of reading the result of ProtoBuf writer, that wrote a history with relevant data, along with a check whether or not the result is correct. \\
 \newline
 \textbf{How will we achieve this?} 
 We will achieve this by using the EpiGridProtoWriter with a made GeoGrid followed by the EpiGridProtoReader that will read the resulting file. We can check if this was according to plan, by comparing the resulting EpiGrid object with the original GeoGrid.
@@ -388,34 +388,34 @@ We will achieve this by generating a geogrid and writing it to a file with the E
 \subsection{QT JSON}
 \subsubsection{EpiGridJSONReaderUnitTest.locationsTest}
 \textbf{What will it test?} 
-This test will check if the reader can properly read the locations in the json file. \\
+This test will check if the reader can properly read the locations in the JSON file. \\
 \newline
 \textbf{How will we achieve this?} 
-We will prepare a json file with a number of locations, read it and compare the results with predefined results.
+We will prepare a JSON file with a number of locations, read it and compare the results with predefined results.
 \subsubsection{EpiGridJSONReaderUnitTest.locationTest}
 \textbf{What will it test?} 
-This test will check if the reader can properly read the locations and the agebrackets in the json file. \\
+This test will check if the reader can properly read the locations and the agebrackets in the JSON file. \\
 \newline
 \textbf{How will we achieve this?} 
-We will prepare a json file with one location and one timestep in the history, read it and compare the results with predefined results.
+We will prepare a JSON file with one location and one timestep in the history, read it and compare the results with predefined results.
 \subsubsection{EpiGridJSONReaderUnitTest.historyTest}
 \textbf{What will it test?} 
-This test will check if the reader can properly read multiple timesteps in the history object of the json file. \\
+This test will check if the reader can properly read multiple timesteps in the history object of the JSON file. \\
 \newline
 \textbf{How will we achieve this?} 
-We will prepare a json file with one location and mulitple timesteps, read it and compare the results with predefined results.
+We will prepare a JSON file with one location and mulitple timesteps, read it and compare the results with predefined results.
 \subsubsection{EpiGridJSONWriterUnitTest.locationsTest}
 \textbf{What will it test?} 
-This test will check if the writer can write the location information, like name and id, to json.\\
+This test will check if the writer can write the location information, like name and id, to JSON.\\
 \newline
 \textbf{How will we achieve this?} 
-We will create a Geogrid, fill it with locations, write it to a string and compare the string with a predefined json output string.
+We will create a Geogrid, fill it with locations, write it to a string and compare the string with a predefined JSON output string.
 \subsubsection{EpiGridJSONWriterUnitTest.historyTest}
 \textbf{What will it test?} 
-This test will check if the writer can write the percentage of people per agebracket and healthstatus to json.\\
+This test will check if the writer can write the percentage of people per agebracket and healthstatus to JSON.\\
 \newline
 \textbf{How will we achieve this?} 
-We will create a Geogrid, fill it with a location and write it to a string and compare the string with a predefined json output string.
+We will create a Geogrid, fill it with a location and write it to a string and compare the string with a predefined JSON output string.
 \subsubsection{EpiGridJSONReaderWriterScenarioTest.mainTest}
 \textbf{What will it test?} 
 This test will check if the reader can read what the writer has written.\\
@@ -466,7 +466,7 @@ We will achieve this by calling the SetData function for all possible demographi
 
 \subsubsection{WorkplaceGeneratorTest.ZeroLocationTest}
 \textbf{What will it test?}
-This test will check whether the generator can handle empty GeoGrid.\\
+This test will check whether the generator can handle an empty GeoGrid.\\
 \newline
 \textbf{How will we achieve this?}
 We will achieve this by passing a GeoGridConfig object that has no workers. After this we can check if the workplace generator added any pools by looking at the size function.
@@ -483,21 +483,21 @@ We will achieve this by passing a GeoGridConfig object that has no commuters and
 This test will check whether the generator can handle a configuration where there are as many commuters from A to B as from B to A.\\
 \newline
 \textbf{How will we achieve this?}
-We will achieve this by passing a GeoGridConfig where such a situation occurs and one that has a workplace distribution. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig were in fact true followed by checking whether the poolsizes are withing the expected boundaries.
+We will achieve this by passing a GeoGridConfig where such a situation occurs and one that has a workplace distribution. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig were in fact true followed by checking whether the poolsizes are within the expected boundaries.
 
 \subsubsection{WorkplaceGeneratorTest.TenCommutingWithDistribution}
 \textbf{What will it test?}
 This test will check whether the generator can handle a configuration where there are multiple commuters from different places along with a workplace distribution configuration.\\
 \newline
 \textbf{How will we achieve this?}
-We will achieve this by passing a GeoGridConfig where such a situation occurs and one that has a workplace distribution. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig were in fact true followed by checking whether the poolsizes are withing the expected boundaries.
+We will achieve this by passing a GeoGridConfig where such a situation occurs and one that has a workplace distribution. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig were in fact true followed by checking whether the poolsizes are within the expected boundaries.
 
 \subsubsection{WorkplaceGeneratorTest.NoCommutingWithoutDistribution}
 \textbf{What will it test?}
 This test will check whether the generator can handle a configuration that has no commuting and no workplace distribution configuration.\\
 \newline
 \textbf{How will we achieve this?}
-We will achieve this by passing a GeoGridConfig object that has no commuters and no workplace distribution configuration. After this we can check each whether each poolsize is equal to the expected value.
+We will achieve this by passing a GeoGridConfig object that has no commuters and no workplace distribution configuration. After this we can check whether each poolsize is equal to the expected value.
 
 \subsubsection{WorkplaceGeneratorTest.NullCommutingWithoutDistribution}
 \textbf{What will it test?}
@@ -511,7 +511,7 @@ We will achieve this by passing a GeoGridConfig where such a situation occurs an
 This test will check whether the generator can handle a configuration where there are multiple commuters from different places and no workplace distribution configuration.\\
 \newline
 \textbf{How will we achieve this?}
-We will achieve this by passing a GeoGridConfig where such a situation occurs and where there is no workplace distribution configuration. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig where in fact true followed by checking whether the poolsizes are equal to their expected values.
+We will achieve this by passing a GeoGridConfig where such a situation occurs and where there is no workplace distribution configuration. We can easily verify whether everything went as planned by checking if the conditions on the GeoGridConfig where in fact true, followed by checking whether the poolsizes are equal to their expected values.
 
 \subsubsection{WorkplaceCSVReader.TestValidInput}
 \textbf{What will it test?}
@@ -528,7 +528,7 @@ For populating the original tests where kept, as it did not change by adding the
 This test will check if everything works out when we create a scenario, using the workplace reader, workplace generator and the workplace populator.\\
 \newline
 \textbf{How will we achieve this?}
-We will achieve this by passing a csv to the reader, followed by calling the generator and populator using the result of the prev steps. We will not verify if the populator worked as expected (as this is not changed within the context, it is just tested to ensure that it does not crash when using the data from the previous step), we will only check if the generated pools are within the expected bounds.
+We will achieve this by passing a csv to the reader, followed by calling the generator and populator using the result of the previous steps. We will not verify if the populator worked as expected (as this is not changed within the context, it is just tested to ensure that it does not crash when using the data from the previous step), we will only check if the generated pools are within the expected bounds.
 
 
 \end{document}
