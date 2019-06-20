@@ -26,7 +26,7 @@
 
 namespace stride {
 
-PoolStatus::PoolStatus() {
+PoolStatus::PoolStatus(): m_status(){
     m_status.resize(stride::ContactType::NumOfTypes());
 }
 

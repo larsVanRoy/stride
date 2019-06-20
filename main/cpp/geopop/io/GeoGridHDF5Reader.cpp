@@ -30,7 +30,7 @@ using namespace stride::util;
 using namespace H5;
 
 GeoGridHDF5Reader::GeoGridHDF5Reader(const std::string& filename, Population* pop)
-    : GeoGridReader(filename, pop), m_filename(filename)
+    : GeoGridReader(pop), m_filename(filename)
 {
 }
 

@@ -25,7 +25,7 @@ GeoGridReader::GeoGridReader(std::unique_ptr<std::istream> inputStream, stride::
 {
 }
 
-GeoGridReader::GeoGridReader(std::string filename, stride::Population *pop)
+GeoGridReader::GeoGridReader(stride::Population *pop)
     : m_people(), m_commutes(), m_inputStream(), m_population(pop)
 {
 
