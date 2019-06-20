@@ -47,7 +47,6 @@ struct IDPack
 using HealthStatusPack_t =
 IDPack<HealthStatus::Susceptible, HealthStatus::Exposed, HealthStatus::Infectious, HealthStatus::Symptomatic, HealthStatus::InfectiousAndSymptomatic, HealthStatus::Recovered, HealthStatus::Immune >;
 
-
 /// A constexpr global variable that gives access to the available Ids
 constexpr HealthStatusPack_t HealthStatusPack;
 
