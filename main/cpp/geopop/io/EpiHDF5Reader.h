@@ -15,11 +15,11 @@
 
 #pragma once
 
+#include "H5Cpp.h"
 #include "geopop/EpiGrid.h"
 #include "geopop/EpiLocation.h"
 #include "geopop/io/EpiReader.h"
 #include "util/Exception.h"
-#include "H5Cpp.h"
 
 #include <memory>
 namespace geopop {
@@ -29,9 +29,14 @@ public:
         /// Construct the EpiJSONReader with the istream which contains the JSON.
         explicit EpiHDF5Reader(std::unique_ptr<std::ifstream> inputStream) = delete;
 
+<<<<<<< Updated upstream
         explicit EpiHDF5Reader(const std::string& filename) : EpiReader(filename),
                                                               m_grid(std::make_shared<EpiGrid>()),
                                                               m_file(H5::H5File(filename, H5F_ACC_RDONLY))
+=======
+        explicit EpiHDF5Reader(const std::string& filename)
+            : EpiReader(filename), m_grid(std::make_shared<EpiGrid>()), m_file(H5::H5File(filename, H5F_ACC_RDONLY))
+>>>>>>> Stashed changes
         {
         }
 
@@ -47,6 +52,7 @@ public:
         std::shared_ptr<EpiGrid> Read() override;
 
         void Print();
+
 private:
         /// Create EpiGrid and fills it with EpiLocations based on the information stored in the HDF5 File.
         void ReadLocations();
@@ -64,8 +70,9 @@ private:
 
         template <typename T>
         void ReadDataset(const std::string& name, T* data, const H5::H5Object& object);
+
 private:
         std::shared_ptr<EpiGrid> m_grid;
-        H5::H5File m_file;
+        H5::H5File               m_file;
 };
 } // namespace geopop

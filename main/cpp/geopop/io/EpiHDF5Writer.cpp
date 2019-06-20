@@ -17,11 +17,11 @@
 #include "EpiGridHDF5Types.h"
 #include "GeoGridHDF5Types.h"
 #include "contact/ContactPool.h"
-#include "geopop/Location.h"
+#include "disease/Health.h"
 #include "geopop/GeoGrid.h"
+#include "geopop/Location.h"
 #include "geopop/geo/Coordinate.h"
 #include "pop/Person.h"
-#include "disease/Health.h"
 
 #include <cstring>
 #include <fstream>
@@ -51,7 +51,8 @@ void EpiHDF5Writer::Initialize(const geopop::GeoGrid& geoPopGrid)
         this->WriteLocations(geoPopGrid);
         this->m_file.createGroup("Steps");
 }
-void EpiHDF5Writer::Finalize() {
+void EpiHDF5Writer::Finalize()
+{
         WriteDataset("Timesteps", m_timesteps, m_file);
         WriteAttribute("nrTimesteps", m_timesteps.size(), m_file);
         this->m_file.close();
@@ -71,8 +72,12 @@ void EpiHDF5Writer::WriteLocations(const geopop::GeoGrid& geoGrid)
         using namespace boost::geometry;
         for (size_t i = 0; i < geoGrid.size(); ++i) {
                 auto loc = geoGrid[i];
-                locations.push_back(H5GeoLocation{loc->GetID(), loc->GetPopCount(), {}, loc->GetProvince(),
-                                       get<0>(loc->GetCoordinate()), get<1>(loc->GetCoordinate())});
+                locations.push_back(H5GeoLocation{loc->GetID(),
+                                                  loc->GetPopCount(),
+                                                  {},
+                                                  loc->GetProvince(),
+                                                  get<0>(loc->GetCoordinate()),
+                                                  get<1>(loc->GetCoordinate())});
                 strcpy(locations.back().name, loc->GetName().c_str());
         }
         this->WriteDataset("Locations", locations, m_file);
@@ -80,37 +85,39 @@ void EpiHDF5Writer::WriteLocations(const geopop::GeoGrid& geoGrid)
         this->WriteAttribute("size", locations.size(), dataset);
 }
 
-void EpiHDF5Writer::WriteHealthStatus(H5::Group& group, const std::shared_ptr<Location<Coordinate>> location) {
-        auto ages_group = group.createGroup("AgeBrackets");
-	std::map<AgeBrackets::AgeBracket, std::map<string, double>> status;
+void EpiHDF5Writer::WriteHealthStatus(H5::Group& group, const std::shared_ptr<Location<Coordinate>> location)
+{
+        auto                                                        ages_group = group.createGroup("AgeBrackets");
+        std::map<AgeBrackets::AgeBracket, std::map<string, double>> status;
 
-    for(const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
-        std::map<string, double> health;
-        for(const HealthStatus& h : stride::HealthStatusList){
-            health[stride::HealthToString(h)] = 0;
+        for (const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
+                std::map<string, double> health;
+                for (const HealthStatus& h : stride::HealthStatusList) {
+                        health[stride::HealthToString(h)] = 0;
+                }
+                status[bracket] = health;
         }
-        status[bracket] = health;
-    }
 
-    for(const auto &pool : location->CRefPools(stride::ContactType::Id::Household)) {
-        for (const Person* person : *pool) {
-            try {
-                status[AgeBrackets::ToAgeBracket(person->GetAge())][stride::HealthToString(person->GetHealth().GetStatus())]++;
-            }
-            catch(const exception& e){
-                cerr << "1: " << e.what() << std::endl;
-                throw e;
-            }
+        for (const auto& pool : location->CRefPools(stride::ContactType::Id::Household)) {
+                for (const Person* person : *pool) {
+                        try {
+                                status[AgeBrackets::ToAgeBracket(person->GetAge())]
+                                      [stride::HealthToString(person->GetHealth().GetStatus())]++;
+                        } catch (const exception& e) {
+                                cerr << "1: " << e.what() << std::endl;
+                                throw e;
+                        }
+                }
         }
-    }
 
-    for(const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
-		std::vector<double> health_statuses;
-        for(const HealthStatus& h : stride::HealthStatusList) {
-            health_statuses.push_back((double) status[bracket][stride::HealthToString(h)] / location->GetPopCount());
+        for (const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
+                std::vector<double> health_statuses;
+                for (const HealthStatus& h : stride::HealthStatusList) {
+                        health_statuses.push_back((double)status[bracket][stride::HealthToString(h)] /
+                                                  location->GetPopCount());
+                }
+                WriteDataset(AgeBrackets::AgeBracketToString(bracket), health_statuses, ages_group);
         }
-        WriteDataset(AgeBrackets::AgeBracketToString(bracket), health_statuses, ages_group);
-    }
 }
 
 template <typename T>

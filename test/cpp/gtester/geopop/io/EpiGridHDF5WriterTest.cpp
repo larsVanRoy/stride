@@ -34,8 +34,6 @@ using boost::geometry::get;
 
 namespace {
 
-bool compareEpiGrid(const std::string& filename, const GeoGrid& geoGrid) {}
-
 TEST(EpiGridHDF5WriterTest, locationTest)
 {
         auto    pop = Population::Create();
@@ -64,7 +62,7 @@ TEST(EpiGridHDF5WriterTest, locationTest)
         {
                 auto locations_group = file.openDataSet("Locations");
 
-                size_t nrLocations;
+                size_t nrLocations = 0;
                 ReadHDF5Attribute("size", &nrLocations, locations_group);
                 EXPECT_EQ(3, nrLocations);
 
@@ -85,7 +83,7 @@ TEST(EpiGridHDF5WriterTest, locationTest)
         for (auto timestep : timesteps) {
                 auto step_group = file.openGroup("Steps").openGroup("Step" + to_string(timestep));
 
-                size_t nrLocations;
+                unsigned int nrLocations;
                 ReadHDF5Attribute("nrLocations", &nrLocations, step_group);
                 EXPECT_EQ(3, nrLocations);
 
@@ -96,6 +94,7 @@ TEST(EpiGridHDF5WriterTest, locationTest)
                         EXPECT_EQ(i + 1, id);
                 }
         }
+        file.close();
 }
 
 TEST(EpiGridHDF5WriterTest, contactPoolsTest)
@@ -133,5 +132,6 @@ TEST(EpiGridHDF5WriterTest, contactPoolsTest)
                 }
 
         }
+        file.close();
 }
 } // namespace
