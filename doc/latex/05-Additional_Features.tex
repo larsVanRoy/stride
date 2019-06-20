@@ -235,20 +235,137 @@ The current implementation in stride generates contact pools for different Conta
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Data Visualization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Seperating Geograpic and Demographic Layer}
-\subsection{Idea}
-In Stride the classes \textit{GeoGrid} and \textit{Location} both held the geographical and demographical information. The idea was to splits these functionalities into seperate layers. A geographical layer which holds the geographical information like coordinates and place names, while the demographic layer holds other information namely the population. This would allow for the reuse of the geographical layer in the gui.\\
-
-\subsection{Implementation}
-The seperation was done via inheritance. The geograpical parts of \textit{GeoGrid} and \textit{Location} were moved to two new classes \textit{Region} and \textit{GeoLocation}. \textit{Location} would inherit from \textit{GeoLocation} and \textit{GeoGrid} from \textit{Region}. This allowed for new classes like \textit{EpiGrid} and \textit{EpiLocation} to inherit from \textit{Region} and \textit{GeoLocation} as well.\\
-
 \section{Epidemiological output}
-As input for the gui, an epidemiological output was proposed. This \textbf{epi\_output} contains for every saved timestep the epidemiological situation. For every location the percentage of people per \textit{HealthStatus} per \textit{ContactType} is saved. To write this file during the simulation an extra viewer was create, the \textit{EpiViewer}. It will write the epi-output to the desired file.\\
-The controller was not yet adapted to fully function with this feature. The \textit{ControlHelper} will be changed so it will check for an \textbf{epi\_output} filename to write to.\\
+As input for the gui, an epidemiological output was proposed. This \textbf{epi\_output} contains for every saved timestep the epidemiological situation. For every location the percentage of people per \textit{HealthStatus} per \textit{AgeBracket} is saved. To write this file during the simulation an extra viewer was create, the \textit{EpiViewer}. It will write the epi-output to the desired file if so desired.\\
+To create an epi-output file for a simulation add:
+\begin{equation}
+\begin{split}
+<output\_epi>&	\\
+			&<format>json</format>\\
+			&<step\_size>n</step\_size>\\
+</output\_epi>&
+\end{split}
+\end{equation}
+
+to the config.xml file. This will make sure an epi-output file is created in json format with step\_size n. This n will determine how many days are skipped while writing the file. n Has to be larger than 1 or no output will be generated. Make sure that locations are created (by adding geopopgen with a cities file for example) else the output will be empty. 
+
+\subsection{Formats}
+Three formats can be selected: json, hdf5 and protobuf. Every time the information about the locations is saved. The coordinates, name and id are saved. Then for every time the situation has to be saved, the percentage of people compared to the total population of the location is saved per  AgeBracket and per HealthStatus. Below are the formats:
+\subsubsection{Json}
+The Json format contains two json objects: the \texttt{history} and the \texttt{locations}.
+\\\\
+\texttt{history object:} : a list containing the following object:
+\begin{itemize}
+\item \texttt{timestep} : unsigned int
+\item \texttt{locations} : a list containing location objects
+\begin{itemize}
+\item \texttt{id} : unsigned int
+\item \texttt{agebrackets}
+\begin{itemize}
+\item \texttt{immune} 		: double
+\item \texttt{susceptible} 	: double
+\item \texttt{infectious} 	: double
+\item \texttt{symptomatic} 	: double
+\item \texttt{infectiousAndSymptomatic} 	: double
+\item \texttt{recovered} 	: double
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\texttt{locations object} : a list containg the following object:
+\begin{itemize}
+\item \texttt{coordinates}
+\begin{itemize}
+\item \texttt{lat} : double
+\item \texttt{long} : double
+\end{itemize}
+\item \texttt{id} : unsigned int
+\item \texttt{name} : string
+\item \texttt{population} : unsigned int
+\end{itemize}
+
+\subsubsection{Protobuf}
+\begin{itemize}
+\item \texttt{Location} : repeated object
+\begin{itemize}
+\item \texttt{Coordinates} : object
+\begin{itemize}
+\item \texttt{latitude} : double
+\item \texttt{longitude} : double
+\end{itemize}
+\item \texttt{id} : int32
+\item \texttt{name} : string
+\item \texttt{population} : int32
+\end{itemize}
+\end{itemize}
+\begin{itemize}
+
+\item \texttt{history} : a list containg the following object:
+\begin{itemize}
+\item{timestep} : int32
+\item \texttt{PoolsForLocation} : repeated object
+\begin{itemize}
+\item \texttt{id} : int32
+\item \texttt{AgeBrackt} : for every defined bracket
+\begin{itemize}
+\item \texttt{DayCar}	 : double (repeated)
+\item \texttt{PreSchool} : double (repeated)
+\item \texttt{K12School} : double (repeated)
+\item \texttt{College}	 : double (repeated)
+\item \texttt{Workplace} : double (repeated)
+\item \texttt{Retired}	 : double (repeated)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+\subsection{HDF5}
+\texttt{Locations} : dataset
+\begin{itemize}
+\item \texttt{location}
+\begin{itemize}
+\item \texttt{id} : uint32
+\item \texttt{population} : uint32
+\item \texttt{name} : string
+\item \texttt{longitude} : float64
+\item \texttt{latitude} : float64
+\end{itemize}
+\end{itemize}
+
+\texttt{steps} : group
+\begin{itemize}
+\item \texttt{locations} : group
+\begin{itemize}
+\item \texttt{id} : scalar
+\item \texttt{AgeBrackets} : group
+\begin{itemize}
+\item \texttt{College} : float64 (7 times)
+\item \texttt{Daycare} : float64 (7 times)
+\item \texttt{K12School} : float64 (7 times)
+\item \texttt{PreSchool} : float64 (7 times)
+\item \texttt{Retired} : float64 (7 times)
+\item \texttt{Workplace} : float64 (7 times)
+\end{itemize}
+\end{itemize}
+\end{itemize}
+
+
+
 
 \section{Data Visualization}
-Currently only the model of the gui has been implemented. An \textit{EpiReader} will read the \textbf{epi\_output} and create an \textit{EpiGrid}. This class will hold \textit{EpiLocations} which will hold the coordinates of the location and for every timestep the a \textit{PoolStatus}. This \textit{PoolStatus} will hold the \textit{HealthPool} for every \textit{ContactType}. The \textit{HealthPool} will in turn have the percentage of people in every \textit{HealthStatus}.\\
-The gui will be called by a commandline which will tell it where the \textbf{epi\_output} is located.
+You can see the gui on figure \ref{gui_location}. On the map itself all locations have been marked with a sphere. The size of the sphere indicates the size of the population. The colour of the sphere indicates a larger percentage of people with the chosen attributes are present in the location of the sphere. \\
+The attributes are the agebrackets and health statusses. You can select any combination of them in the top bar. At figure \ref{gui_location} people in college who are immune are selected. If you click on a location, that location will be selected. A smaller sphere is present in the center of any sphere so if spheres overlap you can still select the location.\\ Information about the location will be given in the sidebar on the right. The name, total selected population are given. In Antwerp there are 4091 people attending college, 10,57\% of those students are immune to the disease. any combinations of agebrackets and healthstatusses can be selected. If you hover the agebrackets or healthstatusses the full name of the button will be shown. \\
+If you wish to select more locations, \textbf{Box} or \textbf{Radius} can be used. Simply click on the one you need and click on the map and drag until you have everything you need.\\
+To select a different day \textbf{Previous Day} or \textbf{Next Day} can be used to change the date.\\
+To launch the gui go to the installed location \textit{bin/gui} and use the command line \textit{./gui [filename]}. 
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=\textwidth]{locSelect.png}
+\caption{Select a location on the gui.}
+\label{gui_location}
+\end{figure}
+
 
 
  

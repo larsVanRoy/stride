@@ -360,7 +360,44 @@ This test will check whether ProtoBuf reader is capable of reading the result of
 \textbf{How will we achieve this?} 
 We will achieve this by using the EpiGridProtoWriter with a made GeoGrid followed by the EpiGridProtoReader that will read the resulting file. We can check if this was according to plan, by comparing the resulting EpiGrid object with the original GeoGrid.
 \subsection{QT HDF5}
+
 \subsection{QT JSON}
+\subsubsection{EpiGridJSONReaderUnitTest.locationsTest}
+\textbf{What will it test?} 
+This test will check if the reader can properly read the locations in the json file. \\
+\newline
+\textbf{How will we achieve this?} 
+We will prepare a json file with a number of locations, read it and compare the results with predefined results.
+\subsubsection{EpiGridJSONReaderUnitTest.locationTest}
+\textbf{What will it test?} 
+This test will check if the reader can properly read the locations and the agebrackets in the json file. \\
+\newline
+\textbf{How will we achieve this?} 
+We will prepare a json file with one location and one timestep in the history, read it and compare the results with predefined results.
+\subsubsection{EpiGridJSONReaderUnitTest.historyTest}
+\textbf{What will it test?} 
+This test will check if the reader can properly read multiple timesteps in the history object of the json file. \\
+\newline
+\textbf{How will we achieve this?} 
+We will prepare a json file with one location and mulitple timesteps, read it and compare the results with predefined results.
+\subsubsection{EpiGridJSONWriterUnitTest.locationsTest}
+\textbf{What will it test?} 
+This test will check if the writer can write the location information, like name and id, to json.\\
+\newline
+\textbf{How will we achieve this?} 
+We will create a Geogrid, fill it with locations, write it to a string and compare the string with a predefined json output string.
+\subsubsection{EpiGridJSONWriterUnitTest.historyTest}
+\textbf{What will it test?} 
+This test will check if the writer can write the percentage of people per agebracket and healthstatus to json.\\
+\newline
+\textbf{How will we achieve this?} 
+We will create a Geogrid, fill it with a location and write it to a string and compare the string with a predefined json output string.
+\subsubsection{EpiGridJSONReaderWriterScenarioTest.mainTest}
+\textbf{What will it test?} 
+This test will check if the reader can read what the writer has written.\\
+\newline
+\textbf{How will we achieve this?} 
+We will create a Geogrid, fill it with a location and write two timesteps. We will then read the output from file and compare the results with predifined values.
 
 \section{Improved population generation}
 \subsection{Introduction}
