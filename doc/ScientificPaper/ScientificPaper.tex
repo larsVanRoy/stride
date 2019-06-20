@@ -41,6 +41,17 @@
 	Other than these additions, there will also be a section about the simulation over entire Belgium, compared to isolated within Flanders. Other than just the simulated area, there will also be a comparison between the data derived from the Belgian population and the data derived from the Flemish population.
 	
 	\section{Daycare \& Preschool}
+		In the original stride implementation, there are no specific contact pools for children aged 6 and under. The only way they could get infected was via the HouseHold contactpool. This is of course unrealistic. In this iteration of stride, 2 more contact pools are added, Daycare for children aged 0 to 3 and PreSchool for children aged 3 to 6. In this section, we discuss some of the repercussions of this change. \\ 
+	\\
+	Intuitively, by adding these contactpools, we should see that diseases spread faster than normal. To test this hypothesis, we generated a geopopulation with daycares and preschools and one without. Both are generated with the config file \textit{run\_generate\_default.xml} and then used them both in simulations.The result is shown in the following graph.
+	\begin{figure}
+			\centering
+		\includegraphics[width=0.9\textwidth]{measles_r12_daycare_comparison.png}	
+		\caption{Average result of 10 simulations with and without daycares and preschools}
+		\label{fig0}
+	\end{figure}
+	\\
+	As shown in the graph, there are more infected persons with the implementation of daycares and preschools. With these parameters, there are around 2000 infected more after 50 days or a little more than 5\% extra infected.
 	\section{Data Formats}
 	\subsection{JSON}
 	\subsection{HDF5}
