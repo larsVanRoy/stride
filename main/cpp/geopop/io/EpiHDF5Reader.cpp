@@ -70,17 +70,17 @@ void EpiHDF5Reader::ReadHistoryLocation(const H5::Group& location_group) {
 void EpiHDF5Reader::ReadLocationPools(const H5::Group& location_group, shared_ptr<EpiLocation<Coordinate>> location) {
         std::shared_ptr<PoolStatus> status = std::make_shared<stride::PoolStatus>();
 
-        for (Id i : IdList) {
+		auto group = location_group.openGroup("AgeBrackets");
+        for (const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
                 std::vector<double> health_status(NumOfHealthStatus());
-                auto group = location_group.openGroup("Pools");
-                ReadDataset(ToString(i), health_status.data(), group);
+                ReadDataset(AgeBrackets::AgeBracketToString(bracket), health_status.data(), group);
 
                 auto h = std::make_shared<stride::HealthPool>();
                 for (size_t j = 0; j < health_status.size(); ++j){
                         h->setHealth(static_cast<HealthStatus >(j), health_status[j]);
                 }
 
-                status->addStatus(i, h);
+                status->addStatus(bracket, h);
         }
         location->AddPoolStatus(status);
 }
