@@ -81,8 +81,9 @@ ApplicationWindow {
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: {
+                        Script.setSpritesInvisible();
                         map.setInvisible();
-                        map.selectType = "box"
+                        map.selectType = "box";
                     }
                 }
                 ToolButton {
@@ -91,6 +92,7 @@ ApplicationWindow {
                     font.family: "fontello"
                     focusPolicy: Qt.TabFocus
                     onClicked: {
+                        Script.setSpritesInvisible();
                         map.setInvisible();
                         map.selectType = "circle";
                     }
@@ -134,7 +136,7 @@ ApplicationWindow {
                             onClicked: {
                                 if(checked){
                                     controller.AgeSelect(objectName.toString())
-                                    preschool.visible = true;
+                                    preSchool.visible = true;
                                 }
                                 else{
                                     controller.AgeDeSelect(objectName.toString())
@@ -493,7 +495,12 @@ ApplicationWindow {
                          selectionRadius.visible = true;
                          selectionRadius.state = "created";
                          controller.RadiusSelect(radius/1000);
+                         Script.setSpritesVisible();
                      }
+                     if(map.selectType !== "default"){
+                         Script.setSpritesVisible();
+                     }
+
                     map.selectType = "default"
                     map.disable_panning = false;
                  }

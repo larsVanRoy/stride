@@ -26,7 +26,7 @@ function createSpriteObjects()
             sprite.center.longitude = listSprites[i].longitude;
             sprite.center.latitude = listSprites[i].latitude;
             sprite.population = listSprites[i].population;
-            var scale = 12/(10000-50)*(sprite.population-50)-6;
+            var scale = 12/(10000-50)*(sprite.population-50)-6; //rescale size
             sprite.radius = 3000/(1+Math.exp(-scale)) + 1000;
             sprite.id = listSprites[i].ID;
             map.addMapItem(sprite);
@@ -84,6 +84,22 @@ function refreshSprites() {
                 c = 0.0
             }
             map.mapItems[i].color = Qt.hsla(0.35, 1, c,0.75);
+        }
+    }
+}
+
+function setSpritesInvisible() {
+    for(var i = 0; i < map.mapItems.length; i++) {
+        if(map.mapItems[i].objectName === "location"){
+            map.mapItems[i].clickable = false;
+        }
+    }
+}
+
+function setSpritesVisible() {
+    for(var i = 0; i < map.mapItems.length; i++) {
+        if(map.mapItems[i].objectName === "location"){
+            map.mapItems[i].clickable = true;
         }
     }
 }

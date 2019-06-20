@@ -75,6 +75,8 @@ double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket) cons
     for(const AgeBrackets::AgeBracket& a : AgeBrackets::AgeBracketList){
         scale += getStatus(a)->sum(stride::HealthStatusList);
     }
+    if(scale == 0)
+        return 0;
     return this->getStatus(ageBracket)->sum(stride::HealthStatusList)/scale;
 }
 
@@ -83,6 +85,8 @@ double PoolStatus::getPercentage(const AgeBrackets::AgeBracket& ageBracket, cons
     for(const AgeBrackets::AgeBracket& a : AgeBrackets::AgeBracketList){
         scale += getStatus(a)->sum(stride::HealthStatusList);
     }
+    if(scale == 0)
+        return 0;
     return this->getStatus(ageBracket)->sum(ID)/scale;
 }
 

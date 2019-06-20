@@ -7,7 +7,7 @@ import "componentCreation.js" as Script
 MapCircle{
     property int id: 0
     property int population: 100
-    property int time: 0
+    property bool clickable: true
     objectName: "location"
 
     center {
@@ -20,6 +20,7 @@ MapCircle{
 
     MouseArea {
         anchors.fill: parent
+        visible: clickable
         onClicked: {
             map.setInvisible();
             controller.SetSelectedLocation(id);
