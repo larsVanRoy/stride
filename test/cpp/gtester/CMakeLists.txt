@@ -1,4 +1,4 @@
-#############################################################################
+Ja #############################################################################
 #  This is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or any
@@ -59,13 +59,14 @@ set(SRC
 #    ---
     geopop/io/CitiesCSVReaderTest.cpp
     geopop/io/CommutesCSVReaderTest.cpp
-        geopop/io/EpiGridJSONReaderUnitTest.cpp
-        geopop/io/EpiGridJSONWriterUnitTest.cpp
+    geopop/io/EpiGridJSONReaderUnitTest.cpp
+    geopop/io/EpiGridJSONWriterUnitTest.cpp
     geopop/io/EpiGridJSONReaderWriterScenarioTest.cpp
     geopop/io/EpiGridProtoReaderTest.cpp
     geopop/io/EpiGridProtoWriterTest.cpp
     geopop/io/EpiGridHDF5ReaderTest.cpp
     geopop/io/EpiGridHDF5WriterTest.cpp
+    geopop/io/EpiGridProtoReaderWriterTest.cpp
     geopop/io/GeoGridIOUtils.cpp
     geopop/io/GeoGridJSONReaderUnitTest.cpp
     geopop/io/GeoGridJSONReaderWriterScenarioTest.cpp
