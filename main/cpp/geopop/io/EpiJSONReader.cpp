@@ -89,6 +89,7 @@ std::shared_ptr<EpiLocation<Coordinate>> EpiJSONReader::ParseLocation(const nloh
     Coordinate coordinate   =   ParseCoordinate(location["coordinates"]);
     std::string name        =   location["name"];
     unsigned int population =   location["population"];
+
     auto result = std::make_shared<EpiLocation<Coordinate>>(id, 0, coordinate, name, population);
 
     return result;

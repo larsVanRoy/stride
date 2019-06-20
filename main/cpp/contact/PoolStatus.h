@@ -33,10 +33,6 @@ namespace stride {
 
 class HealthPool;
 
-namespace AgeBrackets {
-enum class AgeBracket : unsigned int;
-}
-
 /// Stores the % of people of each health status for every ContactType
 class PoolStatus {
 public:

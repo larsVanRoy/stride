@@ -28,7 +28,6 @@
 
 namespace stride {
 
-
 PoolStatus::PoolStatus() : m_status({}){
     m_status.resize(AgeBrackets::NumOfAgeBrackets());
 }

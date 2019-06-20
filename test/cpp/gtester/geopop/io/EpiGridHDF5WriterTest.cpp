@@ -95,7 +95,7 @@ TEST(EpiGridHDF5WriterTest, locationTest)
                 }
         }
         file.close();
-
+}
 
 TEST(EpiGridHDF5WriterTest, contactPoolsTest)
 {
