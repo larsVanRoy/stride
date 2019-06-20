@@ -94,7 +94,9 @@ void Sim::TimeStep()
                 for (auto typ : ContactType::IdList) {
                         if ((typ == ContactType::Id::Workplace && isWorkOff) ||
                             (typ == ContactType::Id::K12School && isSchoolOff) ||
-                            (typ == ContactType::Id::College && isSchoolOff)) {
+                            (typ == ContactType::Id::College && isSchoolOff) ||
+                            (typ == ContactType::Id::Daycare && isSchoolOff) ||
+                            (typ == ContactType::Id::PreSchool && isSchoolOff)){
                                 continue;
                         }
 #pragma omp for schedule(static)

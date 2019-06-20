@@ -20,31 +20,37 @@
 
 #pragma once
 
-#include "ContactType.h"
+//#include "ContactType.h"
+#include "AgeBrackets.h"
 #include "disease/Health.h"
 
 #include <vector>
 #include <map>
+#include <set>
 #include <memory>
 
 namespace stride {
 
 class HealthPool;
 
-/// Stores the % of people of each health status for every AgeBracket
+/// Stores the % of people of each health status for every ContactType
 class PoolStatus {
 public:
     PoolStatus();
 
     bool operator==(const PoolStatus& other) const;
 
-    /// Adds a status (vector of percentages) for a ContactType
-    void addStatus(stride::ContactType::Id ID, std::shared_ptr<HealthPool> status);
+    /// Adds a status (vector of percentages) for an agebracket
+    void addStatus(const AgeBrackets::AgeBracket&, std::shared_ptr<HealthPool> status);
 
     /// Returns the status of a ContactType
-    std::shared_ptr<HealthPool> getStatus(stride::ContactType::Id ID) { return m_status.at(ContactType::ToSizeT(ID)); }
+    std::shared_ptr<HealthPool> getStatus(const AgeBrackets::AgeBracket& ageBracket);
 
-    std::shared_ptr<HealthPool> operator[](stride::ContactType::Id ID){ return m_status[ContactType::ToSizeT(ID)]; }
+    std::shared_ptr<HealthPool> operator[](const AgeBrackets::AgeBracket& ageBracket);
+
+    const std::shared_ptr<const HealthPool> getStatus(const AgeBrackets::AgeBracket& ageBracket) const;
+
+    const std::shared_ptr<const HealthPool> operator[](const AgeBrackets::AgeBracket& ageBracket) const;
 
     std::vector<double> operator[](HealthStatus h) const;
 
@@ -58,6 +64,10 @@ public:
     const_iterator cbegin() const { return m_status.cbegin(); }
 
     const_iterator cend() const { return m_status.cend(); }
+
+    double getPercentage(const AgeBrackets::AgeBracket& ageBracket) const;
+
+    double getPercentage(const AgeBrackets::AgeBracket& ageBracket, const std::set<HealthStatus>& ID) const;
 
 private:
     std::vector<std::shared_ptr<HealthPool>> m_status;   ///< matrix of the health status of a ContactType m_status[ContactType::Id][HealthStatus]
@@ -83,14 +93,14 @@ public:
 
     void setHealth(HealthStatus ID, double fraction);
 
-    double getHealth(HealthStatus ID) const;
+    double getHealth(const HealthStatus& ID) const;
 
-    double operator[](HealthStatus ID) const { return getHealth(ID); };
+    double operator[](const HealthStatus& ID) const { return getHealth(ID); };
 
     bool operator==(const HealthPool& other) const;
 
     /// Sum of fractions of all given ID
-    double sum(const std::vector<HealthStatus>& ID) const;
+    double sum(const std::set<HealthStatus>& ID) const;
 
     /// returns size of HealthPool
     static unsigned size() { return 7; };

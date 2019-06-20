@@ -55,7 +55,7 @@ private:
         /// Create a Boost Property Tree containing all info needed to reconstruct a Person.
         void WritePeople(H5::H5File& file);
 
-        void WriteCommutes(H5::H5File& file, std::shared_ptr<Location<Coordinate>> location, H5::Group& group);
+        void WriteCommutes(std::shared_ptr<Location<Coordinate>> location, H5::Group& group);
 
         template<typename T>
         void WriteAttribute(const std::string& name, const T& value, H5::H5Object& object);

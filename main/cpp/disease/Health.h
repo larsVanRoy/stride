@@ -20,6 +20,8 @@
 
 #pragma once
 
+#include <string>
+
 namespace stride {
 
 /// Enumerate the various health states with respect to the infection.
@@ -34,11 +36,32 @@ enum class HealthStatus : unsigned short int
         Immune                   = 6U
 };
 
+/// Keeps all available HealthStatusses in a template pack and exposes it as a std::initialize_list
+template <HealthStatus ... HealthStatusses>
+struct IDPack
+{
+    constexpr static std::initializer_list<HealthStatus> AsInitializerList = {HealthStatusses...}; ///< Exposed as std::initializer_list
+};
+
+/// Placed separately to please swig and avoid syntax errors there
+using HealthStatusPack_t =
+IDPack<HealthStatus::Susceptible, HealthStatus::Exposed, HealthStatus::Infectious, HealthStatus::InfectiousAndSymptomatic,
+HealthStatus::Symptomatic, HealthStatus::InfectiousAndSymptomatic, HealthStatus::Recovered, HealthStatus::Immune >;
+
+/// A constexpr global variable that gives access to the available Ids
+constexpr HealthStatusPack_t HealthStatusPack;
+
+/// To allow iteration over the type ids.
+constexpr std::initializer_list<HealthStatus> HealthStatusList = HealthStatusPack_t::AsInitializerList;
+
 /// Convert HealthStatus to unsigned short int
 unsigned short int ToSize(const HealthStatus& h);
 
 /// Number of ContactPool types.
 inline constexpr unsigned int NumOfHealthStatus() { return 7U; }
+
+/// Return string version of HealthStatus
+std::string HealthToString(const HealthStatus&);
 
 /// Holds a person's health data.
 class Health

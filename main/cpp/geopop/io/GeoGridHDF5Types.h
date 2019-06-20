@@ -30,12 +30,12 @@ struct H5Person
         float        age;
         unsigned int daycare;
         unsigned int preschool;
-        unsigned int k12School;
         unsigned int houseHold;
+        unsigned int k12School;
+        unsigned int college;
         unsigned int workplace;
         unsigned int primaryCommunity;
         unsigned int secondaryCommunity;
-        unsigned int college;
 };
 
 CompType GetPersonType();

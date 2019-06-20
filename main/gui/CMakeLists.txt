@@ -10,14 +10,12 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
 set(SOURCE_FILES
-        "gui.cpp"
-        "elements.cpp"
-        "Controller.cpp"
-        "Location.cpp")
+        gui.cpp
+        Controller.cpp
+        Location.cpp)
 set(HEADER_FILES
-        "elements.h"
-        "Controller.h"
-        "Location.h")
+        Controller.h
+        Location.h)
 set(RESOURCE_FILES
         "resources/AppWindow.qml"
         "resources/location.qml"

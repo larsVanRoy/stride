@@ -32,7 +32,7 @@ class GeoGrid;
 
 /**
  * An abstract base class for creating a GeoGrid that was read from a file, can be implemented
- * using multiple file types (proto and json are currently implemented)
+ * using multiple file types (proto, json and hdf5 are currently implemented)
  */
 class GeoGridReader
 {
@@ -40,7 +40,7 @@ public:
         /// Parametrized constructor.
         GeoGridReader(std::unique_ptr<std::istream> inputStream, stride::Population* pop);
 
-        GeoGridReader(std::string filename, stride::Population* pop);
+        GeoGridReader(stride::Population* pop);
 
         /// No copy constructor.
         GeoGridReader(const GeoGridReader&) = delete;

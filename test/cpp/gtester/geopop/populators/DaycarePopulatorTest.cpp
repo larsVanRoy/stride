@@ -89,7 +89,6 @@ protected:
 
         ASSERT_EQ(daycarePools.size(), 5 * m_ppd);
         for (auto& pool : daycarePools) {
-                std::cout << pool->GetId() << std::endl;
             EXPECT_EQ(usedCapacity[pool->GetId()], pool->size());
             for (Person* person : *pool) {
                 EXPECT_LE(person->GetAge(), 3);

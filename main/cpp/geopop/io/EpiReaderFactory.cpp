@@ -16,6 +16,7 @@
 #include "EpiReaderFactory.h"
 #include "EpiHDF5Reader.h"
 #include "EpiJSONReader.h"
+#include "EpiProtoReader.h"
 #include "util/Exception.h"
 
 #include <fstream>
@@ -40,20 +41,18 @@ std::shared_ptr<EpiReader> EpiReaderFactory::CreateEpiReader(const std::string& 
     if (!filesys::exists(path)) {
         throw stride::util::Exception("GeoGridReaderFactory::CreateReader> File not found: " + path.string());
     }
-    std::unique_ptr<std::ifstream> stream;
-    stream->open(filename);
 
     if (path.extension().string() == ".json") {
         return std::make_shared<EpiJSONReader>(std::make_unique<std::ifstream>(path.string()));
     }
-//    else if (path.extension().string() == ".proto") {
-//        return std::make_shared<EpiProtoWriter>();
-//    }
-//    else if (path.extension().string() == ".h5") {
-//        // HDF doesn't support streams
-//        stream->close();
-//        return std::make_shared<EpiHDF5Reader>(filename);
-//    }
+    else if (path.extension().string() == ".h5") {
+        // HDF doesn't support streams
+        stream->close();
+        return std::make_shared<EpiHDF5Reader>(filename);
+    }
+    else if (path.extension().string() == ".proto") {
+        return std::make_shared<EpiProtoReader>(std::make_unique<std::ifstream>(path.string()));
+    }
     else {
         throw stride::util::Exception("EpiWriterFactory::CreateWriter> Unsupported file extension: " +
                                       path.extension().string());

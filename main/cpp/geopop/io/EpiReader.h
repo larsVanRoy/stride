@@ -22,6 +22,7 @@ namespace geopop {
 
 class EpiGrid;
 class EpiJSONReader;
+class EpiProtoReader;
 /**
  * An interface for reading the epidemiological status to a file, can be implemented with multiple file types.
  * json is currently implemented.
@@ -31,16 +32,13 @@ class EpiReader
 public:
     explicit EpiReader(std::unique_ptr<std::ifstream> input_stream) : m_stream(std::move(input_stream)) {};
 
-    explicit EpiReader(const std::string& filename) : m_stream() {
-            m_stream = std::make_unique<std::ifstream>(filename);
-    }
     /// Construct the Writer.
+    explicit EpiReader(const std::string& filename) : m_stream(std::make_unique<std::ifstream>(filename)){};
 
     virtual ~EpiReader() {m_stream->close(); };
 
     /// Write the epidemiological status to ostream.
     virtual std::shared_ptr<EpiGrid> Read() = 0;
-
 protected:
     std::unique_ptr<std::ifstream> m_stream;
 };

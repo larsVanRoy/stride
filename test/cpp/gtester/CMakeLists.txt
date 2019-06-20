@@ -46,7 +46,6 @@ set(SRC
     UnitSegmentedVector.cpp
     UnitSlice1.cpp
     UnitSlice2.cpp
-    UnitDemographicProfileTest.cpp
     #---
     #---
     geopop/generators/DaycareGeneratorTest.cpp
@@ -60,6 +59,10 @@ set(SRC
 #    ---
     geopop/io/CitiesCSVReaderTest.cpp
     geopop/io/CommutesCSVReaderTest.cpp
+    geopop/io/EpiGridProtoReaderTest.cpp
+    geopop/io/EpiGridProtoWriterTest.cpp
+#    geopop/io/EpiGridHDF5ReaderTest.cpp
+#    geopop/io/EpiGridHDF5WriterTest.cpp
     geopop/io/GeoGridIOUtils.cpp
     geopop/io/GeoGridJSONReaderUnitTest.cpp
     geopop/io/GeoGridJSONReaderWriterScenarioTest.cpp
@@ -87,6 +90,7 @@ set(SRC
 #    ---
     geopop/WorkplaceScenarioTest.cpp
     geopop/ScenarioDemographicProfile.cpp
+    geopop/UnitDemographicProfileTest.cpp
 #    ---
     myhayai/DeliveryMan.cpp
     myhayai/MyhayaiTests.cpp
