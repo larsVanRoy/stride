@@ -27,6 +27,8 @@
 
 namespace geopop {
 
+
+
 /**
  * An implementation of the EpiReader using JSON.
  * This class is used to read a Epi from a JSON file.
@@ -35,7 +37,7 @@ class EpiJSONReader : public EpiReader
 {
 public:
     /// Construct the EpiJSONReader with the istream which contains the JSON.
-    explicit EpiJSONReader(std::unique_ptr<std::ifstream> inputStream) : EpiReader(std::move(inputStream))
+    EpiJSONReader(std::unique_ptr<std::ifstream> inputStream) : EpiReader(std::move(inputStream)), m_grid()
     {
         m_grid = std::make_shared<EpiGrid>();
     };
@@ -68,17 +70,17 @@ private:
     void ParseHistoryLocation(const nlohmann::json &location);
 
     /// Adds HealthPool to EpiLocation based on the information stored in the provided JSON object.
-    void ParseLocationPools(const nlohmann::json& pools, std::shared_ptr<EpiLocation<Coordinate>> loc);
+    void ParseLocationAgeBrackets(const nlohmann::json& pools, std::shared_ptr<EpiLocation<Coordinate>> loc);
 
     /// Adds to HealthPool based on the information stored in the provided JSON object.
-    std::shared_ptr<stride::HealthPool> ParsePool(const nlohmann::json& pool);
+    std::shared_ptr<stride::HealthPool> ParseAgeBracket(const nlohmann::json& pool);
 
     /// Take a JSON object and cast wrongly provided types to the expected type (if possible).
     template <typename T>
     T JSONCast(const nlohmann::json& json_object);
 
 private:
-    std::shared_ptr<EpiGrid> m_grid;
+    std::shared_ptr<EpiGrid> m_grid;    ///< final EpiGrid object
 };
 
 } // namespace geopop

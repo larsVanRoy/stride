@@ -48,7 +48,6 @@ void EpiHDF5Writer::Write(const geopop::GeoGrid& geoGrid, unsigned timeStep)
 }
 void EpiHDF5Writer::Initialize(const geopop::GeoGrid& geoPopGrid)
 {
-        this->m_file = H5File{m_filename, H5F_ACC_TRUNC};
         this->WriteLocations(geoPopGrid);
         this->m_file.createGroup("Steps");
 }
@@ -82,27 +81,36 @@ void EpiHDF5Writer::WriteLocations(const geopop::GeoGrid& geoGrid)
 }
 
 void EpiHDF5Writer::WriteHealthStatus(H5::Group& group, const std::shared_ptr<Location<Coordinate>> location) {
-        auto pools_group = group.createGroup("Pools");
-        for (unsigned id = 0; id < NumOfTypes(); ++id){
-                WritePoolHealthStatus(pools_group, location, static_cast<Id>(id));
-        }
-}
+        auto ages_group = group.createGroup("AgeBrackets");
+	std::map<AgeBrackets::AgeBracket, std::map<string, double>> status;
 
-void EpiHDF5Writer::WritePoolHealthStatus(H5::Group&                                          group,
-                                          const std::shared_ptr<geopop::Location<Coordinate>> location,
-                                          stride::ContactType::Id                             id)
-{
-        vector<unsigned long> status(NumOfHealthStatus(), 0);
-        for (const auto &pool : location->CRefPools(id)) {
-                for (const auto &person : *pool) {
-                        status[ToSize(person->GetHealth().GetStatus())]++;
-                }
+    for(const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
+        std::map<string, double> health;
+        for(const HealthStatus& h : stride::HealthStatusList){
+            health[stride::HealthToString(h)] = 0;
         }
-        std::vector<double> health_status;
-        for(size_t i = 0; i < status.size(); ++i){
-                health_status.push_back((double)status[i]/location->GetPopCount());
+        status[bracket] = health;
+    }
+
+    for(const auto &pool : location->CRefPools(stride::ContactType::Id::Household)) {
+        for (const Person* person : *pool) {
+            try {
+                status[AgeBrackets::ToAgeBracket(person->GetAge())][stride::HealthToString(person->GetHealth().GetStatus())]++;
+            }
+            catch(const exception& e){
+                cerr << "1: " << e.what() << std::endl;
+                throw e;
+            }
         }
-        WriteDataset(ToString(id), health_status, group);
+    }
+
+    for(const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
+		std::vector<double> health_statuses;
+        for(const HealthStatus& h : stride::HealthStatusList) {
+            health_statuses.push_back((double) status[bracket][stride::HealthToString(h)] / location->GetPopCount());
+        }
+        WriteDataset(AgeBrackets::AgeBracketToString(bracket), health_statuses, ages_group);
+    }
 }
 
 template <typename T>
