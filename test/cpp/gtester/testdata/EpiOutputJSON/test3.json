@@ -1,0 +1,143 @@
+{
+    "history": [
+        {
+            "locations": [
+                {
+                    "agebrackets": {
+                        "College": {
+                            "Exposed": 0.0,
+                            "Immune": 0.0,
+                            "Infectious": 0.0,
+                            "InfectiousAndSymptomatic": 0.0,
+                            "Recovered": 0.0,
+                            "Susceptible": 0.16666666666666666,
+                            "Symptomatic": 0.0
+                        },
+                        "Daycare": {
+                            "Exposed": 0.0,
+                            "Immune": 0.0,
+                            "Infectious": 0.0,
+                            "InfectiousAndSymptomatic": 0.0,
+                            "Recovered": 0.0,
+                            "Susceptible": 0.16666666666666666,
+                            "Symptomatic": 0.0
+                        },
+                        "K12School": {
+                            "Exposed": 0.0,
+                            "Immune": 0.0,
+                            "Infectious": 0.0,
+                            "InfectiousAndSymptomatic": 0.0,
+                            "Recovered": 0.0,
+                            "Susceptible": 0.16666666666666666,
+                            "Symptomatic": 0.0
+                        },
+                        "PreSchool": {
+                            "Exposed": 0.0,
+                            "Immune": 0.0,
+                            "Infectious": 0.0,
+                            "InfectiousAndSymptomatic": 0.0,
+                            "Recovered": 0.0,
+                            "Susceptible": 0.16666666666666666,
+                            "Symptomatic": 0.0
+                        },
+                        "Retired": {
+                            "Exposed": 0.0,
+                            "Immune": 0.0,
+                            "Infectious": 0.0,
+                            "InfectiousAndSymptomatic": 0.0,
+                            "Recovered": 0.0,
+                            "Susceptible": 0.16666666666666666,
+                            "Symptomatic": 0.0
+                        },
+                        "Workplace": {
+                            "Exposed": 0.0,
+                            "Immune": 0.0,
+                            "Infectious": 0.0,
+                            "InfectiousAndSymptomatic": 0.0,
+                            "Recovered": 0.0,
+                            "Susceptible": 0.16666666666666666,
+                            "Symptomatic": 0.0
+                        }
+                    },
+                    "id": 1
+                }
+            ],
+            "timestep": 0
+        },
+        {
+            "locations": [
+                {
+                    "agebrackets": {
+                        "College": {
+                            "Exposed": 0.023809523809523808,
+                            "Immune": 0.023809523809523808,
+                            "Infectious": 0.023809523809523808,
+                            "InfectiousAndSymptomatic": 0.023809523809523808,
+                            "Recovered": 0.023809523809523808,
+                            "Susceptible": 0.023809523809523808,
+                            "Symptomatic": 0.023809523809523808
+                        },
+                        "Daycare": {
+                            "Exposed": 0.023809523809523808,
+                            "Immune": 0.023809523809523808,
+                            "Infectious": 0.023809523809523808,
+                            "InfectiousAndSymptomatic": 0.023809523809523808,
+                            "Recovered": 0.023809523809523808,
+                            "Susceptible": 0.023809523809523808,
+                            "Symptomatic": 0.023809523809523808
+                        },
+                        "K12School": {
+                            "Exposed": 0.023809523809523808,
+                            "Immune": 0.023809523809523808,
+                            "Infectious": 0.023809523809523808,
+                            "InfectiousAndSymptomatic": 0.023809523809523808,
+                            "Recovered": 0.023809523809523808,
+                            "Susceptible": 0.023809523809523808,
+                            "Symptomatic": 0.023809523809523808
+                        },
+                        "PreSchool": {
+                            "Exposed": 0.023809523809523808,
+                            "Immune": 0.023809523809523808,
+                            "Infectious": 0.023809523809523808,
+                            "InfectiousAndSymptomatic": 0.023809523809523808,
+                            "Recovered": 0.023809523809523808,
+                            "Susceptible": 0.023809523809523808,
+                            "Symptomatic": 0.023809523809523808
+                        },
+                        "Retired": {
+                            "Exposed": 0.023809523809523808,
+                            "Immune": 0.023809523809523808,
+                            "Infectious": 0.023809523809523808,
+                            "InfectiousAndSymptomatic": 0.023809523809523808,
+                            "Recovered": 0.023809523809523808,
+                            "Susceptible": 0.023809523809523808,
+                            "Symptomatic": 0.023809523809523808
+                        },
+                        "Workplace": {
+                            "Exposed": 0.023809523809523808,
+                            "Immune": 0.023809523809523808,
+                            "Infectious": 0.023809523809523808,
+                            "InfectiousAndSymptomatic": 0.023809523809523808,
+                            "Recovered": 0.023809523809523808,
+                            "Susceptible": 0.023809523809523808,
+                            "Symptomatic": 0.023809523809523808
+                        }
+                    },
+                    "id": 1
+                }
+            ],
+            "timestep": 1
+        }
+    ],
+    "locations": [
+        {
+            "coordinates": {
+                "lat": 8.0,
+                "long": 10.0
+            },
+            "id": 1,
+            "name": "Bavikhove",
+            "population": 42
+        }
+    ]
+}

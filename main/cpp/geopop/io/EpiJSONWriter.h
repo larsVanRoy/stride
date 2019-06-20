@@ -52,12 +52,21 @@ public:
     /// Convert the provided GeoGrid to an the epidemiological status and write the status to the proved ostream in JSON format.
     void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep) override;
 
+    /// Write the provided GeoGrid to the proved ostream in JSON format.
+    void Write(const geopop::GeoGrid& geoGrid, std::ostream& stream, unsigned timestep);
+
+//    /// Write the provided GeoGrid to the provided file in JSON format.
+//    void Write(GeoGrid& geoGrid, const std::string& filename) override;
+
 //    /// Convert the provided GeoGrid to an the epidemiological status and write the status to the proved file in JSON format.
 //    void Write(const geopop::GeoGrid& geoGrid, unsigned timeStep);
+
     /// Generate file name and open the file stream.
     void Initialize(const geopop::GeoGrid& geoPopGrid) override;
 
     void Finalize() override;
+
+    void Finalize(std::ostream& stream);
 
 private:
     /// Create json object for coordinate

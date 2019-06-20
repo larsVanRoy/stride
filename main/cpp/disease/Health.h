@@ -45,8 +45,7 @@ struct IDPack
 
 /// Placed separately to please swig and avoid syntax errors there
 using HealthStatusPack_t =
-IDPack<HealthStatus::Susceptible, HealthStatus::Exposed, HealthStatus::Infectious ,
-HealthStatus::Symptomatic, HealthStatus::InfectiousAndSymptomatic, HealthStatus::Recovered, HealthStatus::Immune >;
+IDPack<HealthStatus::Susceptible, HealthStatus::Exposed, HealthStatus::Infectious, HealthStatus::Symptomatic, HealthStatus::InfectiousAndSymptomatic, HealthStatus::Recovered, HealthStatus::Immune >;
 
 /// A constexpr global variable that gives access to the available Ids
 constexpr HealthStatusPack_t HealthStatusPack;
@@ -113,6 +112,9 @@ public:
 
         /// Get m_status
         HealthStatus GetStatus() const { return m_status; }
+
+        /// Set m_status
+        void SetStatus(HealthStatus h) {m_status = h;};
 
         /// Have the symptoms started today?
         bool SymptomsStartedToday() const { return GetDiseaseCounter() == m_start_symptomatic; }

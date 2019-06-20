@@ -37,11 +37,20 @@ bool EpiLocation<CoordinateLike>::operator==(const EpiLocation<CoordinateLike>& 
 {
         using boost::geometry::get;
 
-        bool temp = (m_history == other.m_history);
+        if(m_history.size() != other.m_history.size())
+                return false;
 
-        return temp && this->GetID() == other.GetID() && get<0>(this->GetCoordinate()) == get<0>(other.GetCoordinate()) &&
+        bool baseInfo =  this->GetID() == other.GetID() && get<0>(this->GetCoordinate()) == get<0>(other.GetCoordinate()) &&
                get<1>(this->GetCoordinate()) == get<1>(other.GetCoordinate()) && this->GetName() == other.GetName() &&
                this->GetProvince() == other.GetProvince() && this->GetPopCount() == other.GetPopCount();
+        if(!baseInfo)
+            return false;
+
+        for(unsigned int i = 0; i < m_history.size(); ++i){
+            if(this->m_history[i] != other.m_history[i])
+                return false;
+        }
+        return true;
 }
 
 template class EpiLocation<Coordinate>;
