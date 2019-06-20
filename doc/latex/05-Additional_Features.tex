@@ -22,10 +22,10 @@ Each of these expansions came along with their respective implementations and te
 
 The initial idea for this feature was that we were previously incorrectly assuming that every household is the same in the entire country. We therefore wanted to be able to read, whenever given, multiple configurations for households, so that we would be able to generate the household in a more specific manner, rather than using a general set that is the same for the entire population.
 
-A secondary issue was that not all city types have the same household data, the major cities might have a way different ratio for young and old (which is what the differences between the household configurations are based on) than for example a smaller village might have. Since it is very difficult to determine what each city's type is, we considered the major cities versus all other cities.
+A secondary issue was that not all city types have the same household data, the major cities might have a very different ratio for young and old (which is what the differences between the household configurations are based on) than for example a smaller village might have. Since it is very difficult to determine what each city's type is, we considered the major cities versus all other cities.
 
 \subsection{Input}
-The way this data is given to stride is via the config file for the population. There already was a required field in the geopop\_gen section (if it exists) which was household\_file, this field will still be used, and will still be required, it will now hold the data which will be used if there is no more specific configuration at hand.
+The way this data is given to stride is via the configuration file for the population. There already was a required field in the geopop\_gen section (if it exists) which was household\_file, this field will still be used, and will still be required, it will now hold the data which will be used if there is no more specific configuration at hand.
 
 The following input fields were added, and will be used as their respective household configuration, if given. The final file is the file used to determine which cities are considered major:
 
@@ -86,10 +86,10 @@ The initial idea for this feature was based on the fact that not all workplaces 
 This addition adds one extra, optional, input tag, $workpalce\_file$, in the geopop gen section of the populations config file which will be used to generate the workplaces.
 
 \subsection{Workplace Generator}
-Rather then creating a workplace for every 20 persons, we will now iterate for as long as we do not have sufficient space to allow all people that should work, to work. In each iteration we will generate a random size (taking in account the given chances for each size) for a new workplace pool. We will add these sizes to the geogrid configuration.
+Rather than creating a workplace for every 20 persons, we will now iterate for as long as we do not have sufficient space to allow all people that should work, to work. In each iteration we will generate a random size (taking in account the given chances for each size) for a new workplace pool. We will add these sizes to the geogrid configuration.
 
 \subsection{Workplace Populator}
-The Workplace populator will select a random workplace pool for each of the workers. As long as there are places left in the workplaces, these places will get priority over the other workplaces. As soon as all pools are filled to their intended size, we will randomly select pools out of all the pools within a certain range. The pools will not always get perfectly filled to their intended size, even though we intended to create an exact fit, since randomness is used in the populator.
+The Workplace populator will select a random workplace pool for each of the workers. As long as there are places left in the workplaces, these places will get priority over the other workplaces. As soon as all pools are filled to their intended size, we will randomly select pools out of all the pools within a certain range. The pools will not always get perfectly filled to their intended size, even though we intended to create an exact fit since randomness is used in the populator.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Data Formats
@@ -99,7 +99,7 @@ The Workplace populator will select a random workplace pool for each of the work
 \label{section:DataFormats}
 
 \subsection{JSON: GeoGrid}
-This feature offers the user to create a GeoGrid file in JSON format. These files are handled by a Reader and a Writer based by the concepts of "JSON for Modern C++".
+This feature offers the user to create a GeoGrid file in JSON format. These files are handled by a reader and a writer based by the concepts of "JSON for Modern C++".
 
 If a JSON file is prefered to be used as configuration for the GeoGrid population then it is necessary to alter some attributes in the XML configuration file:\\
 Change the filename of the tag \texttt{population\_file} to a file written in the JSON format.
@@ -229,26 +229,26 @@ A Geogrid formatted file written in HDF5 has the following format:
 % Daycares and PreSchools
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Daycares and PreSchools}
-\label{section:Dataycares and PreSchools}
-The current implementation in stride generates contact pools for different Contact Types and their associated AgeBrackets. There are two added Contact Types for 0-3 years old and 3-6 years old, Daycare and Preschool. They have fixed participation rates that can't be altered via config. The participation rate for Daycare is 0.45 and the participation rate for Preschool is 0.99.
+\label{section:Daycares and PreSchools}
+The current implementation in stride generates contact pools for different ContactTypes and their associated AgeBrackets. There are two added ContactTypes for 0-3 years old and 3-6 years old, Daycare and Preschool. They have fixed participation rates that can't be altered via config. The participation rate for Daycare is 0.45 and the participation rate for Preschool is 0.99.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Data Visualization
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Seperating Geograpic and Demographic Layer}
 \subsection{Idea}
-In Stride the classes \textit{GeoGrid} and \textit{Location} both held the geographical and demographical information. The idea was to splits these functionalities into seperate layers. A geographical layer which holds the geographical information like coordinates and place names, while the demographic layer holds other information namely the population. This would allow for the reuse of the geographical layer in the gui.\\
+In Stride the classes \textit{GeoGrid} and \textit{Location} both held the geographical and demographical information. The idea was to split these functionalities into seperate layers. A geographical layer which holds the geographical information like coordinates and place names, while the demographic layer holds other information namely the population. This would allow for the reuse of the geographical layer in the GUI.\\
 
 \subsection{Implementation}
-The seperation was done via inheritance. The geograpical parts of \textit{GeoGrid} and \textit{Location} were moved to two new classes \textit{Region} and \textit{GeoLocation}. \textit{Location} would inherit from \textit{GeoLocation} and \textit{GeoGrid} from \textit{Region}. This allowed for new classes like \textit{EpiGrid} and \textit{EpiLocation} to inherit from \textit{Region} and \textit{GeoLocation} as well.\\
+The seperation was done via inheritance. The geographical parts of \textit{GeoGrid} and \textit{Location} were moved to two new classes \textit{Region} and \textit{GeoLocation}. \textit{Location} would inherit from \textit{GeoLocation} and \textit{GeoGrid} from \textit{Region}. This allowed for new classes like \textit{EpiGrid} and \textit{EpiLocation} to inherit from \textit{Region} and \textit{GeoLocation} as well.\\
 
 \section{Epidemiological output}
-As input for the gui, an epidemiological output was proposed. This \textbf{epi\_output} contains for every saved timestep the epidemiological situation. For every location the percentage of people per \textit{HealthStatus} per \textit{ContactType} is saved. To write this file during the simulation an extra viewer was create, the \textit{EpiViewer}. It will write the epi-output to the desired file.\\
+As input for the GUI, an epidemiological output was proposed. This \textbf{epi\_output} contains for every saved timestep the epidemiological situation. For every location the percentage of people per \textit{HealthStatus} per \textit{ContactType} is saved. To write this file during the simulation an extra viewer was created, the \textit{EpiViewer}. It will write the epi-output to the desired file.\\
 The controller was not yet adapted to fully function with this feature. The \textit{ControlHelper} will be changed so it will check for an \textbf{epi\_output} filename to write to.\\
 
 \section{Data Visualization}
-Currently only the model of the gui has been implemented. An \textit{EpiReader} will read the \textbf{epi\_output} and create an \textit{EpiGrid}. This class will hold \textit{EpiLocations} which will hold the coordinates of the location and for every timestep the a \textit{PoolStatus}. This \textit{PoolStatus} will hold the \textit{HealthPool} for every \textit{ContactType}. The \textit{HealthPool} will in turn have the percentage of people in every \textit{HealthStatus}.\\
-The gui will be called by a commandline which will tell it where the \textbf{epi\_output} is located.
+Currently only the model of the GUI has been implemented. An \textit{EpiReader} will read the \textbf{epi\_output} and create an \textit{EpiGrid}. This class will hold \textit{EpiLocations} which will hold the coordinates of the location and for every timestep the a \textit{PoolStatus}. This \textit{PoolStatus} will hold the \textit{HealthPool} for every \textit{ContactType}. The \textit{HealthPool} will in turn have the percentage of people in every \textit{HealthStatus}.\\
+The GUI will be called by a commandline which will tell where the \textbf{epi\_output} is located.
 
 
  
