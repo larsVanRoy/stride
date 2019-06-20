@@ -53,8 +53,11 @@ void EpiJSONWriter::Finalize() {
     stream.close();
 }
 
-void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, unsigned timeStep)
-{
+void EpiJSONWriter::Finalize(std::ostream& stream) {
+    stream << setw(4) << m_json << endl;
+}
+
+void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, unsigned timestep) {
     json locations_array = json::array();
 
     for (unsigned i = 0; i < geoGrid.size(); ++i) {
@@ -65,9 +68,28 @@ void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, unsigned timeStep)
     }
 
     json step = json::object();
-    step["timestep"] = timeStep;
+    step["timestep"] = timestep;
     step["locations"] = locations_array;
     m_json["history"].push_back(step);
+}
+
+void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, std::ostream& stream, unsigned timestep) {
+    json locations_array = json::array();
+
+    for (unsigned i = 0; i < geoGrid.size(); ++i) {
+        const auto& location = geoGrid[i];
+        json location_json = json::object();
+        location_json = WriteLocation(location);
+        locations_array.push_back(location_json);
+    }
+
+    json step = json::object();
+    step["timestep"] = timestep;
+    step["locations"] = locations_array;
+    m_json["history"].push_back(step);
+
+    stream << setw(4) << m_json << std::endl;
+    stream.flush();
 }
 
 json EpiJSONWriter::WriteLocations(const geopop::GeoGrid &geoGrid)
@@ -122,20 +144,20 @@ json EpiJSONWriter::WriteHealthStatus(const std::shared_ptr<geopop::Location<Coo
 
     for(const auto &pool : location->CRefPools(stride::ContactType::Id::Household)) {
         for (const Person* person : *pool) {
-            try {
-                status[AgeBrackets::ToAgeBracket(person->GetAge())][stride::HealthToString(person->GetHealth().GetStatus())]++;
-            }
-            catch(const exception& e){
-                cerr << "1: " << e.what() << std::endl;
-                throw e;
-            }
+            status[AgeBrackets::ToAgeBracket(person->GetAge())][stride::HealthToString(person->GetHealth().GetStatus())]++;
         }
     }
 
     for(const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
         json Jhealth = json::object();
         for(const HealthStatus& h : stride::HealthStatusList) {
-            Jhealth[stride::HealthToString(h)] = (double) status[bracket][stride::HealthToString(h)] / location->GetPopCount();
+            if(location->GetPopCount() == 0){
+                Jhealth[stride::HealthToString(h)] = 0;
+            }
+            else {
+                Jhealth[stride::HealthToString(h)] =
+                        (double) status[bracket][stride::HealthToString(h)] / location->GetPopCount();
+            }
         }
         health_status[AgeBrackets::AgeBracketToString(bracket)] =Jhealth;
     }

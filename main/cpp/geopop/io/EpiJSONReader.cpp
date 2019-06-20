@@ -86,7 +86,6 @@ void EpiJSONReader::ParseLocations(const nlohmann::json &location_array) {
 std::shared_ptr<EpiLocation<Coordinate>> EpiJSONReader::ParseLocation(const nlohmann::json& location) {
 
     unsigned int id         =   location["id"];
-//    unsigned int province   =   location["province"];
     Coordinate coordinate   =   ParseCoordinate(location["coordinates"]);
     std::string name        =   location["name"];
     unsigned int population =   location["population"];

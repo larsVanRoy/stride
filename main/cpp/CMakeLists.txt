@@ -50,7 +50,7 @@ set(STRIDE_SRC
     #---
     calendar/Calendar.cpp
     #---
-    contact/AgeContactProfile.cpp
+        contact/AgeContactProfile.cpp
     contact/ContactLogMode.cpp
     contact/ContactPool.cpp
     contact/ContactPoolSys.cpp

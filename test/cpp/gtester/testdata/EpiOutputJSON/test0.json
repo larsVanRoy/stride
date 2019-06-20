@@ -1,0 +1,32 @@
+{
+    "history": [],
+    "locations": [
+        {
+            "coordinates": {
+                "lat": 8.0,
+                "long": 10.0
+            },
+            "id": 1,
+            "name": "Bavikhove",
+            "population": 2500
+        },
+        {
+            "coordinates": {
+                "lat": 55.0,
+                "long": 20.0
+            },
+            "id": 2,
+            "name": "Gent",
+            "population": 5000
+        },
+        {
+            "coordinates": {
+                "lat": 40.0,
+                "long": 30.0
+            },
+            "id": 3,
+            "name": "Mons",
+            "population": 2500
+        }
+    ]
+}
