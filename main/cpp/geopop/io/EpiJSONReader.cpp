@@ -17,6 +17,7 @@
 #include <iomanip>
 #include <boost/lexical_cast.hpp>
 #include <string>
+#include <exception>
 
 namespace geopop {
 using nlohmann::json;
@@ -29,8 +30,14 @@ std::shared_ptr<EpiGrid> EpiJSONReader::Read() {
     try {
         json_file = json::parse(*m_stream);
 
-    } catch (json::parse_error&) {
+    }
+    catch (json::parse_error& e) {
+        std::cerr << e.what() << std::endl;
         throw stride::util::Exception("Problem parsing JSON file, check whether empty or invalid JSON.");
+    }
+    catch(const std::exception& e){
+        std::cerr << e.what() << std::endl;
+        throw stride::util::Exception("Problem parsing JSON file: unknown error.");
     }
     try {
         auto location = json_file["locations"];
@@ -44,6 +51,8 @@ std::shared_ptr<EpiGrid> EpiJSONReader::Read() {
         throw stride::util::Exception("Problem parsing JSON file, check whether empty or invalid JSON. 2");
     }
     m_stream->close();
+
+    m_grid->Finalize();
 
     return m_grid;
 }
@@ -76,13 +85,12 @@ void EpiJSONReader::ParseLocations(const nlohmann::json &location_array) {
 
 std::shared_ptr<EpiLocation<Coordinate>> EpiJSONReader::ParseLocation(const nlohmann::json& location) {
 
-
     unsigned int id         =   location["id"];
-    unsigned int province   =   location["province"];
+//    unsigned int province   =   location["province"];
     Coordinate coordinate   =   ParseCoordinate(location["coordinates"]);
     std::string name        =   location["name"];
     unsigned int population =   location["population"];
-    std::shared_ptr<EpiLocation<Coordinate>> result = std::make_shared<EpiLocation<Coordinate>>(id, province, coordinate, name, population);
+    auto result = std::make_shared<EpiLocation<Coordinate>>(id, 0, coordinate, name, population);
 
     return result;
 }
@@ -93,7 +101,6 @@ void EpiJSONReader::ParseHistory(const nlohmann::json &history) {
         try {
             const nlohmann::json &step = history[i];
             locations = step["locations"];
-            const nlohmann::json &day = step["timestep"];
         }
         catch(std::exception& e){
             std::cout << "Error: ParseHistory" << e.what() << std::endl;
@@ -103,14 +110,12 @@ void EpiJSONReader::ParseHistory(const nlohmann::json &history) {
     }
 }
 
-void EpiJSONReader::ParseLocationPools(const nlohmann::json &pools, std::shared_ptr<EpiLocation<Coordinate>> loc) {
+void EpiJSONReader::ParseLocationAgeBrackets(const nlohmann::json &pools, std::shared_ptr<EpiLocation<Coordinate>> loc) {
     std::shared_ptr<stride::PoolStatus> status = std::make_shared<stride::PoolStatus>();
     try {
-        for (stride::ContactType::Id i : stride::ContactType::IdList) {
-            std::cout << loc->GetName() << "\t";
-            std::shared_ptr<stride::HealthPool> h = ParsePool(pools[stride::ContactType::ToString(i)]);
-
-            status->addStatus(i, h);
+        for (stride::AgeBrackets::AgeBracket ageBracket : stride::AgeBrackets::AgeBracketList) {
+            std::shared_ptr<stride::HealthPool> h = ParseAgeBracket(pools[stride::AgeBrackets::AgeBracketToString(ageBracket)]);
+            status->addStatus(ageBracket, h);
         }
     }
     catch(std::exception& e){
@@ -128,7 +133,7 @@ void EpiJSONReader::ParseHistoryLocation(const nlohmann::json &location) {
             const auto& j = location[i];
             unsigned int locationID = j["id"];
             std::shared_ptr<EpiLocation<Coordinate>> loc = m_grid->GetById(locationID);
-            ParseLocationPools(j["pools"], loc);
+            ParseLocationAgeBrackets(j["agebrackets"], loc);
         }
     }
     catch(std::exception& e){
@@ -137,13 +142,11 @@ void EpiJSONReader::ParseHistoryLocation(const nlohmann::json &location) {
     }
 }
 
-std::shared_ptr<stride::HealthPool> EpiJSONReader::ParsePool(const nlohmann::json &pool) {
+std::shared_ptr<stride::HealthPool> EpiJSONReader::ParseAgeBracket(const nlohmann::json &pool) {
     std::shared_ptr<stride::HealthPool> result = std::make_shared<stride::HealthPool>();
     try {
-        for (unsigned short i = 0; i < pool.size(); ++i) {
-            double fraction = pool[i];
-            result->setHealth(static_cast<stride::HealthStatus>(i), fraction);
-
+        for(const auto& h : stride::HealthStatusList){
+            result->setHealth(h, pool[stride::HealthToString(h)]);
         }
     }
     catch(std::exception& e){

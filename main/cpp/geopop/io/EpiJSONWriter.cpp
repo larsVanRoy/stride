@@ -16,6 +16,7 @@
 #include "EpiJSONWriter.h"
 
 #include "contact/ContactPool.h"
+#include "contact/AgeBrackets.h"
 #include "geopop/Location.h"
 #include "geopop/GeoGrid.h"
 #include "geopop/geo/Coordinate.h"
@@ -64,7 +65,7 @@ void EpiJSONWriter::Write(const geopop::GeoGrid& geoGrid, unsigned timeStep)
     }
 
     json step = json::object();
-    step["timestep"] = std::to_string(timeStep);
+    step["timestep"] = timeStep;
     step["locations"] = locations_array;
     m_json["history"].push_back(step);
 }
@@ -80,7 +81,6 @@ json EpiJSONWriter::WriteLocations(const geopop::GeoGrid &geoGrid)
         location_object["coordinates"]  = WriteCoordinate(location->GetCoordinate());
         location_object["population"]   = location->GetPopCount();
         location_object["name"]         = location->GetName();
-        location_object["province"]         = location->GetProvince();
         location_array.push_back(location_object);
     }
 
@@ -102,35 +102,44 @@ json EpiJSONWriter::WriteLocation(const std::shared_ptr<geopop::Location<Coordin
     json location_object = json::object();
 
     location_object["id"] = location->GetID();
-    location_object["pools"] = WriteHealthStatus(location);
+    location_object["agebrackets"] = WriteHealthStatus(location);
 
     return location_object;
 }
 
-json EpiJSONWriter::WriteHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location)
-{
+json EpiJSONWriter::WriteHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location) {
+    json health_status = json::object();
 
-    json pool = json::object();
+    std::map<AgeBrackets::AgeBracket, std::map<string, double>> status;
 
-    for (unsigned int ID = 0; ID < NumOfTypes(); ++ID) {
-        pool[ToString(static_cast<Id>(ID))] = WritePoolHealthStatus(location, static_cast<Id>(ID));
+    for(const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
+        std::map<string, double> health;
+        for(const HealthStatus& h : stride::HealthStatusList){
+            health[stride::HealthToString(h)] = 0;
+        }
+        status[bracket] = health;
     }
-    return pool;
-}
 
-json EpiJSONWriter::WritePoolHealthStatus(const std::shared_ptr<geopop::Location<Coordinate>> location, Id id) {
-    json health_status = json::array();
-
-    vector<unsigned long> status(NumOfHealthStatus(), 0);
-    int i;
-    for (const auto &pool : location->CRefPools(id)) {
-        for (const auto &person : *pool) {
-            status[ToSize(person->GetHealth().GetStatus())]++;
+    for(const auto &pool : location->CRefPools(stride::ContactType::Id::Household)) {
+        for (const Person* person : *pool) {
+            try {
+                status[AgeBrackets::ToAgeBracket(person->GetAge())][stride::HealthToString(person->GetHealth().GetStatus())]++;
+            }
+            catch(const exception& e){
+                cerr << "1: " << e.what() << std::endl;
+                throw e;
+            }
         }
     }
-    for(unsigned i = 0; i < status.size(); ++i){
-        health_status.push_back((double)status[i]/location->GetPopCount());
+
+    for(const AgeBrackets::AgeBracket& bracket : AgeBrackets::AgeBracketList) {
+        json Jhealth = json::object();
+        for(const HealthStatus& h : stride::HealthStatusList) {
+            Jhealth[stride::HealthToString(h)] = (double) status[bracket][stride::HealthToString(h)] / location->GetPopCount();
+        }
+        health_status[AgeBrackets::AgeBracketToString(bracket)] =Jhealth;
     }
+
     return health_status;
 }
 } // namespace geopop

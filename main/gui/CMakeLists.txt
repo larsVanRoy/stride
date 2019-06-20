@@ -7,13 +7,20 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTORCC ON)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
 
-set(SOURCE_FILES "gui.cpp" "elements.cpp")
-set(HEADER_FILES "elements.h")
-set(RESOURCE_FILES  "resources/AppWindow.qml" 
-                    "resources/location.qml" 
-                    "resources/componentCreation.js"
-                    "resources/fontello.ttf")
+set(SOURCE_FILES
+        gui.cpp
+        Controller.cpp
+        Location.cpp)
+set(HEADER_FILES
+        Controller.h
+        Location.h)
+set(RESOURCE_FILES
+        "resources/AppWindow.qml"
+        "resources/location.qml"
+        "resources/componentCreation.js"
+        "resources/fontello.ttf")
     
 set(CMAKE_PREFIX_PATH $ENV{HOME}/Qt/5.12.2/gcc_64)
 

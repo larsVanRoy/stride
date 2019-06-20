@@ -28,7 +28,7 @@ using namespace stride::ContactType;
 
 template <class CoordinateLike>
 EpiLocation<CoordinateLike>::EpiLocation(unsigned int id, unsigned int province, CoordinateLike coordinate, string name, unsigned int popCount)
-    : GeoLocation<CoordinateLike>(id, province, coordinate, name, popCount)
+    : GeoLocation<CoordinateLike>(id, province, coordinate, name, popCount), m_history()
 {
 }
 

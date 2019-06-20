@@ -312,7 +312,56 @@ This test will check whether the people are written correctly to the HDF5 file. 
 \textbf{How will we achieve this?}
 We will achieve this by comparing the resulting HDF5 file with the correct HDF5 file.
 \section{QT}
-No tests will be made for QT, as this is hard to test via code. The testing of QT will happen via simulations done by ourselves and outsiders checking if our interface is obvious and well made
+\subsection{visualiser}
+No tests will be made for the visualizer, as this is hard to test via code. The testing of QT will happen via simulations done by ourselves and outsiders checking if our interface is obvious and well made
+\subsection{QT Proto}
+\subsubsection{introduction}
+In order to make the visualizer as efficient as could be, there was need for a secondary input format that specified the data specifically needed for the visualizer. ProtoBuf is one of the supported types for the visualizer data.
+\subsubsection{EpiGridProtoReaderTest.locationTest} 
+\textbf{What will it test?} 
+This test will check whether ProtoBuf reader is capable of reading locations properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by calling the EpiProtoReader::Read() function using a made EpiGrid. We can check if this was according to plan, by comparing the resulting EpiGrid of the reader with the original epiGrid.
+\subsubsection{EpiGridProtoReaderTest.historyTest} 
+\textbf{What will it test?} 
+This test will check whether ProtoBuf reader is capable of reading the history properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by calling the EpiProtoReader::Read() function using a made EpiGrid. We can check if this was according to plan, by comparing the resulting EpiGrid of the reader with the original epiGrid.
+\subsubsection{EpiGridProtoReaderTest.poolsTest} 
+\textbf{What will it test?} 
+This test will check whether ProtoBuf reader is capable of reading the pools inside history properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by calling the EpiProtoReader::Read() function using a made EpiGrid. We can check if this was according to plan, by comparing the resulting EpiGrid of the reader with the original epiGrid.
+\subsubsection{EpiGridProtoWriterTest.locationTest} 
+\textbf{What will it test?} 
+This test will check whether ProtoBuf writer is capable of writing locations properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by using the EpiGridProtoWriter with a made GeoGrid. We can check if this was according to plan, by comparing the resulting ProtoBuf object with the original GeoGrid.
+\subsubsection{EpiGridProtoWriterTest.contanctPoolsTest} 
+\textbf{What will it test?} 
+This test will check whether ProtoBuf writer is capable of writing the pools inside history properly. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by using the EpiGridProtoWriter with a made GeoGrid. We can check if this was according to plan, by comparing the resulting ProtoBuf object with the original GeoGrid.
+\subsubsection{EpiGridProtoReaderWriterScenartioTest.locationTest} 
+\textbf{What will it test?} 
+This test will check whether ProtoBuf reader is capable of reading the result of protoBuf writer, that wrote locations, along with a check whether or not the result is correct. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by using the EpiGridProtoWriter with a made GeoGrid followed by the EpiGridProtoReader that will read the resulting file. We can check if this was according to plan, by comparing the resulting EpiGrid object with the original GeoGrid.
+\subsubsection{EpiGridProtoReaderWriterScenartioTest.contanctPoolsTest} 
+\textbf{What will it test?} 
+This test will check whether ProtoBuf reader is capable of reading the result of protoBuf writer, that wrote a history with relevant data, along with a check whether or not the result is correct. \\
+\newline
+\textbf{How will we achieve this?} 
+We will achieve this by using the EpiGridProtoWriter with a made GeoGrid followed by the EpiGridProtoReader that will read the resulting file. We can check if this was according to plan, by comparing the resulting EpiGrid object with the original GeoGrid.
+\subsection{QT HDF5}
+\subsection{QT JSON}
+
 \section{Improved population generation}
 \subsection{Introduction}
 All tests related to this section, unit or scenario, will be written by Lars Van Roy, the same student that wrote the related code.
@@ -323,8 +372,6 @@ This test will check whether the original stride implementation is still functio
 \newline
 \textbf{How will we achieve this?} 
 We will achieve this by calling the SetData function, part of GeoGridConfig, with a csv file. We can then check if the data was correctly read into the GeoGridConfig.
-
-\newpage
 
 \subsubsection{UnitDemographicProfileTest.oneAdditionalProvince}
 \textbf{What will it test?} 
@@ -370,8 +417,6 @@ This test will check whether the generator can handle a configuration that has n
 \textbf{How will we achieve this?}
 We will achieve this by passing a GeoGridConfig object that has no commuters and a workplace distribution configuration. After this we can check whether each poolsize is within the expected boundaries given by the distribution.
 
-\newpage
-
 \subsubsection{WorkplaceGeneratorTest.NullCommutingWithDistribution}
 \textbf{What will it test?}
 This test will check whether the generator can handle a configuration where there are as many commuters from A to B as from B to A.\\
@@ -415,7 +460,7 @@ This test will check whether we are able to read Workplace distribution CSV's.\\
 We will achieve this by passing a possible CSV configuration to the reader. The returned format can then be checked in order to ensure that the configuration is read correctly.
 
 \subsubsection{WorkplacePopulatorTest}
-For populating the original tests where kept, as it did not change by adding the workplace distribution configurations. It did however change in the sense that the way data is stored changed, therefore the tests where slightly altered.
+For populating the original tests where kept, as it did not change by adding the workplace distribution configurations, they were however slightly altered to support the new generator.
 
 \subsubsection{WorkplaceScenarioTest.WorkplaceScenarioWithDistribution}
 \textbf{What will it test?}

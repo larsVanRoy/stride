@@ -30,7 +30,7 @@
 #include "viewers/InfectedFileViewer.h"
 #include "viewers/PersonsFileViewer.h"
 #include "viewers/SummaryFileViewer.h"
-//#include "viewers/EpiViewer.h"
+#include "viewers/EpiViewer.h"
 
 #include <boost/property_tree/xml_parser.hpp>
 #include <regex>
@@ -165,12 +165,16 @@ void ControlHelper::RegisterViewers(shared_ptr<SimRunner> runner)
                 runner->Register(v, bind(&viewers::SummaryFileViewer::Update, v, placeholders::_1));
         }
 
-        // Epi viewer
-//        if (m_config.get<bool>("run.output_epi", false)) {
-//                m_stride_logger->info("Registering EpiViewer");
-//                const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix);
-//                runner->Register(v, bind(&viewers::EpiViewer::Update, v, placeholders::_1));
-//        }
+        if (m_config.get<unsigned int>("run.output_epi.step_size", 0)) {
+                m_stride_logger->info("Registering EpiViewer");
+                unsigned int step = m_config.get<unsigned int>("run.output_epi.step_size");
+                const auto fileFormat = m_config.get<string>("run.output_epi.format", "json");
+                const auto filename = "epi-output." + fileFormat;
+
+
+                const auto v = make_shared<viewers::EpiViewer>(runner, m_output_prefix, filename, step);
+                runner->Register(v, bind(&viewers::EpiViewer::Update, v, placeholders::_1));
+        }
 }
 
 } // namespace stride

@@ -17,6 +17,7 @@
 
 #include "EpiReader.h"
 #include "EpiJSONReader.h"
+#include "EpiProtoReader.h"
 
 #include <memory>
 #include <string>
