@@ -35,19 +35,18 @@ class EpiViewer
 {
 public:
     /// Instantiate cases viewer.
-    EpiViewer(std::shared_ptr<SimRunner> runner, const std::string& output_prefix);
+    EpiViewer(std::shared_ptr<SimRunner> runner, const std::string& output_prefix,  const std::string& filename, unsigned int step);
 
-    ~EpiViewer() {m_file.close();};
+    ~EpiViewer() {};
 
     /// Let viewer perform update.
     void Update(sim_event::Id id);
 
 private:
-    std::shared_ptr<geopop::EpiWriter>    m_epi_output;
+    std::shared_ptr<geopop::EpiWriter> m_epi_output;
     std::shared_ptr<SimRunner> m_runner;
     unsigned m_timestep;
     unsigned m_step_size;
-    std::ofstream m_file;
 };
 
 } // namespace viewers

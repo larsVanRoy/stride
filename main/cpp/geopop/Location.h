@@ -31,6 +31,7 @@
 
 namespace stride {
 class ContactPool;
+enum class HealthStatus : unsigned short int;
 }
 
 namespace geopop {

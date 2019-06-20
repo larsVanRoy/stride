@@ -31,6 +31,7 @@ using stride::ContactType::Id;
 
 EpiGrid::EpiGrid() : Region<EpiLocation<Coordinate>>()
 {
+
 }
 
 } // namespace geopop

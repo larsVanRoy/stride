@@ -28,6 +28,27 @@ unsigned short int ToSize(const HealthStatus& h) {
         return static_cast<unsigned short int>(h);
 }
 
+std::string HealthToString(const HealthStatus& h) {
+        switch(h){
+                case HealthStatus::Susceptible:
+                        return "Susceptible";
+                case HealthStatus::Symptomatic:
+                        return "Symptomatic";
+                case HealthStatus::Exposed:
+                        return "Exposed";
+                case HealthStatus::Infectious:
+                        return "Infectious";
+                case HealthStatus::InfectiousAndSymptomatic:
+                        return "InfectiousAndSymptomatic";
+                case HealthStatus::Recovered:
+                        return "Recovered";
+                case HealthStatus::Immune:
+                        return "Immune";
+                default:
+                        return "Unknown";
+        }
+}
+
 Health::Health(unsigned short int start_infectiousness, unsigned short int start_symptomatic,
                unsigned short int time_infectious, unsigned short int time_symptomatic)
     : m_disease_counter(0U), m_status(HealthStatus::Susceptible), m_start_infectiousness(start_infectiousness),
