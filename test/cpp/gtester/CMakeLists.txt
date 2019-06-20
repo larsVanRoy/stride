@@ -64,8 +64,8 @@ set(SRC
     geopop/io/EpiGridJSONReaderWriterScenarioTest.cpp
     geopop/io/EpiGridProtoReaderTest.cpp
     geopop/io/EpiGridProtoWriterTest.cpp
-#    geopop/io/EpiGridHDF5ReaderTest.cpp
-#    geopop/io/EpiGridHDF5WriterTest.cpp
+    geopop/io/EpiGridHDF5ReaderTest.cpp
+    geopop/io/EpiGridHDF5WriterTest.cpp
     geopop/io/GeoGridIOUtils.cpp
     geopop/io/GeoGridJSONReaderUnitTest.cpp
     geopop/io/GeoGridJSONReaderWriterScenarioTest.cpp
