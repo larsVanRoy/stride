@@ -124,7 +124,7 @@ template <typename T>
 void EpiHDF5Writer::WriteDataset(const std::string& name, std::vector<T> values, H5Object& object)
 {
         hsize_t dimensions[1] = {values.size()};
-        T       emptyValue;
+        T       emptyValue{};
         auto    type      = GetH5Type(emptyValue);
         auto    dataSpace = DataSpace(1, dimensions);
         auto    dataSet   = object.createDataSet(name, type, dataSpace);

@@ -54,6 +54,7 @@ void EpiViewer::Update(const sim_event::Id id)
     switch (id) {
         case Id::AtStart:
             m_epi_output->Initialize(m_runner->GetSim()->GetPopulation()->CRefGeoGrid());
+            break;
         case Id::Stepped: {
             if(m_timestep%m_step_size == 0){
                 const geopop::GeoGrid& geoGrid = m_runner->GetSim()->GetPopulation()->CRefGeoGrid();
