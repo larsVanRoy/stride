@@ -92,131 +92,132 @@
 	We didn't limit ourselves in this study to the Belgian population as a whole but we compared it to the fraction of the Flemish district as an area on its own.
 	By doing two different studies, we can evaluate if the Flemish situation differs in a simulation when isolated or as a part of Belgium.
 	
-	This is an interesting point to study because one can ask himself the question if traffic in and out Flanders has a large influence or is it impact minimal and the most traffic is within the Flandrian area itself? Is the region very susceptible for the measles or are the measurements to prevent outbreaks well organized?
+	This is an interesting point to study because one can ask himself the question if traffic in and out Flanders has a large influence or is it impact minimal and the most traffic is within the Flandrian area itself? Is the region very susceptible to the measles or are the measurements to prevent outbreaks well organized?
 	
-	Recently there has been a lot of reports that there has been an outbreak of measles in Europe and there have been reports of outbreak in Belgium. It is a disease that can cause symptoms to young indivuduals but just as well to older ones who didn't get the vaccination when it was not mandatory. We think that is interesting to make simulations based on this disease because it is something current and is reason for a lot of worrying within the health department.
+	Recently there has been a lot of reports that there has been an outbreak of measles in Europe and there have been reports of an outbreak in Belgium. It is a disease that can cause symptoms to young individuals but just as well to older ones who didn't get the vaccination when it was not mandatory. We think that is interesting to make simulations based on this disease because it is something current and is a reason for a lot of worrying within the health department.
 	
 	\subsection{Data about the region and disease}
 	
 	\subsubsection{Flanders} 
-	The region of Flanders consists of a population of 6.550.000 people ~\cite{url_vlaanderen_pop}, which is a little bit more then half of the entire Belgian population. Most of the population we consider with a very high immunity rate. We could not find any scientific data to back out choice for a rate equal to 90\%. But we thought this was a wel estimate since the vaccine rate in Flanders is quite high with its 96,2\%. This statistic in combination with the fact that a vaccination against measles is obligatory in Belgium made us pretty confident to use a high immunity factor. ~\cite{ref_url_vaccine_europe} ~\cite{ref_url_mazelen} ~\cite{ref_url_vaccinerate}\\
+	The region of Flanders consists of a population of 6.550.000 people ~\cite{1}, which is a little bit more than half of the entire Belgian population. Most of the population we consider with a very high immunity rate. We could not find any scientific data to back out choice for a rate equal to 90\%. But we thought this was a good estimate since the vaccine rate in Flanders is quite high with its 96,2\%. This statistic in combination with the fact that vaccination against measles is obligatory in Belgium made us pretty confident to use a high immunity factor. ~\cite{2} ~\cite{3} ~\cite{4}\\
 	
-	We generated random households based on the average distribution of the household throughout Flanders.~\cite{diagram_hh_FL} The other files in the configuration were already provided with the original version of Stride and we did not alter this information. When looking at the amount of people that are categorized as student or as someone part of a worklplace we found different sources that lead to a good estimate of these parameters. For the percentage of students we found that approximattely 49,5\% of the population is located in higher education.~\cite{src_Vlaams_onderwijs} The number of people working is higher then the amount of students with a value of 75.91\%.~\cite{ref_url_working_fl}
-	
+	We generated random households based on the average distribution of the household throughout Flanders.~\cite{5} The other files in the configuration were already provided with the original version of Stride and we did not alter this information. When looking at the number of people that are categorized as a student or as someone part of a workplace we found different sources that lead to a good estimate of these parameters. For the percentage of students, we found that approximately 49,5\% of the population is located in higher education.~\cite{6}~\cite{17} The number of people working is higher than the number of students with a value of 75.91\%.~\cite{7}
+	\newpage
 	\subsubsection{Belgium}
 	
-	Belgium has a population of 11.376.070 individuals ~\cite{url_pop_be} and is quite a large number to run a lot of simulations. Therefore we performed 10 simulation runs using the Stan option. A large population is less susceptible for stochastic deviations and thus it can do no harm that we don't use 50 simulations or more to get an overall view of what will happen.\\
+	Belgium has a population of 11.376.070 individuals ~\cite{8} and is quite a large number to run a lot of simulations. Therefore we performed 10 simulation runs using the Stan option. A large population is less susceptible for stochastic deviations and thus it can do no harm that we don't use 50 simulations or more to get an overall view of what will happen.\\
 	
-	As mentioned before, we studied an outbreak of the measles during a year in this context. And since the vaccination against measles is one of the mandatory vaccinations in Belgium, a rather high vaccinerate is used with a value of 90\%. ~\cite{ref_url_vaccine} In Belgium there is quite a large percentage of people who commute to work and have to travel outside their hometown. The population that we consider to be active and has a job takes up about 71.89\% of the entire population.~\cite{ref_work_bel} And we computed based on different statistics that the workplace commuting percentage had a value of approximateley 0.644.~\cite{ref_url_commute_work} As for the students, they form a smaller percentage of the population then the working community with 45\%. (This is een approximated value because the graph did not contain any specific numbers.~\cite{pdf_education_BE})\\
+	As mentioned before, we studied an outbreak of the measles during a year in this context. And since the vaccination against measles is one of the mandatory vaccinations in Belgium, a rather high vaccine rate is used with a value of 90\%. ~\cite{9} In Belgium there is quite a large percentage of people who commute to work and have to travel outside their hometown. The population that we consider to be active and has a job takes up about 71.89\% of the entire population.~\cite{14} And we computed based on different statistics that the workplace commuting percentage had a value of approximately 0.644.~\cite{12} As for the students, they form a smaller percentage of the population than the working community with 45\%. (This is an approximated value because the graph did not contain any specific numbers.~\cite{15})\\
 	
-	To create a Belgian population based on data found in official governments databanks, we use some files containing the essential information. For the (provided) commuting data we had to alter the reader for the commuting information. We made this choice because it was much less effort to alter the code then to interpret the entire dataset and convert it to the same structure as other files. In the commuting information from Belgium the proportions were already calculated and thus less work was needed to create this information since we only had to extract it. The data describing the households within Belgium is based on numbers we collected from studies which gave an insight in the size of the households in Belgium. Based on this numbers and on the proportion of different age categories, we created a random set of households for Belgium. ~\cite{ref_url_hh} ~\cite{ref_url_ages}
+	To create a Belgian population based on data found in official governments databanks, we use some files containing the essential information. For the (provided) commuting data we had to alter the reader for the commuting information. We made this choice because it was much less effort to alter the code than to interpret the entire dataset and convert it to the same structure as other files. In the commuting information from Belgium, the proportions were already calculated and thus less work was needed to create this information since we only had to extract it. The data describing the households within Belgium is based on numbers we collected from studies which gave an insight into the size of the households in Belgium. Based on these numbers and on the proportion of different age categories, we created a random set of households for Belgium.~\cite{10} ~\cite{11}
 	
 	\subsection{Flanders vs. Belgium}
 	
-	First we want to discuss the simulation results between a measles outbreak during one year in the country of Belgium and the Flanders region as an isolated area. The data we collected for this simulation was discribed in the previous section and now we want to discuss and evaluate some discoveries, remarks and findings. \\
+	In this section, we want to discuss the simulation results between a measles outbreak during one year in the country of Belgium and the Flanders region as an isolated area. The data we collected for this simulation was discribed in the previous section and now we want to discuss and evaluate some discoveries, remarks and findings. The graphs for this discussion can be found in Figure 13 and Figure 16 in the appendix.\\
 	
-	Because the population within the region of Flanders is less smaller than the population within Belgium we can expect a less smaller amount of infected people. In Flanders we have an average of 200 infected cases for 10 stochatsic simulation runs over a time period of one year. This is an realistic value for an outbreak of the measles. We have found articles that state that there were 25 cases in the month of January of this year.~\cite{article_standaard} In the graphical representation of the number of the infected count we can see a large outbreak in the beginning and a flat line after 50 days. This can be explained by the high standards of vaccination in this region. Almost the entire Flandrian population has received a vaccination against the measles and once this vaccine has been taken you are as good as immune againt the disease. The high spread in the beginning can not be avoided because it is an highly infectious disease and there is a group of people that didn't take the precautions like children younger then one year or individuals who can not receive the vaccine due to medical reasons.~\cite{url_measles_info} \\
+	The first thing that we can immediately notice is that the simulation of Belgium creates a higher amount of infected people. Because the population within the region of Flanders is smaller than the population within Belgium we did expect a less small amount of infected people. In Flanders we have an average of 200 infected cases for 10 stochastic simulation runs over a time period of one year. This is a realistic value for an outbreak of the measles. We have found articles that state that there were 25 cases in the month of January of this year.~\cite{18}~\cite{13} In the graphical representation of the number of the infected count, we can see a large outbreak in the beginning and a flat line after 50 days. This can be explained by the high standards of vaccination in this region. Almost the entire Flandrian population has received a vaccination against the measles and once this vaccine has been taken you are as good as immune against the disease. The high spread, in the beginning, can not be avoided because it is a highly infectious disease and there is a group of people that didn't take the precautions like children younger than one year or individuals who can not receive the vaccine due to medical reasons.~\cite{20} 
+	For Belgium, we can observe a different kind of increase. The number of infected count in Belgium is 2831. In Belgium, the spreading of the measles and the growing of the number of infected people increases more in value throughout the whole period of time rather than in a short window of time within the year as is the case in Flanders. But the growth rate is not as high as it is Flanders. The curve is more rounded upwards instead of being almost straight up as in Flanders. A reason for this is the larger population in Belgium. There is a larger percentage of unvaccinated people who move through a larger area. So it takes longer for everyone who can be infected to be effectively carrier of the disease. Having only 2831 cases of measles over a population of around 11 million people may seem a bit strange. But again this is due to the mandatory vaccination and a high vaccination rate.\\
 	
-	If we compare Flanders with the entire region of Belgium we can observe a different kind of increase. In Belgium the spreading of the measles and the growing of the number of infected people increases more throughout the whole period of time rather than in a short window of time within the year as is the case in Flanders. A reason for this is the larger population in Belgium. There is a larger percentage of unvaccinated people who move through a larger area. So it takes longer for everyone who can be infected to be effectively carrier of the disease.
+    And lastly, we consider Flanders as a part of Belgium and it gives a higher average infected count of 260 for the Flandrian area. It is not such a big difference with the average of Flanders. There is now higher traffic of commuters in the region of Flanders because there can be individuals who live in Wallonia but work in the Flandrian region. The vaccination rate in Wallonia is slightly lower than in Flanders, this can also have an impact on the spreading of the disease. What is a returning observation in Flanders is that there is always some stabilisation of the number of infected people due to the high vaccination rate. A lot is dependent on the initial place of infection. If the outbreak starts in an isolated villege, where there is not a lot of traffic to the more residential places, one can expect that it would not be an outbreak on a large scale but more locally.
 	
 	
 	\newpage
 	\begin{thebibliography}{20}
-		\bibitem{url_vlaanderen_pop}
+		\bibitem{1}
 		Population of Flanders \\
 		\url{https://www.statistiekvlaanderen.be/bevolking-omvang-en-groei}
 		\\
 		
-		\bibitem{ref_url_vaccine_europe}
+		\bibitem{2}
 		Vaccination rate in Europe \\
 		\url{http://www.europarl.europa.eu/news/nl/headlines/society/20180316STO99921/vaccinatie-zorg-om-de-te-lage-vaccinatiegraad-in-de-eu}
 		\\
 		
-		\bibitem{ref_url_mazelen}
+		\bibitem{3}
 		Measles: vaccination information \\
 		\url{https://epidemio.wiv-isp.be/ID/Pages/Rougeole.aspx}
 		\\
 		
-		\bibitem{ref_url_vaccinerate}
+		\bibitem{4}
 		Vaccination Flanders \\
 		\url{https://www.zorg-en-gezondheid.be/nieuwe-cijfers-tonen-hoge-vaccinatiegraad-bij-vlamingen}
 		\\
 		
-		\bibitem{diagram_hh_FL}
+		\bibitem{5}
 		Household size statisic chart (Flanders) \\
 		\url{https://www.wonenvlaanderen.be/sites/wvl/files/wysiwyg/huishoudens\_naar\_hh-grootte.pdf}
 		\\
 		
-		\bibitem{src_Vlaams_onderwijs}
+		\bibitem{6}
 		Education Flanders \\
 		\url{https://www.vlaanderen.be/publicaties/vlaams-onderwijs-in-cijfers-2017-2018}
 		
-		\bibitem{ref_url_working_fl}
+		\bibitem{7}
 		Working population within Belgium \\
 		\url{http://projecties.steunpuntwerk.be/werkzaamheid/tls/werkzaamheid/index.php}
 		\\
 		
-		\bibitem{url_pop_be}
+		\bibitem{8}
 		Structure of population Belgium \\
 		\url{https://statbel.fgov.be/nl/themas/bevolking/structuur-van-de-bevolking\#news}
 		\\
 		
-		\bibitem{ref_url_vaccine}
+		\bibitem{9}
 		Epidemics: Measles in Europe and Belgium 2017 \\
 		\url{https://www.vaxinfopro.be/spip.php?article2249\&lang=nl\&retour=1}
 		\\
 		
-		\bibitem{ref_url_hh}
+		\bibitem{10}
 		Household composition in Belgium \\
 		\url{https://statbel.fgov.be/sites/default/files/Over\_Statbel\_FR/Sociaal-Economische\%20Enqu\%C3\%AAte\%202001\%20-\%20monografie\%204-Huishoudens\%20en\%20gezinnen\%20in\%20Belgi\%C3\%AB.pdf}	
 		\\
 		
-		\bibitem{ref_url_ages}
+		\bibitem{11}
 		Age pyramid of Belgium \\
 		\url{https://statbel.fgov.be/nl/themas/bevolking/structuur-van-de-bevolking\#panel-11}
 		\\
 		
-		\bibitem{ref_url_commute_work}
+		\bibitem{12}
 		Commuting workplaces 2011 \\
 		\url{http://www.census2011.be/analyse/flux\_nl.html}
 		\\
 		
-		\bibitem{ref_numbers_measles}
+		\bibitem{13}
 		Number of reported measle cases in Flanders/Belgium \\
 		\url{https://www.vaxinfopro.be/spip.php?article2938\&lang=nl}
 		\\
 		
-		\bibitem{ref_work_bel}
+		\bibitem{14}
 		Employment and unemployment Belgium \\
 		\url{https://statbel.fgov.be/nl/themas/werk-opleiding/arbeidsmarkt/werkgelegenheid-en-werkloosheid}
 		\\
 		
-		\bibitem{pdf_education_BE}
+		\bibitem{15}
 		Education policy profile (page 16) \\
 		\url{http://www.oecd.org/education/Education-Policy-Outlook-Country-Profile-Belgium.pdf}
 		\\
 		
-		\bibitem{url_pop_age_FL}
+		\bibitem{16}
 		Population stated by age in Flanders \\
 		\url{https://www.statistiekvlaanderen.be/bevolking-naar-leeftijd-en-geslacht}
 		\\
 		
-		\bibitem{url_students_young}
+		\bibitem{17}
 		Profile of number of students \\
 		\url{https://www.werk.be/sites/default/files/rapporten/wse\_2-09\_jongeren\_in\_beeld-jan2009.pdf}
 		\\
 		
-		\bibitem{article_standaard}
+		\bibitem{18}
 		Article about measles outbreak (De Standaard) \\
 		\url{https://www.standaard.be/extra/pdf/belgieblootgelegd/BB7/BB7pagina6.pdf}
 		\\
 		
-		\bibitem{pdf_vaccination2016}
+		\bibitem{19}
 		Vaccination rate Flanders 2016 \\
 		\url{https://www.zorg-en-gezondheid.be/sites/default/files/atoms/files/VIB\%202017-2\%20-\%20Vaccinatiegraad\%20in\%20Vlaanderen\%20in\%202016.pdf}
 		\\
 		
-		\bibitem{url_measles_info}
+		\bibitem{20}
 		All round info about the vaccination against measles \\
 		\url{https://www.cm.be/ziekte-en-behandeling/vaccinaties/basisvaccinaties/mazelen}
 		
@@ -290,5 +291,34 @@
 		\caption{The cumulative evolution of the diseased people, using the different household implementations and r0 equal to 14}	
 		\label{fig12}
 	\end{figure}
+	\begin{figure}
+		\centering
+		\centering
+		\includegraphics[width=0.9\textwidth]{FL1_FL2_sim_infected.png}
+		\caption{The cumulative evolution of the diseased people (Flanders as an isolated area and as part of Belgium)}	
+		\label{fig13}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\centering
+		\includegraphics[width=0.9\textwidth]{FL1_FL2_sim_boxplot.png}
+		\caption{The boxplot of the diseased people (Flanders as an isolated area and as part of Belgium)}	
+		\label{fig14}
+	\end{figure}
+	\begin{figure}
+		\centering
+		\centering
+		\includegraphics[width=0.9\textwidth]{BE_sim_boxplot.png}
+		\caption{The boxplot of the diseased people (Flanders and Belgium)}	
+		\label{fig15}
+	\end{figure}	
+	\begin{figure}
+		\centering
+		\centering
+		\includegraphics[width=0.9\textwidth]{BE_sim_infected_cases.png}
+		\caption{The boxplot of the diseased people (Flanders and Belgium)}	
+		\label{fig16}
+	\end{figure}
+
 \end{document}
 

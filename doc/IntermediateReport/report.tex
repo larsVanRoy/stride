@@ -199,10 +199,11 @@
 	\end{itemize}
 	
 \section{Data Visualization}
-\section{Progress}
+
+\subsubsection{Progress}
 The demographic and geographic layers have been split by inheritance. During the feedback of the beta it was adviced to create a template for the geographical layer. This will be done in the future. Because GeoGrid is used nearly everywhere, the changed files have been omitted. \\
 The changes are discussed in the Latex/UserManual.pdf under section 5.6,5.7 and 5.8.
-\section{Code}
+\subsubsection{Code}
 	\begin{itemize}
 		\item \texttt{main/cpp/geopop/GeoGrid (.h/.cpp)}
 		\item \texttt{main/cpp/geopop/Location (.h/.cpp)}
@@ -224,6 +225,17 @@ The changes are discussed in the Latex/UserManual.pdf under section 5.6,5.7 and 
 		\item \texttt{main/cpp/geopop/io/EpiReaderFactory (.h/.cpp)}
 		\item \texttt{main/cpp/contact/PoolStatus (.h/.cpp)}
 		\item \texttt{main/cpp/viewers/EpiViewer (.h/.cpp)}
+	\end{itemize}
+
+\section{Simulation Belgium}
+A discussion of the results can be found in the final paper in section 7.
+\subsubsection{Configuration files}
+	\begin{itemize}
+		\item \texttt{config/run\_generate\_BE.xml}
+		\item \texttt{config/run\_generate\_flanders.xml}
+		\item \texttt{config/run\_generate\_flanders\_inBE.xml}
+		\\
+		\item \texttt{main/resources/data/households\_BE.csv}
 	\end{itemize}
 
 \end{document}
