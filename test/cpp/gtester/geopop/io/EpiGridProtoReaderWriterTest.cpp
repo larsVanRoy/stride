@@ -80,7 +80,7 @@ void CompareLocation(const  shared_ptr<Location<Coordinate>>&    geoLocation,
             status.push_back(static_cast<double>(statuses[bracket][HealthToString(healthStatus)]) / geoLocation->GetPopCount());
         }
 
-        for (ulong idx = 0; idx < status.size(); idx ++)
+        for (unsigned idx = 0; idx < status.size(); idx ++)
         {
             EXPECT_EQ(status[idx], epiPoolStatus->operator[](HealthPoolTypes.at(idx)));
         }
