@@ -20,7 +20,7 @@ namespace H5{
         CompType location_t(sizeof(H5GeoLocation));
         location_t.insertMember("id", HOFFSET(H5GeoLocation, id), PredType::NATIVE_UINT);
         location_t.insertMember("population", HOFFSET(H5GeoLocation, population), PredType::NATIVE_UINT);
-        location_t.insertMember("name", HOFFSET(H5GeoLocation, name), StrType(H5T_C_S1, 50));
+        location_t.insertMember("name", HOFFSET(H5GeoLocation, name), StrType(H5T_C_S1, 100));
         location_t.insertMember("province", HOFFSET(H5GeoLocation, province), PredType::NATIVE_UINT);
         location_t.insertMember("longitude", HOFFSET(H5GeoLocation, longitude), PredType::NATIVE_DOUBLE);
         location_t.insertMember("latitude", HOFFSET(H5GeoLocation, latitude), PredType::NATIVE_DOUBLE);
