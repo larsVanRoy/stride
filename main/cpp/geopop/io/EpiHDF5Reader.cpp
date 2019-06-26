@@ -16,6 +16,7 @@ std::shared_ptr<EpiGrid> EpiHDF5Reader::Read()
 {
         ReadLocations();
         ReadHistory();
+        m_grid->Finalize();
         return m_grid;
 }
 
